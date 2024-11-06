@@ -22,7 +22,7 @@ export default function UpdateProduct({
   };
 
   const updateProduct = () => {
-    fetch("http://localhost:4000/api/product/update", {
+    fetch("https://avera-stock-back-end.vercel.app/api/product/update", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

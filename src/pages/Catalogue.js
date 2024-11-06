@@ -38,7 +38,7 @@ function Catalogue() {
 
 
     const fetchCatalogeData = () => {
-        fetch(`http://localhost:4000/api/cataloge/list_cataloge/${authContext.user}`)
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/list_cataloge/${authContext.user}`)
             .then((response) => response.json())
             .then((data) => {
                 setAllCataloge(data);
@@ -46,7 +46,7 @@ function Catalogue() {
             .catch((err) => console.log(err));
     };
     const fetchSingleCatalogeData = (id) => {
-        fetch(`http://localhost:4000/api/cataloge/edit_cataloge/${id}`)
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/edit_cataloge/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleCataloge(data);
@@ -58,7 +58,7 @@ function Catalogue() {
     // const deleteItem = async (id) => {
 
     //     try {
-    //         const response = await fetch(`http://localhost:4000/api/cataloge/delete_cataloge/${id}`, {
+    //         const response = await fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/delete_cataloge/${id}`, {
     //             method: 'DELETE'
     //         });
     //         const data = await response.json();

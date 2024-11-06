@@ -8,7 +8,7 @@ export default function DeleteDesign({deleteCatalogueModel , setUpdatePage , upd
     const deleteItem = async () => {
   
         try {
-          const response = await fetch(`http://localhost:4000/api/cataloge_design/delete_design/${singleDesign._id}`, {
+          const response = await fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/delete_design/${singleDesign._id}`, {
             method: 'DELETE'
           });
           const data = await response.json(); 

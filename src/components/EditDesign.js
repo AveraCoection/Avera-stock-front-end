@@ -36,7 +36,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
         };
     
         try {
-            const response = await fetch(`http://localhost:4000/api/cataloge_design/update_design/${id}`, {
+            const response = await fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/update_design/${id}`, {
                 method: "PUT",
                 //credentials: 'include', 
                 headers: {

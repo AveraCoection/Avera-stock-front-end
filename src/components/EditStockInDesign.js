@@ -27,7 +27,7 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
     ...design ,
     stock : addStock
  }
-        fetch(`http://localhost:4000/api/cataloge_design/update_design/${id}`, {
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/update_design/${id}`, {
             method: "PUT",
             headers: {
                 "Content-type": "application/json",

@@ -28,7 +28,7 @@ export default function AddSale({
 
   // POST Data
   const addSale = () => {
-    fetch("http://localhost:4000/api/sales/add", {
+    fetch("https://avera-stock-back-end.vercel.app/api/sales/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

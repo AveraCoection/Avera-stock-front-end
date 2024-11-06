@@ -42,7 +42,7 @@ export default function CatalogueDetail() {
         setDeleteDesignModal(!showDeleteDesignModal);
     };
     const fetchCatalogeData = () => {
-        fetch(`http://localhost:4000/api/cataloge_design/list_design/${params.cataloge}`)
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/list_design/${params.cataloge}`)
             .then((response) => response.json())
             .then((data) => {
                 setAllCatalogeDesign(data);
@@ -51,7 +51,7 @@ export default function CatalogueDetail() {
     };
 
     const fetchSingleCatalogeData = () => {
-        fetch(`http://localhost:4000/api/cataloge/edit_cataloge/${params.cataloge}`)
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/edit_cataloge/${params.cataloge}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleCataloge(data);
@@ -59,7 +59,7 @@ export default function CatalogueDetail() {
             .catch((err) => console.log(err));
     };
     const fetchSingleDesignData = (id) => {
-        fetch(`http://localhost:4000/api/cataloge_design/edit_design/${id}`)
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/edit_design/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleDesign(data);

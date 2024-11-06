@@ -21,7 +21,7 @@ function Login() {
   // const authCheck = async () => {
   //   setTimeout(async () => {
   //     try {
-  //       const response = await fetch("http://localhost:4000/api/login");
+  //       const response = await fetch("https://avera-stock-back-end.vercel.app/api/login");
   //       const data = await response.json();
   //       localStorage.setItem("user", JSON.stringify(data));
   //       toast.success("Successfully Login");
@@ -49,7 +49,7 @@ function Login() {
     }
   
     try {
-      const response = await fetch("http://localhost:4000/api/login", {
+      const response = await fetch("https://avera-stock-back-end.vercel.app/api/login", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

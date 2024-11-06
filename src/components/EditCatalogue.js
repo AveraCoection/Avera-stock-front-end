@@ -21,7 +21,7 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
     };
 
     const editCataloge = (id) => {
-        fetch(`http://localhost:4000/api/cataloge/update_cataloge/${id}`, {
+        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/update_cataloge/${id}`, {
             method: "PUT",
             //credentials: 'include', 
             headers: {

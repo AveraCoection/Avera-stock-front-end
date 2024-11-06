@@ -32,7 +32,7 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/cataloge/add", {
+      const response = await fetch("https://avera-stock-back-end.vercel.app/api/cataloge/add", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

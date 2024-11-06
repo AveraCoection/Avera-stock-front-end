@@ -44,7 +44,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length === 0) {
-      fetch('http://localhost:4000/api/cataloge_design/add_design', {
+      fetch('https://avera-stock-back-end.vercel.app/api/cataloge_design/add_design', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
