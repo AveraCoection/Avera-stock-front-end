@@ -140,7 +140,7 @@ function Register() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div>
+              {/* <div>
                 <input
                   name="phoneNumber"
                   type="number"
@@ -151,7 +151,7 @@ function Register() {
                   value={form.phoneNumber}
                   onChange={handleInputChange}
                 />
-              </div>
+              </div> */}
               <UploadImage uploadImage={uploadImage} />
             </div>
 

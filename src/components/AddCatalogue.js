@@ -33,7 +33,7 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
     }
 
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}api/cataloge/add`, {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/add`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
