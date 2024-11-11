@@ -3,6 +3,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../AuthContext';
 import { toast } from 'react-toastify';
+import GlobalApiState from '../utilis/globalVariable';
 
 export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, singlecatalogue }) {
 
@@ -21,7 +22,7 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
     };
 
     const editCataloge = (id) => {
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/update_cataloge/${id}`, {
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/update_cataloge/${id}`, {
             method: "PUT",
             //credentials: 'include', 
             headers: {

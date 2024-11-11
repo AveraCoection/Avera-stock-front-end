@@ -5,14 +5,10 @@ import Dashboard from "./pages/Dashboard";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Inventory from "./pages/Inventory";
 import NoPageFound from "./pages/NoPageFound";
 import AuthContext from "./AuthContext";
 import ProtectedWrapper from "./ProtectedWrapper";
 import { useEffect, useState } from "react";
-import Store from "./pages/Store";
-import Sales from "./pages/Sales";
-import PurchaseDetails from "./pages/PurchaseDetails";
 import Catalogue from "./pages/Catalogue";
 import CatalogueDetail from "./pages/CatalogueDetail";
 // import { ToastContainer } from "react-toastify";
@@ -76,10 +72,6 @@ const App = () => {
             }
           >
             <Route index element={<Catalogue />} />
-            <Route path="/inventory" element={<Inventory />} />
-            <Route path="/purchase-details" element={<PurchaseDetails />} />
-            <Route path="/sales" element={<Sales />} />
-            <Route path="/manage-store" element={<Store />} />
             {/* <Route path="/catalogue" element={<Catalogue />} /> */}
             <Route path="/catalogue-detail/:cataloge" element={<CatalogueDetail  />} />
           </Route>

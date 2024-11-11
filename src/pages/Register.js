@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UploadImage from "../components/UploadImage";
 import { toast, ToastContainer } from "react-toastify";
-
+import GlobalApiState from "../utilis/globalVariable"
 function Register() {
   const [form, setForm] = useState({
     firstName: "",
@@ -23,7 +23,7 @@ function Register() {
 
   const registerUser = async () => {
     try {
-      const response = await fetch(`https://avera-stock-back-end.vercel.app/api/register`, {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

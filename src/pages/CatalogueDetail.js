@@ -10,6 +10,7 @@ import DeleteDesign from '../components/DeleteDesign';
 import EditDesignBySell from '../components/EditDesign';
 import EditDesignByAdd from '../components/EditStockInDesign';
 import { ToastContainer } from 'react-toastify';
+import GlobalApiState from '../utilis/globalVariable';
 
 export default function CatalogueDetail() {
     const params = useParams()
@@ -42,7 +43,7 @@ export default function CatalogueDetail() {
         setDeleteDesignModal(!showDeleteDesignModal);
     };
     const fetchCatalogeData = () => {
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/list_design/${params.cataloge}`)
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/list_design/${params.cataloge}`)
             .then((response) => response.json())
             .then((data) => {
                 setAllCatalogeDesign(data);
@@ -51,7 +52,7 @@ export default function CatalogueDetail() {
     };
 
     const fetchSingleCatalogeData = () => {
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/edit_cataloge/${params.cataloge}`)
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/edit_cataloge/${params.cataloge}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleCataloge(data);
@@ -59,7 +60,7 @@ export default function CatalogueDetail() {
             .catch((err) => console.log(err));
     };
     const fetchSingleDesignData = (id) => {
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/edit_design/${id}`)
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/edit_design/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleDesign(data);
@@ -116,7 +117,7 @@ export default function CatalogueDetail() {
                             <div className="flex gap-4 justify-center items-center">
                                 <span className="font-bold">Catalogue : {singlecataloge.cataloge_number}</span>
                             </div>
-                            <ToastContainer/>
+                            <ToastContainer />
                             <div className="flex gap-4">
                                 <button
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded"
@@ -133,7 +134,10 @@ export default function CatalogueDetail() {
                                         Design Number
                                     </th>
                                     <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Total Stock
+                                        Total Thaan
+                                    </th>
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                                        Total Khazana
                                     </th>
                                     <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                                         Edit
@@ -159,6 +163,9 @@ export default function CatalogueDetail() {
                                             </td>
                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                                 {element.stock}
+                                            </td>
+                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                {element.khazana_stock}
                                             </td>
                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                                 <span

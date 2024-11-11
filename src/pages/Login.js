@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../AuthContext";
 import { toast, ToastContainer } from 'react-toastify';
+import GlobalApiState from "../utilis/globalVariable";
 
 function Login() {
   const [form, setForm] = useState({
@@ -49,7 +50,7 @@ function Login() {
     }
   
     try {
-      const response = await fetch("https://avera-stock-back-end.vercel.app/api/login", {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",

@@ -9,25 +9,37 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-    const [addStock, setAddStock] = useState(0);
+    const [addStock, setAddStock] = useState(editDesign.stock);
+    const [addKhazana, setAddKhazana] = useState(editDesign.khazana_stock);
 
     const [design, setDesign] = useState({
         id: editDesign._id,
         cataloge_number: editDesign.cataloge_number,
         stock: editDesign.stock,
+        khazana_stock: editDesign.khazana_stock,
     });
 
-    const handleInputChange = (key, value) => {
-        // setDesign({ ...design, [key]: value });
-        setAddStock(value)
+    const handleInput = (type, value) => {
+        const currentStock = type === "stock" ? editDesign.stock : editDesign.khazana_stock;
+    
+            const numberValue = Number(value);
+            const newStockValue = numberValue !== 0 ? currentStock + numberValue : currentStock;
+            
+            if (type === "stock") {
+                setAddStock(newStockValue);
+            } else {
+                setAddKhazana(newStockValue);
+            }
+        
     };
 
     const editDesignbyId = (id) => {
- const updatedDesign = {
-    ...design ,
-    stock : addStock
- }
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/update_design/${id}`, {
+        const updatedDesign = {
+            ...design,
+            stock: addStock,
+            khazana_stock: addKhazana
+        }
+        fetch(`http://localhost:4000/api/cataloge_design/update_design/${id}`, {
             method: "PUT",
             headers: {
                 "Content-type": "application/json",
@@ -35,7 +47,7 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
             body: JSON.stringify(updatedDesign),
         })
             .then((result) => {
-          toast.success("Stock Updated Successfully");
+                toast.success("Stock Updated Successfully");
                 handlePageUpdate();
                 editDesignModelByAdd();
             })
@@ -89,11 +101,13 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
                                                     className="text-lg  py-4 font-semibold leading-6 text-gray-900 "
                                                 >
                                                     <div className='flex items-center justify-between'>
-                                                    <p>Catalogue  : <span className='font-normal text-blue-500'>{singlecataloge.cataloge_number} </span></p>
-                                                    <p>Current Stock  : <span className='font-normal text-blue-500'>{editDesign.stock} </span></p>
-
+                                                        <p>Catalogue  : <span className='font-normal text-blue-500'>{singlecataloge.cataloge_number} </span></p>
+                                                        <p className='mt-2'>Design Number  : <span className='font-normal text-blue-500'>{editDesign.design_number}</span> </p>
                                                     </div>
-                                                    <p className='mt-2'>Design Number  : <span className='font-normal text-blue-500'>{editDesign.design_number}</span> </p>
+                                                    <div className='flex items-center justify-between mt-3'>
+                                                        <p>Current Thaan  : <span className='font-normal text-blue-500'>{editDesign.stock} </span></p>
+                                                        <p>Current Khazana : <span className='font-normal text-blue-500'>{editDesign.khazana_stock} </span></p>
+                                                    </div>
 
 
                                                 </Dialog.Title>
@@ -105,7 +119,7 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
                                                                 htmlFor="stock"
                                                                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                                                             >
-                                                                Add Stock                            </label>
+                                                                Add Thaan                            </label>
                                                             <input
                                                                 type="number"
                                                                 name="stock"
@@ -113,13 +127,31 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
                                                                 min={0}
                                                                 // value={design.stock}
                                                                 onChange={(e) =>
-                                                                    handleInputChange(e.target.name, e.target.value)
+                                                                    handleInput(e.target.name, e.target.value)
                                                                 }
                                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                placeholder="Add Stock"
+                                                                placeholder="Add Thaan"
                                                             />
                                                         </div>
-
+                                                        <div>
+                                                            <label
+                                                                htmlFor="Khazana_stock"
+                                                                className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                                                            >
+                                                                Add Khazana                            </label>
+                                                            <input
+                                                                type="number"
+                                                                name="Khazana_stock"
+                                                                id="Khazana_stock"
+                                                                min={0}
+                                                                // value={design.stock}
+                                                                onChange={(e) =>
+                                                                    handleInput(e.target.name, e.target.value)
+                                                                }
+                                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                                placeholder="Add Khazana"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </form>
                                             </div>
@@ -129,7 +161,7 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
                                         <button
                                             type="button"
                                             className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                                            onClick={()=>editDesignbyId(editDesign._id)}
+                                            onClick={() => editDesignbyId(editDesign._id)}
                                         >
                                             Update
                                         </button>
