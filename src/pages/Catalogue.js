@@ -7,6 +7,7 @@ import AuthContext from '../AuthContext';
 import EditCatalogue from '../components/EditCatalogue';
 import DeleteCataloge from '../components/DeleteCataloge';
 import { ToastContainer } from 'react-toastify';
+import GlobalApiState from '../utilis/globalVariable';
 
 function Catalogue() {
     const authContext = useContext(AuthContext);
@@ -38,7 +39,7 @@ function Catalogue() {
 
 
     const fetchCatalogeData = () => {
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/list_cataloge/${authContext.user}`)
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/list_cataloge/${authContext.user}`)
             .then((response) => response.json())
             .then((data) => {
                 setAllCataloge(data);
@@ -46,7 +47,7 @@ function Catalogue() {
             .catch((err) => console.log(err));
     };
     const fetchSingleCatalogeData = (id) => {
-        fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/edit_cataloge/${id}`)
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/edit_cataloge/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleCataloge(data);

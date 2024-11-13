@@ -4,6 +4,7 @@ import React, { Fragment, useContext, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 import { toast } from 'react-toastify';
+import GlobalApiState from '../utilis/globalVariable';
 
 export default function AddDesign({ addDesignModel, handlePageUpdate, singlecataloge }) {
   const params = useParams();
@@ -15,10 +16,11 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     userId: authContext.user,
     design_number: '',
     stock: '',
+    khazana_stock : '',
     cataloge: singlecataloge._id,
   });
 
-  const [errors, setErrors] = useState({}); // To track validation errors
+  const [errors, setErrors] = useState({}); 
 
   const handleInputChange = (key, value) => {
     setDesignCataloge({ ...catalogeDesign, [key]: value });
@@ -44,7 +46,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length === 0) {
-      fetch('https://avera-stock-back-end.vercel.app/api/cataloge_design/add_design', {
+      fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/add_design`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
@@ -102,7 +104,10 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                           Catalogue: {singlecataloge.cataloge_number} <br />
                         </Dialog.Title>
                         <form action="#">
-                          <div className="grid gap-4 mb-4 sm:grid-cols-2">
+                          <div className='flex flex-col'>
+
+                         
+                          <div className="flex items-center ">
                             <div>
                               <label
                                 htmlFor="design_number"
@@ -126,12 +131,35 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                               )}
                             </div>
 
+                           
+                          </div>
+                          <div className="flex items-center justify-between gap-4 mt-4">
+                            <div>
+                              <label
+                                htmlFor="khazana_stock"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >
+                                Add Khazana
+                              </label>
+                              <input
+                                type="number"
+                                name="khazana_stock"
+                                id="khazana_stock"
+                                value={catalogeDesign.khazana_stock}
+                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                className={`bg-gray-50 border ${
+                                  errors.stock ? 'border-red-500' : 'border-gray-300'
+                                } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                placeholder="Khazana Stock"
+                              />
+                              {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
+                            </div>
                             <div>
                               <label
                                 htmlFor="stock"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                               >
-                                Add Stock
+                                Add Thaan
                               </label>
                               <input
                                 type="number"
@@ -142,11 +170,12 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                                 className={`bg-gray-50 border ${
                                   errors.stock ? 'border-red-500' : 'border-gray-300'
                                 } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                placeholder="Stock"
+                                placeholder="Thaan"
                               />
                               {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
                             </div>
                           </div>
+                          </div> 
                         </form>
                       </div>
                     </div>

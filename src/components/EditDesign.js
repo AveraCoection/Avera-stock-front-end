@@ -9,34 +9,45 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-    const [soldStock, setSoldStock] = useState(0)
+    const [soldStock, setSoldStock] = useState(editDesign.stock)
+    const [soldKhazana, setSoldKhazana] = useState(editDesign.khazana_stock)
     const [design, setDesign] = useState({
         id: editDesign._id,
         cataloge_number: editDesign.cataloge_number,
         stock: editDesign.stock,
+        khazana_stock: editDesign.khazana_stock
     });
 
-    const handleInputChange = (key, value) => {
-        const numberValue = Number(value);
-    
-        if (isNaN(numberValue)) {
-            console.error("Invalid number entered for stock.");
-            return; 
+    const handleInput = (type, value) => {
+        const currentStock = type === "stock" ? editDesign.stock : editDesign.khazana_stock;
+        const setStockFunction = type === "stock" ? setSoldStock : setSoldKhazana;
+        
+        // Check if the entered value exceeds the current stock for that type
+        if (value > currentStock) {
+            toast.error(`Sold Value should not be greater than Current ${type === "stock" ? "Thaan" : "Khazana"}`);
+        } else {
+            const numberValue = Number(value);
+            const newStockValue = numberValue !== 0 ? currentStock - numberValue : currentStock;
+            
+            if (type === "stock") {
+                setSoldStock(newStockValue);
+            } else {
+                setSoldKhazana(newStockValue);
+            }
         }
-    
-        setSoldStock(numberValue); 
     };
     
-
-    const editDesignbyId = async (id) => {
     
+    const editDesignbyId = async (id) => {
+
         const updateDesign = {
             ...design,
-            sell_stock: soldStock
+            stock: soldStock,
+            khazana_stock : soldKhazana
         };
-    
+
         try {
-            const response = await fetch(`https://avera-stock-back-end.vercel.app/api/cataloge_design/update_design/${id}`, {
+            const response = await fetch(`http://localhost:4000/api/cataloge_design/update_design/${id}`, {
                 method: "PUT",
                 //credentials: 'include', 
                 headers: {
@@ -44,30 +55,30 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                 },
                 body: JSON.stringify(updateDesign),
             });
-    
+
             if (!response.ok) {
                 const errorMessage = await response.text();
                 throw new Error(errorMessage || "Failed to update stock");
             }
-    
+
             const result = await response.json();
-    
+
             toast.success("Stock Updated Successfully");
-    
+
             handlePageUpdate();
             editDesignModel();
-    
+
         } catch (error) {
             if (error.name === 'TypeError') {
                 toast.error("Network error. Please check your connection.");
             } else {
                 toast.error(`Error: ${error.message}`);
             }
-    
+
             console.error("Error updating stock:", error);
         }
     };
-    
+
 
     return (
         <>
@@ -117,57 +128,61 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                                                 >
                                                     <div className='flex items-center justify-between'>
                                                         <p>Catalogue  :<span className='font-normal text-blue-500'>{singlecataloge.cataloge_number}</span>  </p>
-                                                        <p >Current Stock  : <span className='font-normal text-blue-500'>{editDesign.stock}</span>  </p>
+                                                        <p className='mt-2'>Design Number  : {editDesign.design_number} </p>
+
+                                                    </div>
+                                                    <div className='flex items-center justify-between'>
+                                                        <p >Current Thaan  : <span className='font-normal text-blue-500'>{editDesign.stock}</span>  </p>
+                                                        <p >Current Khazana  : <span className='font-normal text-blue-500'>{editDesign.khazana_stock}</span>  </p>
 
                                                     </div>
 
-                                                    <p className='mt-2'>Design Number  : {editDesign.design_number} </p>
 
 
                                                 </Dialog.Title>
                                                 <form action="#">
                                                     <div className="grid gap-4 mb-4 sm:grid-cols-2">
 
-                                                        {/* <div>
-                                                            <label
-                                                                htmlFor="stock"
-                                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                            >
-                                                                Add Stock                            </label>
-                                                            <input
-                                                                type="text"
-                                                                name="stock"
-                                                                id="stock"
-                                                                value={design.stock}
-                                                                onChange={(e) =>
-                                                                    handleInputChange(e.target.name, e.target.value)
-                                                                }
-                                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                placeholder="Stock"
-                                                            />
-                                                        </div> */}
+
 
                                                         <div>
                                                             <label
-                                                                htmlFor="sell_stock"
+                                                                htmlFor="stock"
                                                                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                                                             >
-                                                                Sell Stock
+                                                                Sell Thaan
                                                             </label>
                                                             <input
                                                                 type="number"
-                                                                name="sell_stock"
-                                                                id="sell_stock"
+                                                                name="stock"
+                                                                id="stock"
                                                                 min={"0"}
-                                                                value={design.sell_stock}
+                                                                // value={design.stock}
                                                                 onChange={(e) =>
-                                                                    handleInputChange(e.target.name, e.target.value)
+                                                                    handleInput(e.target.name, e.target.value)
                                                                 }
                                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                placeholder="sold stock"
+                                                                placeholder="sold than"
                                                             />
                                                         </div>
-
+                                                        <div>
+                                                            <label
+                                                                htmlFor="khazana_stock"
+                                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                                            >
+                                                                Sell Khazana                            </label>
+                                                            <input
+                                                                type="text"
+                                                                name="khazana_stock"
+                                                                id="khazana_stock"
+                                                                // value={design.khazana_stock}
+                                                                onChange={(e) =>
+                                                                    handleInput(e.target.name, e.target.value)
+                                                                }
+                                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                                placeholder="sold khazana"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </form>
                                             </div>

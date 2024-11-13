@@ -4,6 +4,7 @@ import React, { Fragment, useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import GlobalApiState from '../utilis/globalVariable';
 
 export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
   const [open, setOpen] = useState(true);
@@ -32,7 +33,7 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
     }
 
     try {
-      const response = await fetch("https://avera-stock-back-end.vercel.app/api/cataloge/add", {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/add`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
