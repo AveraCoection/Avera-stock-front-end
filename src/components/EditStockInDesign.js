@@ -3,6 +3,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import React, { Fragment, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import GlobalApiState from '../utilis/globalVariable';
 
 export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate, editDesign, singlecataloge }) {
     const params = useParams()
@@ -39,7 +40,7 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
             stock: addStock,
             khazana_stock: addKhazana
         }
-        fetch(`http://localhost:4000/api/cataloge_design/update_design/${id}`, {
+        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/update_design/${id}`, {
             method: "PUT",
             headers: {
                 "Content-type": "application/json",
