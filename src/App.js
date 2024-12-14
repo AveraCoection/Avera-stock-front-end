@@ -11,6 +11,9 @@ import ProtectedWrapper from "./ProtectedWrapper";
 import { useEffect, useState } from "react";
 import Catalogue from "./pages/Catalogue";
 import CatalogueDetail from "./pages/CatalogueDetail";
+import Buyers from "./pages/Buyers";
+import SoldCatalogeDetail from "./pages/SoldCatalogeDetail";
+import Billing from "./pages/Billing";
 // import { ToastContainer } from "react-toastify";
 
 const App = () => {
@@ -74,6 +77,9 @@ const App = () => {
             <Route index element={<Catalogue />} />
             {/* <Route path="/catalogue" element={<Catalogue />} /> */}
             <Route path="/catalogue-detail/:cataloge" element={<CatalogueDetail  />} />
+            <Route path="/buyer" element={<Buyers  />} />
+            <Route path="/sold-detail" element={<SoldCatalogeDetail  />} />
+            <Route path="/bill-detail" element={<Billing  />} />
           </Route>
           <Route path="*" element={<NoPageFound />} />
         </Routes>

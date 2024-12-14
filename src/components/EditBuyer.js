@@ -5,37 +5,40 @@ import AuthContext from '../AuthContext';
 import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 
-export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, singlecatalogue }) {
+export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuyer }) {
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
     const authContext = useContext(AuthContext);
 
-    const [cataloge, setCataloge] = useState({
-        id: singlecatalogue._id,
-        // userID: authContext.user,
-        cataloge_number: singlecatalogue.cataloge_number,
+    const [buyer, setBuyer] = useState({
+        id: singleBuyer._id,
+        buyer_name: singleBuyer.buyer_name,
+        phone_number: singleBuyer.phone_number,
     });
 
     const handleInputChange = (key, value) => {
-        setCataloge({ ...cataloge, [key]: value });
+        setBuyer({ ...buyer, [key]: value });
     };
 
-    const editCataloge = (id) => {
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/update_cataloge/${id}`, {
+    const editBuyer = (id) => {
+
+  const buyerData = {
+    ...buyer,
+    phone_number: Number(buyer.phone_number),
+  }
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/update_buyer/${id}`, {
             method: "PUT",
-            //credentials: 'include', 
             headers: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify(cataloge),
+            body: JSON.stringify(buyerData),
         })
             .then((result) => {
-                // alert("Cataloge Updated");
-          toast.success("Cataloge Updated Successfully");
+                toast.success("Buyer Updated Successfully");
 
                 handlePageUpdate();
-                editCatalogueModel();
+                editBuyerModel();
             })
             .catch((err) => console.log(err, "jj"));
     };
@@ -76,33 +79,45 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
                                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg overflow-y-scroll">
                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                         <div className="sm:flex sm:items-start">
-                                            {/* <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                                                <PlusIcon
-                                                    className="h-6 w-6 text-blue-400"
-                                                    aria-hidden="true"
-                                                />
-                                            </div> */}
                                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full ">
                                                 <Dialog.Title
                                                     as="h3"
                                                     className="text-lg  py-4 font-semibold leading-6 text-gray-900 "
                                                 >
-                                                    Catalogue
+                                                    Buyer
                                                 </Dialog.Title>
                                                 <form action="#">
                                                     <div className="flex gap-4 mb-4 items-center justify-center">
                                                         <div className='flex gap-4 mb-4 items-center justify-start w-full'>
                                                             <div>
                                                                 <label
-                                                                    htmlFor="cataloge_number"
+                                                                    htmlFor="buyer_name"
                                                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                                                 >
-                                                                    Catalogue Number                            </label>
+                                                                    Buyer Name                            </label>
                                                                 <input
                                                                     type="text"
-                                                                    name="cataloge_number"
-                                                                    id="cataloge_number"
-                                                                    value={cataloge.cataloge_number}
+                                                                    name="buyer_name"
+                                                                    id="buyer_name"
+                                                                    value={buyer.buyer_name}
+                                                                    onChange={(e) =>
+                                                                        handleInputChange(e.target.name, e.target.value)
+                                                                    }
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                                    placeholder="Name"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label
+                                                                    htmlFor="phone_number"
+                                                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                                                >
+                                                                    Phone Number                            </label>
+                                                                <input
+                                                                    type="number"
+                                                                    name="phone_number"
+                                                                    id="phone_number"
+                                                                    value={buyer.phone_number}
                                                                     onChange={(e) =>
                                                                         handleInputChange(e.target.name, e.target.value)
                                                                     }
@@ -117,14 +132,14 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
                                                         <button
                                                             type="button"
                                                             className="inline-flex w-full justify-end rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                                                            onClick={()=> editCataloge(singlecatalogue._id)}
+                                                            onClick={() => editBuyer(singleBuyer._id)}
                                                         >
                                                             Update
                                                         </button>
                                                         <button
                                                             type="button"
                                                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                                            onClick={() => editCatalogueModel()}
+                                                            onClick={() => editBuyerModel()}
                                                             ref={cancelButtonRef}
                                                         >
                                                             Cancel

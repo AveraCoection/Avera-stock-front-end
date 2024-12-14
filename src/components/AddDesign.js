@@ -18,6 +18,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     stock: '',
     khazana_stock : '',
     cataloge: singlecataloge._id,
+    price : ''
   });
 
   const [errors, setErrors] = useState({}); 
@@ -29,16 +30,18 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
   const validateForm = () => {
     const newErrors = {};
 
-    // Check if design_number is empty
     if (!catalogeDesign.design_number.trim()) {
       newErrors.design_number = 'Design Number is required';
     }
-
-    // Check if stock is empty
+    if (!catalogeDesign.price.trim()) {
+      newErrors.price = 'Price is required';
+    }
     if (!catalogeDesign.stock.trim()) {
       newErrors.stock = 'Stock is required';
     }
-
+    if (!catalogeDesign.khazana_stock.trim()) {
+      newErrors.khazana_stock = 'Khazana Stock is required';
+    }
     return newErrors;
   };
 
@@ -46,7 +49,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length === 0) {
-      fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/add_design`, {
+      fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/add_design`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
@@ -107,7 +110,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                           <div className='flex flex-col'>
 
                          
-                          <div className="flex items-center ">
+                          <div className="flex items-center gap-4 ">
                             <div>
                               <label
                                 htmlFor="design_number"
@@ -130,7 +133,28 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                                 <p className="text-red-500 text-xs mt-1">{errors.design_number}</p>
                               )}
                             </div>
-
+                            <div>
+                              <label
+                                htmlFor="price"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >
+                                Price
+                              </label>
+                              <input
+                                type="number"
+                                name="price"
+                                id="price"
+                                value={catalogeDesign.price}
+                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                className={`bg-gray-50 border ${
+                                  errors.price ? 'border-red-500' : 'border-gray-300'
+                                } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                placeholder="Price"
+                              />
+                              {errors.price && (
+                                <p className="text-red-500 text-xs mt-1">{errors.price}</p>
+                              )}
+                            </div>
                            
                           </div>
                           <div className="flex items-center justify-between gap-4 mt-4">
@@ -152,7 +176,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                                 } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
                                 placeholder="Khazana Stock"
                               />
-                              {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
+                              {errors.khazana_stock && <p className="text-red-500 text-xs mt-1">{errors.khazana_stock}</p>}
                             </div>
                             <div>
                               <label

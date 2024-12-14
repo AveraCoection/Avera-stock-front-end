@@ -12,6 +12,7 @@ import GlobalApiState from '../utilis/globalVariable';
 function Catalogue() {
     const authContext = useContext(AuthContext);
 
+    const [isLoading, setIsLoading] = useState(true);
     const [showCatalogueModal, setCatalogueModal] = useState(false);
     const [showEditCatalogueModal, setEditCatalogueModal] = useState(false);
     const [showDeleteCatalogueModal, setDeleteCatalogueModal] = useState(false);
@@ -37,17 +38,24 @@ function Catalogue() {
         element.cataloge_number.toLowerCase().includes(searchTerm.toLowerCase())  // Filter by catalogue number
     );
 
-
-    const fetchCatalogeData = () => {
-        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/list_cataloge/${authContext.user}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setAllCataloge(data);
-            })
-            .catch((err) => console.log(err));
+    const fetchCatalogeData = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${authContext.user}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setAllCataloge(data);
+        } catch (error) {
+            console.error("Error fetching catalog data:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
+    
     const fetchSingleCatalogeData = (id) => {
-        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/edit_cataloge/${id}`)
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/edit_cataloge/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleCataloge(data);
@@ -56,24 +64,8 @@ function Catalogue() {
     };
 
 
-    // const deleteItem = async (id) => {
-
-    //     try {
-    //         const response = await fetch(`https://avera-stock-back-end.vercel.app/api/cataloge/delete_cataloge/${id}`, {
-    //             method: 'DELETE'
-    //         });
-    //         const data = await response.json();
-
-    //         setUpdatePage(!updatePage);
-    //     } catch (error) {
-    //         console.error('Error deleting item:', error);
-    //     }
-    // };
-
-
     useEffect(() => {
         fetchCatalogeData();
-        // toast.success("hello")
     }, [updatePage]);
 
     return (
@@ -110,8 +102,17 @@ function Catalogue() {
                     )}
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
                         <ToastContainer />
-                        <div className="flex gap-4 justify-start items-start p-5 ">
+                        <div className="flex gap-4 justify-between items-start p-5 ">
                             <span className="font-bold">Catalogue Details</span>
+                            <div className="flex gap-4">
+                                <Link to={'/sold-detail'}>
+                                    <button
+                                        className="bg-green-600 hover:bg-green-700 text-white font-bold p-2 text-xs  rounded"
+                                    >
+                                        Sell Item
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
                         <div className="flex justify-between pt-5 pb-3 px-3">
                             <div className="flex justify-center items-center px-2 border-2 rounded-md ">
@@ -137,25 +138,30 @@ function Catalogue() {
                                 </button>
                             </div>
                         </div>
-                        <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
-                            <thead>
-                                <tr>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Catalogue Number
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        View book
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Edit
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Delete
-                                    </th>
-                                </tr>
-                            </thead>
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-32">
+                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-700"></div>
+                            </div>
+                        ) : (
+                            <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
+                                <thead>
+                                    <tr>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                                            Catalogue Number
+                                        </th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                                            View book
+                                        </th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                                            Edit
+                                        </th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                                            Delete
+                                        </th>
+                                    </tr>
+                                </thead>
 
-                            {/* <tbody className="divide-y divide-gray-200">
+                                {/* <tbody className="divide-y divide-gray-200">
 
                                 <tr>
                                     <td className="whitespace-nowrap px-4 py-2  text-gray-900">
@@ -172,15 +178,15 @@ function Catalogue() {
                                     </td>
                                 </tr>
                             </tbody> */}
-                            <tbody className="divide-y divide-gray-200">
-                                {
-                                    filteredCatalogue.length == 0 ? (
-                                        <tr>
-                                            <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
-                                                Record Not Found
-                                            </td>
-                                        </tr>) : (
-                                        
+                                <tbody className="divide-y divide-gray-200">
+                                    {
+                                        filteredCatalogue.length == 0 ? (
+                                            <tr>
+                                                <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
+                                                    Record Not Found
+                                                </td>
+                                            </tr>) : (
+
                                             filteredCatalogue.map((element, index) => {
                                                 return (
                                                     <tr key={element._id}>
@@ -197,7 +203,7 @@ function Catalogue() {
                                                                 // fetchSingleCatalogeData(element._id);
                                                                 editCatalogueModel(element)
                                                             }}>
-                                                                <FaRegEdit color="gray" size={22} cursor={'pointer'}
+                                                                <FaRegEdit color="#138808" size={22} cursor={'pointer'}
 
                                                                 />
                                                             </span>
@@ -205,7 +211,7 @@ function Catalogue() {
                                                         </td>
                                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">
 
-                                                            <RiDeleteBinLine color="gray" size={22} cursor={'pointer'}
+                                                            <RiDeleteBinLine color="#CC0000" size={22} cursor={'pointer'}
                                                                 // onClick={() => deleteItem(element._id)}
                                                                 onClick={() => {
                                                                     fetchSingleCatalogeData(element._id);
@@ -216,12 +222,15 @@ function Catalogue() {
                                                     </tr>
                                                 );
                                             })
-                                        
-                                    )
-                                }
 
-                            </tbody>
-                        </table>
+                                        )
+                                    }
+
+                                </tbody>
+                            </table>
+                        )}
+
+
                     </div>
                 </div>
             </div>

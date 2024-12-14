@@ -50,7 +50,7 @@ function Login() {
     }
   
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/login`, {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/login`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
