@@ -9,7 +9,7 @@ export default function DeleteCataloge({deleteCatalogueModel , setUpdatePage , u
     const deleteItem = async (id) => {
 
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/delete_cataloge/${singlecatalogue._id}`, {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/delete_cataloge/${singlecatalogue._id}`, {
                 method: 'DELETE'
             });
             const data = await response.json();

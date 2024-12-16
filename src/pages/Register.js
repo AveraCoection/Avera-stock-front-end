@@ -23,7 +23,7 @@ function Register() {
 
   const registerUser = async () => {
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/register`, {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

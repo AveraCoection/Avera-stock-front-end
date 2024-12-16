@@ -3,7 +3,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import React, { Fragment, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import GlobalApiState from "../utilis/globalVariable";
+import GlobalApiState from '../utilis/globalVariable';
 
 export default function EditDesignBySell({ editDesignModel, handlePageUpdate, editDesign, singlecataloge }) {
     const params = useParams()
@@ -48,7 +48,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
         };
 
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/update_design/${id}`, {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/update_design/${id}`, {
                 method: "PUT",
                 //credentials: 'include', 
                 headers: {

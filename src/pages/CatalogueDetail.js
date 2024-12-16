@@ -5,19 +5,25 @@ import AddDesign from '../components/AddDesign';
 import EditDesign from '../components/EditDesign';
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import DeleteDesign from '../components/DeleteDesign';
 import EditDesignBySell from '../components/EditDesign';
 import EditDesignByAdd from '../components/EditStockInDesign';
 import { ToastContainer } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
+import EditPrice from '../components/EditPrice';
+import { BsCashCoin } from "react-icons/bs";
+import { IoMdArrowBack } from "react-icons/io";
 
 export default function CatalogueDetail() {
     const params = useParams()
-
+    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
     const [showDesignModal, setDesignModal] = useState(false);
     const [showEditDesignModal, setEditDesignModal] = useState(false);
     const [showEditDesignModalSold, setEditDesignModalSold] = useState(false);
+    const [showPriceModal, setPriceModal] = useState(false);
     const [showDeleteDesignModal, setDeleteDesignModal] = useState(false);
     const [updatePage, setUpdatePage] = useState(true);
     const [catalogueDesign, setAllCatalogeDesign] = useState([]);
@@ -36,23 +42,35 @@ export default function CatalogueDetail() {
         setEditDesignModal(!showEditDesignModal);
         setEditDesign(element)
     };
+    const editPrice = (element) => {
+        setPriceModal(!showPriceModal);
+        setEditDesign(element)
+    };
     const handlePageUpdate = () => {
         setUpdatePage(!updatePage);
     };
     const deleteCatalogueModel = () => {
         setDeleteDesignModal(!showDeleteDesignModal);
     };
-    const fetchCatalogeData = () => {
-        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/list_design/${params.cataloge}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setAllCatalogeDesign(data);
-            })
-            .catch((err) => console.log(err));
+    const fetchCatalogeData = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/list_design/${params.cataloge}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setAllCatalogeDesign(data);
+        } catch (error) {
+            console.error("Error fetching catalog data:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
+
     const fetchSingleCatalogeData = () => {
-        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge/edit_cataloge/${params.cataloge}`)
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/edit_cataloge/${params.cataloge}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleCataloge(data);
@@ -60,13 +78,17 @@ export default function CatalogueDetail() {
             .catch((err) => console.log(err));
     };
     const fetchSingleDesignData = (id) => {
-        fetch(`${GlobalApiState.DEV_BASE_URL}/api/cataloge_design/edit_design/${id}`)
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/edit_design/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setSingleDesign(data);
             })
             .catch((err) => console.log(err));
     };
+
+    const filteredDesign = catalogueDesign.filter((element) =>
+        element.design_number.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     useEffect(() => {
         fetchCatalogeData();
@@ -103,6 +125,15 @@ export default function CatalogueDetail() {
                         />
                     )}
 
+                    {showPriceModal && (
+                        <EditPrice
+                            editPrice={editPrice}
+                            handlePageUpdate={handlePageUpdate}
+                            editDesign={editDesign}
+                            singlecataloge={singlecataloge}
+                        />
+                    )}
+
                     {showDeleteDesignModal && (
                         <DeleteDesign
                             deleteCatalogueModel={deleteCatalogueModel}
@@ -113,11 +144,18 @@ export default function CatalogueDetail() {
                     )}
 
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 pb-11">
-                        <div className="flex justify-between pt-5 pb-3 px-3">
+                        <ToastContainer />
+
+                        <div className=' flex justify-start p-4'>
+                            <IoMdArrowBack
+                                onClick={() => { navigate(-1) }}
+                                size={'22px'}
+                            />
+                        </div>
+                        <div className="flex justify-between  pb-3 px-3">
                             <div className="flex gap-4 justify-center items-center">
                                 <span className="font-bold">Catalogue : {singlecataloge.cataloge_number}</span>
                             </div>
-                            <ToastContainer />
                             <div className="flex gap-4">
                                 <button
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded"
@@ -126,84 +164,95 @@ export default function CatalogueDetail() {
                                     Add Design
                                 </button>
                             </div>
-                        </div>
-                        <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
-                            <thead>
-                                <tr>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Design Number
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Total Thaan
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Total Khazana
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Edit
-                                    </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                        Delete
-                                    </th>
-                                </tr>
-                            </thead>
 
-                            <tbody className="divide-y divide-gray-200">
-                                {catalogueDesign?.length === 0 ? (
+
+                        </div>
+
+                        <div className="flex justify-between pt-5 pb-3 px-3">
+                            <div className="flex justify-center items-center px-2 border-2 rounded-md ">
+                                <img
+                                    alt="search-icon"
+                                    className="w-5 h-5"
+                                    src={require("../assets/search-icon.png")}
+                                />
+                                <input
+                                    className="border-none outline-none text-xs"
+                                    type="text"
+                                    placeholder="Search here"
+                                    value={searchTerm} // Bind the input value to searchTerm state
+                                    onChange={(e) => setSearchTerm(e.target.value)} // Handle search term change
+                                />
+                            </div>
+                        </div>
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-32">
+                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-700"></div>
+                            </div>
+                        ) : (
+                            <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
+                                <thead>
                                     <tr>
-                                        <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
-                                            Record Not Found
-                                        </td>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Design Number</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Price</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Thaan</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Khazana</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Edit Price</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Add</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Delete</th>
                                     </tr>
-                                ) : (
-                                    catalogueDesign.map((element) => (
-                                        <tr key={element._id}>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                {element.design_number}
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                {element.stock}
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                {element.khazana_stock}
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                <span
-                                                    className='text-green-600 pr-2 cursor-pointer'
-                                                    onClick={() => {
-                                                        editDesignModelByAdd(element);
-                                                    }}
-                                                >
-                                                    Add
-                                                </span>
-                                                <span
-                                                    className='text-red-600 pr-2 cursor-pointer'
-                                                    onClick={() => {
-                                                        editDesignModel(element);
-                                                    }}
-                                                >
-                                                    Sold
-                                                </span>
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                <RiDeleteBinLine
-                                                    color="gray"
-                                                    size={22}
-                                                    cursor={'pointer'}
-                                                    onClick={() => {
-                                                        fetchSingleDesignData(element._id);
-                                                        deleteCatalogueModel();
-                                                    }}
-                                                />
+                                </thead>
+
+                                <tbody className="divide-y divide-gray-200">
+                                    {filteredDesign?.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
+                                                Record Not Found
                                             </td>
                                         </tr>
-                                    ))
-                                )}
+                                    ) : (
+                                        filteredDesign.map((element) => (
+                                            <tr key={element._id}>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.design_number}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.price} /per m</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.stock}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.khazana_stock}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                    <button
+                                                        className="flex items-center gap-1 border-2 border-[#CC0000] text-[#CC0000] p-1 rounded-md"
+                                                        onClick={() => editPrice(element)}
+                                                    >
+                                                        <BsCashCoin size={19} color="#CC0000" />
+                                                        Price
+                                                    </button>
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                    <button
+                                                        className="border-2 border-green-700 text-green-600 p-1 rounded-md"
+                                                        onClick={() => {
+                                                            editDesignModelByAdd(element);
+                                                        }}
+                                                    >
+                                                        <span className="text-green-600 px-1 cursor-pointer">Add</span>
+                                                    </button>
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                    <RiDeleteBinLine
+                                                        color="#CC0000"
+                                                        size={22}
+                                                        cursor="pointer"
+                                                        onClick={() => {
+                                                            fetchSingleDesignData(element._id);
+                                                            deleteCatalogueModel();
+                                                        }}
+                                                    />
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        )}
 
-
-                            </tbody>
-
-                        </table>
                     </div>
                 </div>
             </div>

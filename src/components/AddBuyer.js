@@ -6,58 +6,62 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GlobalApiState from '../utilis/globalVariable';
 
-export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
+export default function AddBuyer({ addBuyerModel, handlePageUpdate }) {
   const [open, setOpen] = useState(true);
-  const [error, setError] = useState("");
-  const cancelButtonRef = useRef(null);
+  const [error, setErrors] = useState({});
+    const cancelButtonRef = useRef(null);
   const authContext = useContext(AuthContext);
 
-  const [cataloge, setCataloge] = useState({
+  const [buyer, setCataloge] = useState({
     userId: authContext.user,
-    cataloge_number: "",
+    buyer_name: "",
+    phone_number : "",
   });
 
   // Function to handle input change
   const handleInputChange = (key, value) => {
-    setCataloge({ ...cataloge, [key]: value });
+    setCataloge({ ...buyer, [key]: value });
     if (value.trim()) {
-      setError("");
+      setErrors("");
     }
   };
+  const validateFields = () => {
+    const fieldErrors = {};
+    if (!buyer.buyer_name.trim()) {
+      fieldErrors.buyer_name = "Buyer Name is required";
+    }
+    if (!buyer.phone_number.trim()) {
+      fieldErrors.phone_number = "Phone Number is required";
+    }
+    setErrors(fieldErrors);
+    return Object.keys(fieldErrors).length === 0
+  }
 
-  // // Function to add cataloge
-  const addCataloge = async () => {
-    if (!cataloge.cataloge_number.trim()) {
-      setError("Catalogue Number is required");
+  const addBuyer = async () => {
+    if (!validateFields()) {
       return;
     }
-
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/add`, {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/add`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify(cataloge),
+        body: JSON.stringify(buyer),
       });
       if (response.status == 200) {
-        toast.success("Catalogue Added Successfully");
+        toast.success("Buyer Added Successfully");
       }
       handlePageUpdate();
-      addCatalogueModel();
+      addBuyerModel();
     } catch (err) {
       toast.error(`Error: ${err.message}`);
       console.error(err);
     }
   };
 
-
-  //   useEffect(() => {
-  // toast.success("hello")
-  // }, []);
   return (
     <>
-      {/* <ToastContainer /> */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -91,44 +95,65 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg overflow-y-scroll">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      {/* <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <PlusIcon
-                          className="h-6 w-6 text-blue-400"
-                          aria-hidden="true"
-                        />
-                      </div> */}
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left ">
                         <Dialog.Title
                           as="h3"
                           className="text-lg  py-4 font-semibold leading-6 text-gray-900 "
                         >
-                          Catalogue
+                          Buyer
                         </Dialog.Title>
                         <form action="#">
                           <div className="flex gap-4 mb-4 items-center justify-center">
                             <div className="flex gap-4 mb-4 items-center justify-center w-full">
                               <div>
                                 <label
-                                  htmlFor="cataloge_number"
+                                  htmlFor="buyer_name"
                                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 >
-                                  Catalogue Number
+                                  Buyer Name
                                 </label>
                                 <input
                                   type="text"
-                                  name="cataloge_number"
-                                  id="cataloge_number"
-                                  value={cataloge.cataloge_number}
+                                  name="buyer_name"
+                                  id="buyer_name"
+                                  value={buyer.buyer_name}
                                   onChange={(e) =>
                                     handleInputChange(e.target.name, e.target.value)
                                   }
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                  placeholder="Number"
+                                  placeholder="name"
                                 />
                                 {/* Error message */}
-                                {error && (
+                                {error.buyer_name && (
                                   <p className="mt-1 text-sm text-red-600">
-                                    {error}
+                                    {error.buyer_name}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex gap-4 mb-4 items-center justify-center w-full">
+                              <div>
+                                <label
+                                  htmlFor="phone_number"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Phone Number
+                                </label>
+                                <input
+                                  type="number"
+                                  name="phone_number"
+                                  id="phone_number"
+                                  value={buyer.phone_number}
+                                  onChange={(e) =>
+                                    handleInputChange(e.target.name, e.target.value)
+                                  }
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                  placeholder="number"
+                                />
+                                {/* Error message */}
+                                {error.phone_number && (
+                                  <p className="mt-1 text-sm text-red-600">
+                                    {error.phone_number}
                                   </p>
                                 )}
                               </div>
@@ -142,14 +167,14 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
                     <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                      onClick={addCataloge}
+                      onClick={addBuyer}
                     >
                       Add
                     </button>
                     <button
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => addCatalogueModel()}
+                      onClick={() => addBuyerModel()}
                       ref={cancelButtonRef}
                     >
                       Cancel
