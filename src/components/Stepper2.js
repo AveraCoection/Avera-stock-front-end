@@ -102,7 +102,7 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap ,ste
                                         <th className="border p-2">Sr No</th>
                                         <th className="border p-2">Catalogue</th>
                                         <th className="border p-2">Design</th>
-                                        <th className="border p-2">Khazana</th>
+                                        <th className="border p-2">Ghazana</th>
                                         <th className="border p-2">Price</th>
                                         <th className="border p-2">Total</th>
                                     </tr>

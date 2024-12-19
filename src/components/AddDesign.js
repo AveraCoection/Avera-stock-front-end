@@ -40,7 +40,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
       newErrors.stock = 'Stock is required';
     }
     if (!catalogeDesign.khazana_stock.trim()) {
-      newErrors.khazana_stock = 'Khazana Stock is required';
+      newErrors.khazana_stock = 'Ghazana Stock is required';
     }
     return newErrors;
   };
@@ -163,7 +163,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                                 htmlFor="khazana_stock"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                               >
-                                Add Khazana
+                                Add Ghazana
                               </label>
                               <input
                                 type="number"
@@ -174,7 +174,7 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                                 className={`bg-gray-50 border ${
                                   errors.stock ? 'border-red-500' : 'border-gray-300'
                                 } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                placeholder="Khazana Stock"
+                                placeholder="Ghazana Stock"
                               />
                               {errors.khazana_stock && <p className="text-red-500 text-xs mt-1">{errors.khazana_stock}</p>}
                             </div>
