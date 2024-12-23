@@ -195,7 +195,7 @@ export default function CatalogueDetail() {
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Design Number</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Price</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Thaan</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Khazana</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Ghazana</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Edit Price</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Add</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Delete</th>

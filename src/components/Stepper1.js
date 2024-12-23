@@ -119,7 +119,7 @@ export default function Stepper1({
         newErrors[`design-${index}`] = 'Design is required.';
       }
       if (!field.khazana || Number(field.khazana) <= 0) {
-        newErrors[`khazana-${index}`] = 'Khazana stock must be a positive number.';
+        newErrors[`khazana-${index}`] = 'Ghazana stock must be a positive number.';
       }
       if (field.error) {
         newErrors[`khazana-${index}`] = field.error;
@@ -334,7 +334,7 @@ export default function Stepper1({
                         htmlFor={`khazana-${index}`}
                         className="block mb-2 text-sm font-medium text-gray-700"
                       >
-                        Add Khazana
+                        Add Ghazana
                       </label>
                       <input
                         type="number"
@@ -344,7 +344,7 @@ export default function Stepper1({
                         min="0"
                         onChange={(e) => handleFieldChange(index, 'khazana', e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Khazana Stock"
+                        placeholder="Ghazana Stock"
                       />
                       {field.error && (
                         <span className="text-sm text-red-500 mt-1">{field.error}</span>

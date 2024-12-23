@@ -40,7 +40,7 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap ,ste
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        pdf.save(`${soldValue.buyer}_statement.pdf`);
+        pdf.save(`${soldValue.buyer.label}_statement.pdf`);
 
         try {
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/adds`, {
@@ -102,7 +102,7 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap ,ste
                                         <th className="border p-2">Sr No</th>
                                         <th className="border p-2">Catalogue</th>
                                         <th className="border p-2">Design</th>
-                                        <th className="border p-2">Khazana</th>
+                                        <th className="border p-2">Ghazana</th>
                                         <th className="border p-2">Price</th>
                                         <th className="border p-2">Total</th>
                                     </tr>

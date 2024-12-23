@@ -88,7 +88,7 @@ export default function EditPrice({ editPrice, handlePageUpdate, editDesign, sin
                                                     </div>
                                                     {/* <div className='flex items-center justify-between'>
                                                         <p >Current Thaan  : <span className='font-normal text-blue-500'>{editDesign.stock}</span>  </p>
-                                                        <p >Current Khazana  : <span className='font-normal text-blue-500'>{editDesign.khazana_stock}</span>  </p>
+                                                        <p >Current Ghazana  : <span className='font-normal text-blue-500'>{editDesign.khazana_stock}</span>  </p>
 
                                                     </div> */}
 

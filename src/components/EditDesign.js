@@ -25,7 +25,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
         
         // Check if the entered value exceeds the current stock for that type
         if (value > currentStock) {
-            toast.error(`Sold Value should not be greater than Current ${type === "stock" ? "Thaan" : "Khazana"}`);
+            toast.error(`Sold Value should not be greater than Current ${type === "stock" ? "Thaan" : "Ghazana"}`);
         } else {
             const numberValue = Number(value);
             const newStockValue = numberValue !== 0 ? currentStock - numberValue : currentStock;
@@ -134,7 +134,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                                                     </div>
                                                     <div className='flex items-center justify-between'>
                                                         <p >Current Thaan  : <span className='font-normal text-blue-500'>{editDesign.stock}</span>  </p>
-                                                        <p >Current Khazana  : <span className='font-normal text-blue-500'>{editDesign.khazana_stock}</span>  </p>
+                                                        <p >Current Ghazana  : <span className='font-normal text-blue-500'>{editDesign.khazana_stock}</span>  </p>
 
                                                     </div>
 
@@ -171,7 +171,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                                                                 htmlFor="khazana_stock"
                                                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                                             >
-                                                                Sell Khazana                            </label>
+                                                                Sell Ghazana                            </label>
                                                             <input
                                                                 type="text"
                                                                 name="khazana_stock"
