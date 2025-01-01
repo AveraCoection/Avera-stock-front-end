@@ -154,7 +154,7 @@ export default function CatalogueDetail() {
                         </div>
                         <div className="flex justify-between  pb-3 px-3">
                             <div className="flex gap-4 justify-center items-center">
-                                <span className="font-bold">Catalogue : {singlecataloge.cataloge_number}</span>
+                                <span className="font-bold text-[16px]">Catalogue : {singlecataloge.cataloge_number}</span>
                             </div>
                             <div className="flex gap-4">
                                 <button
@@ -192,13 +192,22 @@ export default function CatalogueDetail() {
                             <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                                 <thead>
                                     <tr>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Design Number</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Price</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Thaan</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Total Ghazana</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Edit Price</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Add</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">Delete</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Design Number</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Total Ghazana</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Total Thaan</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Price</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Edit Price</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Add</th>
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Edit</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                            Delete</th>
                                     </tr>
                                 </thead>
 
@@ -212,11 +221,15 @@ export default function CatalogueDetail() {
                                     ) : (
                                         filteredDesign.map((element) => (
                                             <tr key={element._id}>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.design_number}</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.price} /per m</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.stock}</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">{element.khazana_stock}</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                    {element.design_number}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                    {element.khazana_stock}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                    {element.stock}</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                    {element.price} /per m</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
                                                     <button
                                                         className="flex items-center gap-1 border-2 border-[#CC0000] text-[#CC0000] p-1 rounded-md"
                                                         onClick={() => editPrice(element)}
@@ -233,6 +246,16 @@ export default function CatalogueDetail() {
                                                         }}
                                                     >
                                                         <span className="text-green-600 px-1 cursor-pointer">Add</span>
+                                                    </button>
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                    <button
+                                                        className="border-2 border-red-700 text-red-600 p-1 rounded-md"
+                                                        onClick={() => {
+                                                            editDesignModel(element);
+                                                        }}
+                                                    >
+                                                        <span className="text-red-600 px-1 cursor-pointer">Edit</span>
                                                     </button>
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700">

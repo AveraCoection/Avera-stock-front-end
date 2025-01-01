@@ -108,7 +108,7 @@ export default function Stepper1({
   const validateFields = () => {
     const newErrors = {};
     if (!soldValue.buyer) {
-      newErrors.buyer = 'Buyer is required.';
+      newErrors.buyer = 'Party Name is required.';
     }
 
     fields.forEach((field, index) => {
@@ -174,7 +174,7 @@ export default function Stepper1({
                       htmlFor="buyer"
                       className="block mb-2 text-sm font-medium text-gray-700"
                     >
-                      Add Buyer
+                      Add Party Name
                     </label>
                     {/* <CreatableSelect
                       options={buyer.map((item) => ({
@@ -192,7 +192,7 @@ export default function Stepper1({
                           }
                           : null
                       }
-                      placeholder="Select a Buyer"
+                      placeholder="Select a Party Name"
                       className="shadow-sm rounded-lg border border-gray-200"
                     /> */}
                     <CreatableSelect
@@ -213,7 +213,7 @@ export default function Stepper1({
                           }
                           : null
                       }
-                      placeholder="Select a Buyer"
+                      placeholder="Select a Party Name"
                       className="shadow-sm rounded-lg border border-gray-200"
                     />
 

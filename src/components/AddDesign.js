@@ -11,17 +11,18 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
   const authContext = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [catalogeDesign, setDesignCataloge] = useState({
     userId: authContext.user,
     design_number: '',
     stock: '',
-    khazana_stock : '',
+    khazana_stock: '',
     cataloge: singlecataloge._id,
-    price : ''
+    price: ''
   });
 
-  const [errors, setErrors] = useState({}); 
+  const [errors, setErrors] = useState({});
 
   const handleInputChange = (key, value) => {
     setDesignCataloge({ ...catalogeDesign, [key]: value });
@@ -45,27 +46,36 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     return newErrors;
   };
 
-  const addCatalogeDesign = () => {
+  const addCatalogeDesign = async () => {
     const validationErrors = validateForm();
 
-    if (Object.keys(validationErrors).length === 0) {
-      fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/add_design`, {
-        method: 'POST',
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setIsLoading(true)
+    try {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/add_design`, {
+        method: "POST",
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
         },
         body: JSON.stringify(catalogeDesign),
-      })
-        .then((result) => {
-          // alert('Cataloge Design ADDED');
-          toast.success("Design Added Successfully");
-          handlePageUpdate();
-          addDesignModel();
-        })
-        .catch((err) => console.log(err));
-    } else {
-      // Set the validation errors
-      setErrors(validationErrors);
+      });
+
+      if (response.ok) {
+        toast.success("Design Added Successfully");
+        handlePageUpdate();
+        addDesignModel();
+      } else {
+        const errorData = await response.json();
+        toast.error(`Failed to add design: ${errorData.message || response.statusText}`);
+      }
+    } catch (err) {
+      toast.error(`Error: ${err.message}`);
+      console.error(err);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -109,97 +119,93 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                         <form action="#">
                           <div className='flex flex-col'>
 
-                         
-                          <div className="flex items-center gap-4 ">
-                            <div>
-                              <label
-                                htmlFor="design_number"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                              >
-                                Design Number
-                              </label>
-                              <input
-                                type="text"
-                                name="design_number"
-                                id="design_number"
-                                value={catalogeDesign.design_number}
-                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                className={`bg-gray-50 border ${
-                                  errors.design_number ? 'border-red-500' : 'border-gray-300'
-                                } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                placeholder="Number"
-                              />
-                              {errors.design_number && (
-                                <p className="text-red-500 text-xs mt-1">{errors.design_number}</p>
-                              )}
+
+                            <div className="flex items-center gap-4 ">
+                              <div>
+                                <label
+                                  htmlFor="design_number"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Design Number
+                                </label>
+                                <input
+                                  type="text"
+                                  name="design_number"
+                                  id="design_number"
+                                  value={catalogeDesign.design_number}
+                                  onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                  className={`bg-gray-50 border ${errors.design_number ? 'border-red-500' : 'border-gray-300'
+                                    } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                  placeholder="Number"
+                                />
+                                {errors.design_number && (
+                                  <p className="text-red-500 text-xs mt-1">{errors.design_number}</p>
+                                )}
+                              </div>
+                              <div>
+                                <label
+                                  htmlFor="price"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Price
+                                </label>
+                                <input
+                                  type="number"
+                                  name="price"
+                                  id="price"
+                                  value={catalogeDesign.price}
+                                  onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                  className={`bg-gray-50 border ${errors.price ? 'border-red-500' : 'border-gray-300'
+                                    } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                  placeholder="Price"
+                                />
+                                {errors.price && (
+                                  <p className="text-red-500 text-xs mt-1">{errors.price}</p>
+                                )}
+                              </div>
+
                             </div>
-                            <div>
-                              <label
-                                htmlFor="price"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                              >
-                                Price
-                              </label>
-                              <input
-                                type="number"
-                                name="price"
-                                id="price"
-                                value={catalogeDesign.price}
-                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                className={`bg-gray-50 border ${
-                                  errors.price ? 'border-red-500' : 'border-gray-300'
-                                } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                placeholder="Price"
-                              />
-                              {errors.price && (
-                                <p className="text-red-500 text-xs mt-1">{errors.price}</p>
-                              )}
-                            </div>
-                           
-                          </div>
-                          <div className="flex items-center justify-between gap-4 mt-4">
-                            <div>
-                              <label
-                                htmlFor="khazana_stock"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                              >
-                                Add Ghazana
-                              </label>
-                              <input
-                                type="number"
-                                name="khazana_stock"
-                                id="khazana_stock"
-                                value={catalogeDesign.khazana_stock}
-                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                className={`bg-gray-50 border ${
-                                  errors.stock ? 'border-red-500' : 'border-gray-300'
-                                } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                placeholder="Ghazana Stock"
-                              />
-                              {errors.khazana_stock && <p className="text-red-500 text-xs mt-1">{errors.khazana_stock}</p>}
-                            </div>
-                            <div>
-                              <label
-                                htmlFor="stock"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                              >
-                                Add Thaan
-                              </label>
-                              <input
-                                type="number"
-                                name="stock"
-                                id="stock"
-                                value={catalogeDesign.stock}
-                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                className={`bg-gray-50 border ${
-                                  errors.stock ? 'border-red-500' : 'border-gray-300'
-                                } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
-                                placeholder="Thaan"
-                              />
-                              {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
+                            <div className="flex items-center justify-between gap-4 mt-4">
+                              <div>
+                                <label
+                                  htmlFor="khazana_stock"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Add Ghazana
+                                </label>
+                                <input
+                                  type="number"
+                                  name="khazana_stock"
+                                  id="khazana_stock"
+                                  value={catalogeDesign.khazana_stock}
+                                  onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                  className={`bg-gray-50 border ${errors.stock ? 'border-red-500' : 'border-gray-300'
+                                    } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                  placeholder="Ghazana Stock"
+                                />
+                                {errors.khazana_stock && <p className="text-red-500 text-xs mt-1">{errors.khazana_stock}</p>}
+                              </div>
+                              <div>
+                                <label
+                                  htmlFor="stock"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Add Thaan
+                                </label>
+                                <input
+                                  type="number"
+                                  name="stock"
+                                  id="stock"
+                                  value={catalogeDesign.stock}
+                                  onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                  className={`bg-gray-50 border ${errors.stock ? 'border-red-500' : 'border-gray-300'
+                                    } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                  placeholder="Thaan"
+                                />
+                                {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
+                              </div>
                             </div>
                           </div>
-                          </div> 
                         </form>
                       </div>
                     </div>
@@ -207,10 +213,21 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                      className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500 text-white"
+                        }`}
                       onClick={addCatalogeDesign}
+                      disabled={isLoading}
                     >
-                      Add
+                    {isLoading ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+                           
+                          </div>
+                        ) : (
+                          <>
+                          <p>Add</p>
+                          </>
+                        )}
                     </button>
                     <button
                       type="button"

@@ -1,47 +1,25 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useRef, useState } from 'react'
 import GlobalApiState from "../utilis/globalVariable"
-import { toast } from 'react-toastify';
 
-export default function ConfirmPrice({ editPrice, handlePageUpdate, design, editDesign, deleteBuyerModel }) {
+export default function DeleteBill({deleteBillModel , setUpdatePage , updatePage , singleBill}) {
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-        const [isLoading, setIsLoading] = useState(false);
 
+    const deleteItem = async (id) => {
 
-    const editDesignbyId = async () => {
-
-        setIsLoading(true)
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/update_design/${editDesign._id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify(design),
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/delete_bill/${singleBill._id}`, {
+                method: 'DELETE'
             });
+            const data = await response.json();
 
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                throw new Error(errorMessage || "Failed to update stock");
-            }
-
-            const result = await response.json();
-
-            toast.success("Price Updated Successfully");
-
-            handlePageUpdate();
-            editPrice();
-
+            setUpdatePage(!updatePage);
         } catch (error) {
-          
-            
-            toast.error(`Error: ${error.message}`);
-        }finally{
-        setIsLoading(false)
-
+            console.error('Error deleting item:', error);
         }
     };
+
 
     return (
         <>
@@ -78,40 +56,26 @@ export default function ConfirmPrice({ editPrice, handlePageUpdate, design, edit
                                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                         <p className="text-xl text-center text-gray-500">
-                                            Are you sure you want to change the price, which was previously {editDesign.price}?
-                                        </p>
+                                            Are you sure you want to delete this Bill?</p>
                                     </div>
 
                                     <div className="m-4 flex justify-end gap-4">
                                         <button
                                             type="button"
                                             className="inline-flex justify-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-400"
-                                            ref={cancelButtonRef}
-                                            onClick={() => deleteBuyerModel()}                                       >
+                                            ref={cancelButtonRef} 
+                                            onClick={()=>deleteBillModel()}                                       >
                                             Cancel
                                         </button>
                                         <button
                                             type="button"
-                                            className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-500 text-white"
-                                            }`}    
-                                            disabled={isLoading}
-                                             onClick={() => {
-                                                deleteBuyerModel()
-                                                editDesignbyId()
-                                            }}
-                                            ref={cancelButtonRef}
+                                            className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
+                                            onClick={()=>{deleteBillModel()
+                                                deleteItem()}}
+                                            ref={cancelButtonRef} 
 
                                         >
-                                           {isLoading ? (
-                                                                <div className="flex items-center">
-                                                                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-
-                                                                </div>
-                                                            ) : (
-                                                                <>
-                                                                    <p>Change</p>
-                                                                </>
-                                                            )}
+                                            Delete
                                         </button>
                                     </div>
                                 </Dialog.Panel>

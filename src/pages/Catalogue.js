@@ -53,7 +53,7 @@ function Catalogue() {
             setIsLoading(false);
         }
     };
-    
+
     const fetchSingleCatalogeData = (id) => {
         fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/edit_cataloge/${id}`)
             .then((response) => response.json())
@@ -102,7 +102,7 @@ function Catalogue() {
                     )}
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
                         <ToastContainer />
-                        <div className="flex gap-4 justify-between items-start p-5 ">
+                        <div className="flex gap-4 justify-between items-start p-5 font-bold ">
                             <span className="font-bold">Catalogue Details</span>
                             <div className="flex gap-4">
                                 <Link to={'/sold-detail'}>
@@ -146,17 +146,13 @@ function Catalogue() {
                             <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                                 <thead>
                                     <tr>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                            Catalogue Number
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                            Catalogue Number
                                         </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                            View book
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                            View book
                                         </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                            Edit
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                            Edit
                                         </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                                            Delete
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                            Delete
                                         </th>
                                     </tr>
                                 </thead>
@@ -191,11 +187,11 @@ function Catalogue() {
                                                 return (
                                                     <tr key={element._id}>
 
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
                                                             {element.cataloge_number}
                                                         </td>
 
-                                                        <td className="whitespace-nowrap px-4 py-2 text-blue-500 " >
+                                                        <td className="whitespace-nowrap px-4 py-2 text-blue-500 text-[16px] font-bold " >
                                                             <Link to={`/catalogue-detail/${element._id}`} >View Detail</Link>
                                                         </td>
                                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">
