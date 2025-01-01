@@ -10,6 +10,8 @@ function Login() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
@@ -42,13 +44,13 @@ function Login() {
 
   const loginUser = async (e) => {
     e.preventDefault();  // Prevent form submission default behavior
-  
+    setIsLoading(true)
     // Cannot send empty data
     if (form.email === "" || form.password === "") {
       toast.warning("Please enter both email and password to proceed.");
       return;
     }
-  
+
     try {
       const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/login`, {
         method: "POST",
@@ -57,33 +59,33 @@ function Login() {
         },
         body: JSON.stringify(form),
       });
-  
+
       if (!response.ok) {
         throw new Error("Login failed. Please check your credentials.");
       }
-  
+
       // Parse the response data
       const data = await response.json();
-  
+
       // Store user data in local storage
       localStorage.setItem("user", JSON.stringify(data));
-  
+
       // Show success toast
       toast.success("Successfully Logged in!");
-  
+
       // Sign the user in and navigate after 1 second delay
       authContext.signin(data._id, () => {
         setTimeout(() => {
           navigate("/");
         }, 1000);
       });
-  
+
     } catch (err) {
       toast.error(err.message || "Something went wrong during login.");
       console.error(err);
     }
   };
-  
+
 
 
   const handleSubmit = (e) => {
@@ -182,16 +184,41 @@ function Login() {
             <div>
               <button
                 type="submit"
-                className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className={`group relative flex w-full justify-center rounded-md py-2 px-3 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${isLoading
+                    ? 'bg-indigo-400 cursor-not-allowed'
+                    : 'bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600'
+                  }`}
                 onClick={loginUser}
+                disabled={isLoading}
               >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  {/* <LockClosedIcon
-                    className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                    aria-hidden="true"
-                  /> */}
+                  {isLoading ? (
+                    <svg
+                      className="h-5 w-5 animate-spin text-indigo-200"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 000 8v4a8 8 0 01-8-8z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    // Optional: Add an icon or leave blank
+                    <span></span>
+                  )}
                 </span>
-                Sign in
+                {isLoading ? 'Loading...' : 'Sign in'}
               </button>
               <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
