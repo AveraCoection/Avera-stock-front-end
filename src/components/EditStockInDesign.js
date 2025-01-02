@@ -12,49 +12,61 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
     const cancelButtonRef = useRef(null);
     const [addStock, setAddStock] = useState(editDesign.stock);
     const [addKhazana, setAddKhazana] = useState(editDesign.khazana_stock);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [design, setDesign] = useState({
         id: editDesign._id,
         cataloge_number: editDesign.cataloge_number,
         stock: editDesign.stock,
         khazana_stock: editDesign.khazana_stock,
-        price :editDesign.price
+        price: editDesign.price
     });
 
     const handleInput = (type, value) => {
         const currentStock = type === "stock" ? editDesign.stock : editDesign.khazana_stock;
-    
-            const numberValue = Number(value);
-            const newStockValue = numberValue !== 0 ? currentStock + numberValue : currentStock;
-            
-            if (type === "stock") {
-                setAddStock(newStockValue);
-            } else {
-                setAddKhazana(newStockValue);
-            }
-        
+
+        const numberValue = Number(value);
+        const newStockValue = numberValue !== 0 ? currentStock + numberValue : currentStock;
+
+        if (type === "stock") {
+            setAddStock(newStockValue);
+        } else {
+            setAddKhazana(newStockValue);
+        }
+
     };
 
-    const editDesignbyId = (id) => {
+    const editDesignbyId = async (id) => {
         const updatedDesign = {
             ...design,
             stock: addStock,
-            khazana_stock: addKhazana
+            khazana_stock: addKhazana,
+        };
+        setIsLoading(true)
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/update_design/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(updatedDesign),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            toast.success("Stock Updated Successfully");
+            handlePageUpdate();
+            editDesignModelByAdd();
+        } catch (error) {
+            toast.error("Failed to update design. Please try again.");
+        } finally {
+            setIsLoading(false)
+
         }
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/update_design/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(updatedDesign),
-        })
-            .then((result) => {
-                toast.success("Stock Updated Successfully");
-                handlePageUpdate();
-                editDesignModelByAdd();
-            })
-            .catch((err) => console.log(err, "jj"));
     };
+
 
     return (
         <>
@@ -162,10 +174,21 @@ export default function EditDesignByAdd({ editDesignModelByAdd, handlePageUpdate
                                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                         <button
                                             type="button"
-                                            className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                                            onClick={() => editDesignbyId(editDesign._id)}
+                                            className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500 text-white"
+                                            }`}    
+                                            disabled={isLoading}
+                                              onClick={() => editDesignbyId(editDesign._id)}
                                         >
-                                            Update
+                                           {isLoading ? (
+                                                                <div className="flex items-center">
+                                                                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    <p>Update</p>
+                                                                </>
+                                                            )}
                                         </button>
                                         <button
                                             type="button"

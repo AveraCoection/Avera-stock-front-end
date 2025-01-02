@@ -14,6 +14,7 @@ import CatalogueDetail from "./pages/CatalogueDetail";
 import Buyers from "./pages/Buyers";
 import SoldCatalogeDetail from "./pages/SoldCatalogeDetail";
 import Billing from "./pages/Billing";
+import BillHistory from "./pages/BillHistory";
 // import { ToastContainer } from "react-toastify";
 
 const App = () => {
@@ -79,7 +80,8 @@ const App = () => {
             <Route path="/catalogue-detail/:cataloge" element={<CatalogueDetail  />} />
             <Route path="/buyer" element={<Buyers  />} />
             <Route path="/sold-detail" element={<SoldCatalogeDetail  />} />
-            <Route path="/bill-detail" element={<Billing  />} />
+            <Route path="/billing-detail" element={<Billing  />} />
+            <Route path="/bill-history/:id" element={<BillHistory  />} />
           </Route>
           <Route path="*" element={<NoPageFound />} />
         </Routes>

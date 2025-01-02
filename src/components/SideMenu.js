@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { GrCatalog  } from 'react-icons/gr'; // FontAwesome List icon
+import { GrCatalog  } from 'react-icons/gr';
 import { IoIosPerson } from "react-icons/io";
+import { FaFileInvoiceDollar } from "react-icons/fa";
+
 function SideMenu() {
   const localStorageData = JSON.parse(localStorage.getItem("user"));
 
@@ -82,6 +84,14 @@ function SideMenu() {
             {/* <img alt="sale-icon" src={require("../assets/supplier-icon.png")} /> */}
             <IoIosPerson  size={20} color="grey" />
             <span className="text-sm font-medium">Buyer</span>
+          </Link>
+          <Link
+            to="/billing-detail"
+            className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          >
+            {/* <img alt="sale-icon" src={require("../assets/supplier-icon.png")} /> */}
+            <FaFileInvoiceDollar   size={20} color="grey" />
+            <span className="text-sm font-medium">Bills</span>
           </Link>
         </nav>
       </div>

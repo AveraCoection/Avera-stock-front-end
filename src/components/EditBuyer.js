@@ -10,6 +10,7 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
     const authContext = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [buyer, setBuyer] = useState({
         id: singleBuyer._id,
@@ -21,27 +22,35 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
         setBuyer({ ...buyer, [key]: value });
     };
 
-    const editBuyer = (id) => {
-
-  const buyerData = {
-    ...buyer,
-    phone_number: Number(buyer.phone_number),
-  }
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/update_buyer/${id}`, {
+    const editBuyer = async (id) => {
+        const buyerData = {
+          ...buyer,
+          phone_number: Number(buyer.phone_number),
+        };
+        setIsLoading(true)
+        try {
+          const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/update_buyer/${id}`, {
             method: "PUT",
             headers: {
-                "Content-type": "application/json",
+              "Content-type": "application/json",
             },
             body: JSON.stringify(buyerData),
-        })
-            .then((result) => {
-                toast.success("Buyer Updated Successfully");
+          });
+      
+          if (response.ok) {
+            toast.success("Buyer Updated Successfully");
+            handlePageUpdate();
+            editBuyerModel();
+          }
+        } catch (err) {
+          toast.error(`Error: ${err.message}`);
+          console.error(err);
+        }finally{
+            setIsLoading(false)
 
-                handlePageUpdate();
-                editBuyerModel();
-            })
-            .catch((err) => console.log(err, "jj"));
-    };
+        }
+      };
+      
 
 
     return (
@@ -131,10 +140,21 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
                                                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                                         <button
                                                             type="button"
-                                                            className="inline-flex w-full justify-end rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                                                            className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500 text-white"
+                                                            }`}    
+                                                            disabled={isLoading}
                                                             onClick={() => editBuyer(singleBuyer._id)}
                                                         >
-                                                            Update
+                                                            {isLoading ? (
+                                                                <div className="flex items-center">
+                                                                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    <p>Update</p>
+                                                                </>
+                                                            )}
                                                         </button>
                                                         <button
                                                             type="button"

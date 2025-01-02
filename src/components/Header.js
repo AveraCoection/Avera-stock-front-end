@@ -2,7 +2,7 @@ import { Fragment, useContext } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import AuthContext from "../AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const navigation = [
   { name: "Dashboard", href: "/", current: true },
@@ -22,6 +22,7 @@ function classNames(...classes) {
 export default function Header() {
   const authContext = useContext(AuthContext);
   const localStorageData = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   return (
     <>
       <div className="min-h-full">
@@ -42,6 +43,7 @@ export default function Header() {
                           className="h-11 w-11 rounded-full"
                           src={require("../assets/brandLogo.jpg")}
                           alt="Inventory Management System"
+                          onClick={()=>navigate("/")}
                         />
                         {/* <span className="font-bold text-white italic">
                           Inventory Management

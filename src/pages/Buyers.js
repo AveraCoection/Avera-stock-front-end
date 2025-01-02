@@ -48,7 +48,7 @@ export default function Buyers() {
             setAllBuyer(data);
         } catch (error) {
             console.error("Error fetching buyer data:", error);
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     };
@@ -129,17 +129,13 @@ export default function Buyers() {
                         <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                             <thead>
                                 <tr>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">
-                                        Buyer Name
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Buyer Name
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">
-                                        Phone number
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Phone number
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">
-                                        Edit
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Edit
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900">
-                                        Delete
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Delete
                                     </th>
                                 </tr>
                             </thead>
@@ -163,13 +159,13 @@ export default function Buyers() {
                                     ) : (
                                         filteredCatalogue.map((element) => (
                                             <tr key={element._id}>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
                                                     {element.buyer_name}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
                                                     {element.phone_number}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
                                                     <span onClick={() => editBuyerModel(element)}>
                                                         <FaRegEdit
                                                             color="#138808"
@@ -178,7 +174,7 @@ export default function Buyers() {
                                                         />
                                                     </span>
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
                                                     <RiDeleteBinLine
                                                         color="#CC0000"
                                                         size={22}

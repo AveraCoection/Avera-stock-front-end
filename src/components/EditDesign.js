@@ -16,36 +16,40 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
         id: editDesign._id,
         cataloge_number: editDesign.cataloge_number,
         stock: editDesign.stock,
-        khazana_stock: editDesign.khazana_stock
+        khazana_stock: editDesign.khazana_stock,
+        price : editDesign.price
     });
 
-    const handleInput = (type, value) => {
-        const currentStock = type === "stock" ? editDesign.stock : editDesign.khazana_stock;
-        const setStockFunction = type === "stock" ? setSoldStock : setSoldKhazana;
+    const handleInput = (key, value) => {
+        setDesign({...design ,[key]: value})
+
+        // const currentStock = type === "stock" ? editDesign.stock : editDesign.khazana_stock;
+        // const setStockFunction = type === "stock" ? setSoldStock : setSoldKhazana;
         
-        // Check if the entered value exceeds the current stock for that type
-        if (value > currentStock) {
-            toast.error(`Sold Value should not be greater than Current ${type === "stock" ? "Thaan" : "Ghazana"}`);
-        } else {
-            const numberValue = Number(value);
-            const newStockValue = numberValue !== 0 ? currentStock - numberValue : currentStock;
+        // // Check if the entered value exceeds the current stock for that type
+        // if (value > currentStock) {
+        //     toast.error(`Sold Value should not be greater than Current ${type === "stock" ? "Thaan" : "Ghazana"}`);
+        // } else {
+        //     const numberValue = Number(value);
+        //     const newStockValue = numberValue !== 0 ? currentStock - numberValue : currentStock;
             
-            if (type === "stock") {
-                setSoldStock(newStockValue);
-            } else {
-                setSoldKhazana(newStockValue);
-            }
-        }
+        //     if (type === "stock") {
+        //         setSoldStock(newStockValue);
+        //     } else {
+        //         setSoldKhazana(newStockValue);
+        //     }
+        // }
+
     };
     
     
     const editDesignbyId = async (id) => {
 
-        const updateDesign = {
-            ...design,
-            stock: soldStock,
-            khazana_stock : soldKhazana
-        };
+        // const updateDesign = {
+        //     ...design,
+        //     stock: soldStock,
+        //     khazana_stock : soldKhazana
+        // };
 
         try {
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/update_design/${id}`, {
@@ -54,7 +58,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify(updateDesign),
+                body: JSON.stringify(design),
             });
 
             if (!response.ok) {
@@ -132,11 +136,11 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                                                         <p className='mt-2'>Design Number  : {editDesign.design_number} </p>
 
                                                     </div>
-                                                    <div className='flex items-center justify-between'>
+                                                    {/* <div className='flex items-center justify-between'>
                                                         <p >Current Thaan  : <span className='font-normal text-blue-500'>{editDesign.stock}</span>  </p>
                                                         <p >Current Ghazana  : <span className='font-normal text-blue-500'>{editDesign.khazana_stock}</span>  </p>
 
-                                                    </div>
+                                                    </div> */}
 
 
 
@@ -151,14 +155,14 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                                                                 htmlFor="stock"
                                                                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                                                             >
-                                                                Sell Thaan
+                                                                Edit Thaan
                                                             </label>
                                                             <input
                                                                 type="number"
                                                                 name="stock"
                                                                 id="stock"
                                                                 min={"0"}
-                                                                // value={design.stock}
+                                                                value={design.stock}
                                                                 onChange={(e) =>
                                                                     handleInput(e.target.name, e.target.value)
                                                                 }
@@ -171,12 +175,12 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                                                                 htmlFor="khazana_stock"
                                                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                                             >
-                                                                Sell Ghazana                            </label>
+                                                                Edit Ghazana                            </label>
                                                             <input
                                                                 type="text"
                                                                 name="khazana_stock"
                                                                 id="khazana_stock"
-                                                                // value={design.khazana_stock}
+                                                                value={design.khazana_stock}
                                                                 onChange={(e) =>
                                                                     handleInput(e.target.name, e.target.value)
                                                                 }

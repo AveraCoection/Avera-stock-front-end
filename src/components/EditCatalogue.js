@@ -10,6 +10,7 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
     const authContext = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [cataloge, setCataloge] = useState({
         id: singlecatalogue._id,
@@ -21,24 +22,35 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
         setCataloge({ ...cataloge, [key]: value });
     };
 
-    const editCataloge = (id) => {
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/update_cataloge/${id}`, {
-            method: "PUT",
-            //credentials: 'include', 
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(cataloge),
-        })
-            .then((result) => {
-                // alert("Cataloge Updated");
-          toast.success("Cataloge Updated Successfully");
-
-                handlePageUpdate();
-                editCatalogueModel();
-            })
-            .catch((err) => console.log(err, "jj"));
+    const editCataloge = async (id) => {
+        setIsLoading(true)
+       
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/update_cataloge/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(cataloge),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+    
+            // alert("Cataloge Updated");
+            toast.success("Cataloge Updated Successfully");
+    
+            handlePageUpdate();
+            editCatalogueModel();
+        } catch (error) {
+            console.error("Error updating cataloge:", error);
+            toast.error("Failed to update cataloge. Please try again.");
+        }finally{
+            setIsLoading(false)
+        }
     };
+    
 
 
     return (
@@ -116,10 +128,21 @@ export default function EditCatalogue({ editCatalogueModel, handlePageUpdate, si
                                                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                                         <button
                                                             type="button"
-                                                            className="inline-flex w-full justify-end rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                                                            onClick={()=> editCataloge(singlecatalogue._id)}
+                                                            className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500 text-white"
+                                                            }`}    
+                                                            disabled={isLoading}
+                                                             onClick={()=> editCataloge(singlecatalogue._id)}
                                                         >
-                                                            Update
+                                                            {isLoading ? (
+                                                                <div className="flex items-center">
+                                                                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    <p>Update</p>
+                                                                </>
+                                                            )}
                                                         </button>
                                                         <button
                                                             type="button"
