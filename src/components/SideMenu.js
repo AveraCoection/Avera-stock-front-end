@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { GrCatalog  } from 'react-icons/gr';
+import { GrCatalog } from 'react-icons/gr';
 import { IoIosPerson } from "react-icons/io";
 import { FaFileInvoiceDollar } from "react-icons/fa";
+import { Avatar } from "@mui/material";
 
 function SideMenu() {
   const localStorageData = JSON.parse(localStorage.getItem("user"));
@@ -82,7 +83,7 @@ function SideMenu() {
             className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
           >
             {/* <img alt="sale-icon" src={require("../assets/supplier-icon.png")} /> */}
-            <IoIosPerson  size={20} color="grey" />
+            <IoIosPerson size={20} color="grey" />
             <span className="text-sm font-medium">Buyer</span>
           </Link>
           <Link
@@ -90,7 +91,7 @@ function SideMenu() {
             className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
           >
             {/* <img alt="sale-icon" src={require("../assets/supplier-icon.png")} /> */}
-            <FaFileInvoiceDollar   size={20} color="grey" />
+            <FaFileInvoiceDollar size={20} color="grey" />
             <span className="text-sm font-medium">Bills</span>
           </Link>
         </nav>
@@ -98,10 +99,10 @@ function SideMenu() {
 
       <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
         <div className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
-          <img
-            alt="Profile"
-            src={localStorageData.imageUrl}
-            className="h-10 w-10 rounded-full object-cover"
+          <Avatar
+            alt={localStorageData.name || "User"}
+            src={localStorageData.profilePicture || ""}
+            sx={{ width: 54, height: 54, mb: 2 }}
           />
 
           <div>

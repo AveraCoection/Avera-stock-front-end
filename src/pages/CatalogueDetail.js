@@ -68,7 +68,6 @@ export default function CatalogueDetail() {
         }
     };
 
-
     const fetchSingleCatalogeData = () => {
         fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/edit_cataloge/${params.cataloge}`)
             .then((response) => response.json())
@@ -98,7 +97,7 @@ export default function CatalogueDetail() {
     return (
         <>
             <div className="col-span-12 lg:col-span-10 flex justify-center">
-                <div className="flex flex-col gap-5 w-11/12">
+                <div className="flex flex-col gap-5 w-full lg:w-11/12">
                     {showDesignModal && (
                         <AddDesign
                             addDesignModel={addDesignModel}
@@ -146,13 +145,13 @@ export default function CatalogueDetail() {
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 pb-11">
                         <ToastContainer />
 
-                        <div className=' flex justify-start p-4'>
+                        <div className='flex justify-start p-4'>
                             <IoMdArrowBack
                                 onClick={() => { navigate(-1) }}
                                 size={'22px'}
                             />
                         </div>
-                        <div className="flex justify-between  pb-3 px-3">
+                        <div className="flex justify-between pb-3 px-3">
                             <div className="flex gap-4 justify-center items-center">
                                 <span className="font-bold text-[16px]">Catalogue : {singlecataloge.cataloge_number}</span>
                             </div>
@@ -164,19 +163,17 @@ export default function CatalogueDetail() {
                                     Add Design
                                 </button>
                             </div>
-
-
                         </div>
 
                         <div className="flex justify-between pt-5 pb-3 px-3">
-                            <div className="flex justify-center items-center px-2 border-2 rounded-md ">
+                            <div className="flex justify-center items-center px-2 border-2 rounded-md w-full lg:w-auto">
                                 <img
                                     alt="search-icon"
                                     className="w-5 h-5"
                                     src={require("../assets/search-icon.png")}
                                 />
                                 <input
-                                    className="border-none outline-none text-xs"
+                                    className="border-none outline-none text-xs w-full lg:w-auto"
                                     type="text"
                                     placeholder="Search here"
                                     value={searchTerm} // Bind the input value to searchTerm state
@@ -192,21 +189,21 @@ export default function CatalogueDetail() {
                             <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                                 <thead>
                                     <tr>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Design Number</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Total Ghazana</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Total Thaan</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Price</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Edit Price</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Add</th>
-                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Edit</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Delete</th>
                                     </tr>
                                 </thead>
@@ -221,15 +218,15 @@ export default function CatalogueDetail() {
                                     ) : (
                                         filteredDesign.map((element) => (
                                             <tr key={element._id}>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                     {element.design_number}</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                     {element.khazana_stock}</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                     {element.stock}</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
-                                                    {element.price} /per m</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[16px] font-bold">
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
+                                                    {element.price} /per gaz</td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                     <button
                                                         className="flex items-center gap-1 border-2 border-[#CC0000] text-[#CC0000] p-1 rounded-md"
                                                         onClick={() => editPrice(element)}

@@ -160,15 +160,15 @@ export default function Stepper1({
 
   return (
     <>
-      <div className="flex items-center justify-center w-[80vw] min-h-[100vh] bg-gray-100 relative ">
-        <div className="flex items-center justify-center md:w-[60vw]">
-          <div className="w-[100vw] md:w-[80vw] lg:w-[60vw] min-h-[90vh] mx-auto mb-4 p-6 bg-white shadow-lg rounded-xl relative">
-            <h3 className="text-xl py-4 font-bold text-gray-800 border-b border-gray-300">
+      <div className="flex items-center justify-center lg:w-[80vw] md:w-[100vw] w-[100vw]  min-h-[100vh] relative ">
+        <div className="flex items-center justify-center md:w-[75vw] mx-7">
+          <div className="md:w-[80vw] w-[85vw] lg:w-[60vw] min-h-[90vh] mx-auto mb-4 md:p-6 p-2 bg-white shadow-lg rounded-xl relative">
+            <h3 className="text-xl md:py-4 py-1 font-bold text-gray-800 border-b border-gray-300">
               Sold Details
             </h3>
             <form className="flex flex-col pb-11 ">
               <div>
-                <div className="flex flex-col md:flex-row gap-6 mt-6">
+                <div className="flex flex-col md:flex-row md:gap-6 gap-0 md:mt-6 mt-1">
                   <div className="w-full">
                     <label
                       htmlFor="buyer"
@@ -258,7 +258,7 @@ export default function Stepper1({
                 </div>
 
                 {fields.map((field, index) => (
-                  <div key={index} className="flex flex-col md:flex-row gap-6 mt-3">
+                  <div key={index} className="flex flex-col md:flex-row md:gap-6 gap-0 mt-3">
                     <div className="w-full">
                       <label
                         htmlFor={`catalogue-${index}`}
@@ -361,7 +361,7 @@ export default function Stepper1({
                       <button
                         type="button"
                         onClick={() => handleDeleteField(index)}
-                        className="mt-5 text-red-500 hover:text-red-700"
+                        className="md:mt-5 mt-1 text-red-500 hover:text-red-700"
                       >
                         <RxCross1 />
                       </button>
@@ -370,7 +370,7 @@ export default function Stepper1({
 
                 ))}
               </div>
-              <div className="flex justify-end mt-6">
+              <div className="flex justify-end md:mt-6 mt-2">
                 <button
                   type="button"
                   onClick={handleAddField}

@@ -1,198 +1,171 @@
-import { Fragment, useContext } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import AuthContext from "../AuthContext";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Drawer, IconButton, Menu, MenuItem, List, ListItem, ListItemText } from "@mui/material";
+import { Menu as MenuIcon, Close as CloseIcon, Notifications as NotificationsIcon } from "@mui/icons-material";
+import AuthContext from "../AuthContext";
+import { Avatar } from "@mui/material";
 
 const navigation = [
-  { name: "Dashboard", href: "/", current: true },
-  { name: "Inventory", href: "/inventory", current: false },
-  { name: "Purchase Details", href: "/purchase-details", current: false },
-  { name: "Sales", href: "/sales", current: false },
-  { name: "Manage Store", href: "/manage-store", current: false },
-  { name: "Catalogue", href: "/catalogue", current: false },
+  { name: "Catalogue", href: "/", current: true },
+  { name: "Buyer", href: "/buyer", current: false },
+  { name: "Bills", href: "/billing-detail", current: false },
 ];
 
 const userNavigation = [{ name: "Sign out", href: "./login" }];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Header() {
   const authContext = useContext(AuthContext);
   const localStorageData = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+
+  const toggleDrawer = (open) => {
+    setOpenDrawer(open);
+  };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    authContext.signout();
+    navigate("./login");
+  };
+
+  // Function to close the Drawer and navigate
+  const handleNavigation = (href) => {
+    navigate(href);
+    toggleDrawer(false); // Close the Drawer after navigation
+  };
+
   return (
-    <>
-      <div className="min-h-full">
-        <Disclosure as="nav" className="bg-gray-800">
-          {({ open }) => (
-            <>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="flex justify-center items-center gap-2">
-                        {/* <img
-                          className="h-8 w-8"
-                          src={require("../assets/logo.png")}
-                          alt="Inventory Management System"
-                        /> */}
-                         <img
-                          className="h-11 w-11 rounded-full"
-                          src={require("../assets/brandLogo.jpg")}
-                          alt="Inventory Management System"
-                          onClick={()=>navigate("/")}
-                        />
-                        {/* <span className="font-bold text-white italic">
-                          Inventory Management
-                        </span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-4 flex items-center md:ml-6">
-                      <button
-                        type="button"
-                        className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <span className="sr-only">View notifications</span>
-                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
-
-                      {/* Profile dropdown */}
-                      <Menu as="div" className="relative ml-3">
-                        <div>
-                          <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-8 w-8 rounded-full"
-                              src={localStorageData.imageUrl}
-                              alt="profile"
-                            />
-                          </Menu.Button>
-                        </div>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {userNavigation.map((item) => (
-                              <Menu.Item key={item.name}>
-                                {({ active }) => (
-                                  <Link
-                                    to={item.href}
-                                    className={classNames(
-                                      active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
-                                    )}
-                                  >
-                                    <span onClick={() => authContext.signout()}>
-                                      {item.name}{" "}
-                                    </span>
-                                  </Link>
-                                )}
-                              </Menu.Item>
-                            ))}
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    </div>
-                  </div>
-                  <div className="-mr-2 flex md:hidden">
-                    {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Bars3Icon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </Disclosure.Button>
-                  </div>
-                </div>
+    <div className="min-h-full bg-black">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <div className="flex justify-center items-center gap-2">
+                <img
+                  className="h-11 w-11 rounded-full"
+                  src={require("../assets/brandLogo.jpg")}
+                  alt="Inventory Management System"
+                  onClick={() => navigate("/")}
+                />
               </div>
+            </div>
+          </div>
 
-              <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                  {navigation.map((item) => (
-                    <Link to={item.href} key={item.name}>
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        // href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "bg-gray-900 text-white"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "block rounded-md px-3 py-2 text-base font-medium"
-                        )}
-                        aria-current={item.current ? "page" : undefined}
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    </Link>
-                  ))}
-                </div>
-                <div className="border-t border-gray-700 pt-4 pb-3">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={localStorageData.imageUrl}
-                        alt="profile"
-                      />
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">
-                        {localStorageData.firstName +
-                          " " +
-                          localStorageData.lastName}
-                      </div>
-                      <div className="text-sm font-medium leading-none text-gray-400">
-                        {localStorageData.email}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        <span onClick={() => authContext.signout()}>
-                          {item.name}{" "}
-                        </span>
-                      </Disclosure.Button>
-                    ))}
-                  </div>
-                </div>
-              </Disclosure.Panel>
-            </>
-          )}
-        </Disclosure>
+          <div className="hidden md:flex items-center">
+            <IconButton
+              color="inherit"
+              aria-label="view notifications"
+              onClick={handleMenuClick}
+            >
+              <NotificationsIcon />
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleMenuClose}
+              sx={{ backgroundColor: 'white' }}
+            >
+              {userNavigation.map((item) => (
+                <MenuItem
+                  key={item.name}
+                  onClick={handleSignOut}
+                  sx={{ color: 'black' }}
+                >
+                  {item.name}
+                </MenuItem>
+              ))}
+            </Menu>
+          </div>
+
+          <div className="-mr-2 flex md:hidden">
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => toggleDrawer(true)}
+              sx={{ color: 'white' }}
+            >
+              <MenuIcon sx={{ color: 'white' }} />
+            </IconButton>
+          </div>
+        </div>
       </div>
-    </>
+
+      <Drawer
+        anchor="left"
+        open={openDrawer}
+        onClose={() => toggleDrawer(false)}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: '64vw',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between', // Ensure the bottom section stays at the bottom
+            backgroundColor: '#ffffff', // Background color for better visibility
+            color: '#000000',
+          },
+        }}
+      >
+        <div className="p-4">
+          {/* Close Icon */}
+          <IconButton sx={{ color: 'black' }} onClick={() => toggleDrawer(false)}>
+            <CloseIcon />
+          </IconButton>
+
+          {/* Navigation Items */}
+          <List>
+            {navigation.map((item) => (
+              <ListItem
+                button
+                key={item.name}
+                onClick={() => handleNavigation(item.href)}
+              >
+                <ListItemText primary={item.name} />
+              </ListItem>
+            ))}
+            <ListItem
+              button
+              onClick={() => {
+                handleSignOut();
+                toggleDrawer(false);
+              }}
+              sx={{ color: 'black' }}
+            >
+              <ListItemText primary="Sign out" />
+            </ListItem>
+          </List>
+        </div>
+
+        {/* User Information */}
+        <div className="p-4 border-t border-gray-300">
+          {localStorageData && (
+            <div className="flex flex-col items-center">
+               <Avatar
+                alt={localStorageData.name || "User"}
+                src={localStorageData.profilePicture || ""}
+                sx={{ width: 54, height: 54 }}
+              />
+              <p className="font-semibold">  {localStorageData.firstName + " " + localStorageData.lastName}</p>
+              <p className="text-sm text-gray-500">{localStorageData.email}</p>
+            </div>
+          )}
+        </div>
+        
+       
+      </Drawer>
+
+    </div>
   );
 }

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 import { useNavigate } from 'react-router-dom';
 
-export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, stepCount, setStepCount,updateInvoiceNumber  , invoiceNumber}) {
+export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, stepCount, setStepCount, updateInvoiceNumber, invoiceNumber }) {
     const pdfRef = useRef(); // Reference for the content to download
     const navigate = useNavigate();
     const currentDate = new Date().toLocaleString(); // Get current date and time
@@ -45,10 +45,11 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify({...soldValue
-                    , grandTotal ,
-                    buyer_phone : soldValue.buyer_number,
-                    inVoice : invoiceNumber.invoiceNumber
+                body: JSON.stringify({
+                    ...soldValue
+                    , grandTotal,
+                    buyer_phone: soldValue.buyer_number,
+                    inVoice: invoiceNumber.invoiceNumber
                 }),
             });
             if (response.status === 200) {
@@ -64,8 +65,8 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
     let grandTotal = 0;
 
     return (
-        <div className="flex items-start justify-center flex-row w-[80vw] min-h-[100vh] bg-gray-100">
-            <div className="p-6 min-h-screen w-[50vw] relative">
+        <div className="flex items-start justify-center flex-row lg:w-[80vw] w-[100vw] min-h-[100vh] bg-gray-100">
+            <div className="md:p-6 p-2 min-h-screen lg:w-[50vw] md:w-[70vw] w-[100vw] m-auto relative">
                 <div ref={pdfRef}>
                     {/* Header */}
                     <div className="bg-orange-600 text-white p-4 pb-4 h-[100px] flex items-center justify-between">
@@ -83,24 +84,26 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                     </div>
 
                     {/* Body */}
-                    <div className="bill-img bg-white shadow-md p-6 -mt-6">
-                        <div className='flex justify-between'>
-                        <div>
-                             <h2 className="text-xl font-bold mb-2">Party Name : {soldValue.buyer.label}</h2>
-                        <p className="text-gray-600">Phone Number: +92-{soldValue.buyer_number}</p>
-                       </div>
-                       <div>
-                       <div>
-                            <p className='font-bold' >InVoice number : {invoiceNumber.invoiceNumber}</p>
+                    <div className="bill-img bg-white shadow-md md:p-6 p-2 md:overflow-auto overflow-x-scroll">
+                        <div className='flex flex-col md:flex-row justify-between gap-2'>
+                            <div>
+                                <h2 className="text-[15px] sm:text-lg md:text-xl font-bold">
+                                    Party Name: {soldValue.buyer.label}
+                                </h2>
+                                <p className="text-gray-600 text-sm sm:text-[15px]">
+                                    Phone Number: +92-{soldValue.buyer_number}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p className='text-sm sm:text-[15px] font-bold'>
+                                    Invoice Number: {invoiceNumber.invoiceNumber}
+                                </p>
+                                <p className="mt-2 text-sm">{currentDate}</p>
+                            </div>
                         </div>
-                       <div>
-                        <p className="mt-2 text-sm">{currentDate}</p>
-                        </div>
-                      
-                       </div>
-                        
-                        </div>
-                        
+
+
                         <div className="mt-8">
                             <table className="w-full border-collapse">
                                 <thead>
@@ -146,20 +149,24 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                     </div>
                 </div>
 
-                <div className="px-4 py-3 sm:flex sm:flex-row-reverse gap-4 sm:px-6">
+                <div className="px-4 py-3 flex flex-row-reverse items-center gap-5  sm:px-6">
                     <button
                         onClick={soldCatalogeApi}
-                        className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md"
+                        className="md:px-6 py-2 px-3 h-10 md:w-auto hidden md:block w-full text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md text-sm "
                     >
                         Done
                     </button>
-                    <button
-                        type="button"
-                        className="mt-3 px-6 py-2 inline-flex w-full justify-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                        onClick={goBack}
+                    <div
+                        className="md:px-6 px-3 py-2 h-10 md:w-auto w-full  inline-flex  justify-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                     >
-                        Edit
-                    </button>
+                        <button
+                            type="button"
+                            onClick={goBack}
+                        >
+                            Edit
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
