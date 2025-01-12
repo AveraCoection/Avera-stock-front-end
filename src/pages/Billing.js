@@ -102,26 +102,26 @@ const Billing = () => {
               <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                 <thead>
                   <tr>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Sr No
                     </th>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Party Name
                     </th>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Date
                     </th>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Time
                     </th>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Total
                     </th>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Preview
                     </th>
 
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Delete
                     </th>
                   </tr>
@@ -152,8 +152,8 @@ const Billing = () => {
                         });
                         const currentInvoice = element?.inVoice
                           ? element.inVoice.toString().padStart(4, "0")
-                          : "0000"; 
-                      
+                          : "0000";
+
                         return (
                           <tr key={element._id}>
 

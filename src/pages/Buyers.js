@@ -98,44 +98,70 @@ export default function Buyers() {
                     )}
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
                         <ToastContainer />
-                        <div className="flex gap-4 justify-start items-start p-5 ">
-                            <span className="font-bold">Buyer Details</span>
-                        </div>
-                        <div className="flex justify-between pt-5 pb-3 px-3">
-                            <div className="flex justify-center items-center px-2 border-2 rounded-md ">
+
+                        {/* <div className="flex  sm:justify-between gap-4 px-3 py-2">
+                            <div className="flex items-center px-2 border-2 rounded-md w-full sm:w-auto">
                                 <img
                                     alt="search-icon"
                                     className="w-5 h-5"
                                     src={require("../assets/search-icon.png")}
                                 />
                                 <input
-                                    className="border-none outline-none text-xs"
+                                    className="border-none outline-none text-xs  w-full"
                                     type="text"
                                     placeholder="Search here"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
+                            <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded md:w-auto w-full "
+                                onClick={addBuyerModel}
+                            >
+                                Add Buyer
+                            </button>
+                        </div> */}
+
+                        <div className="flex justify-between py-3 px-3">
+                            <div className="flex gap-4 justify-center items-center">
+                                <span className="font-bold text-[16px]">Buyer Details</span>
+                            </div>
                             <div className="flex gap-4">
                                 <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs  rounded"
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded"
                                     onClick={addBuyerModel}
                                 >
                                     Add Buyer
                                 </button>
                             </div>
                         </div>
+                        <div className="flex justify-between pt-5 pb-3 px-3">
+                            <div className="flex justify-center items-center px-2 border-2 rounded-md w-full lg:w-auto">
+                                <img
+                                    alt="search-icon"
+                                    className="w-5 h-5"
+                                    src={require("../assets/search-icon.png")}
+                                />
+                                <input
+                                    className="border-none outline-none text-xs w-full lg:w-auto"
+                                    type="text"
+                                    placeholder="Search here"
+                                    value={searchTerm} // Bind the input value to searchTerm state
+                                    onChange={(e) => setSearchTerm(e.target.value)} // Handle search term change
+                                />
+                            </div>
+                        </div>
 
                         <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                             <thead>
                                 <tr>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Buyer Name
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Buyer Name
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Phone number
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Phone number
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Edit
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Edit
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 text-[17px]">                                        Delete
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Delete
                                     </th>
                                 </tr>
                             </thead>
