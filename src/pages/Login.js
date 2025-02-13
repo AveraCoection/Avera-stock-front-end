@@ -83,6 +83,8 @@ function Login() {
     } catch (err) {
       toast.error(err.message || "Something went wrong during login.");
       console.error(err);
+    setIsLoading(false)
+
     }
   };
 

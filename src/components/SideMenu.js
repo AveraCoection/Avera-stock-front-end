@@ -101,7 +101,7 @@ function SideMenu() {
         <div className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
           <Avatar
             alt={localStorageData.name || "User"}
-            src={localStorageData.profilePicture || ""}
+            src={localStorageData.imageUrl || ""}
             sx={{ width: 54, height: 54, mb: 2 }}
           />
 

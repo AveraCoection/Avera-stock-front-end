@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Drawer, IconButton, Menu, MenuItem, List, ListItem, ListItemText } from "@mui/material";
 import { Menu as MenuIcon, Close as CloseIcon, Notifications as NotificationsIcon } from "@mui/icons-material";
@@ -39,11 +39,24 @@ export default function Header() {
     navigate("./login");
   };
 
-  // Function to close the Drawer and navigate
   const handleNavigation = (href) => {
     navigate(href);
-    toggleDrawer(false); // Close the Drawer after navigation
+    toggleDrawer(false);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setOpenDrawer(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div className="min-h-full bg-black">
@@ -62,21 +75,31 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
+            <IconButton
+              color="inherit"
+              aria-label="view notifications"
+            >
+              <NotificationsIcon sx={{ color: 'white' }} />
+            </IconButton>
             <IconButton
               color="inherit"
               aria-label="view notifications"
               onClick={handleMenuClick}
             >
-              <NotificationsIcon />
+              <Avatar
+                alt={localStorageData.name || "User"}
+                src={localStorageData.imageUrl || ""}
+                sx={{ width: 28, height: 28 }}
+              />
             </IconButton>
-
             <Menu
               anchorEl={anchorEl}
               open={openMenu}
               onClose={handleMenuClose}
-              sx={{ backgroundColor: 'white' }}
+              sx={{ zIndex: '1301' }}
             >
+
               {userNavigation.map((item) => (
                 <MenuItem
                   key={item.name}
@@ -89,7 +112,8 @@ export default function Header() {
             </Menu>
           </div>
 
-          <div className="-mr-2 flex md:hidden">
+
+          <div className="-mr-2 flex lg:hidden">
             <IconButton
               edge="start"
               color="inherit"
@@ -109,13 +133,17 @@ export default function Header() {
         onClose={() => toggleDrawer(false)}
         sx={{
           '& .MuiDrawer-paper': {
-            width: '64vw',
+            width: '75vw',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between', // Ensure the bottom section stays at the bottom
-            backgroundColor: '#ffffff', // Background color for better visibility
+            justifyContent: 'space-between',
+            backgroundColor: '#ffffff',
+            zIndex: '1200',
             color: '#000000',
-          },
+            '@media (min-width: 500px)': {
+              width: '35vw',
+            },
+            },
         }}
       >
         <div className="p-4">
@@ -152,18 +180,16 @@ export default function Header() {
         <div className="p-4 border-t border-gray-300">
           {localStorageData && (
             <div className="flex flex-col items-center">
-               <Avatar
+              <Avatar
                 alt={localStorageData.name || "User"}
-                src={localStorageData.profilePicture || ""}
+                src={localStorageData.imageUrl || ""}
                 sx={{ width: 54, height: 54 }}
               />
-              <p className="font-semibold">  {localStorageData.firstName + " " + localStorageData.lastName}</p>
+              <p className="font-semibold">{localStorageData.firstName + " " + localStorageData.lastName}</p>
               <p className="text-sm text-gray-500">{localStorageData.email}</p>
             </div>
           )}
         </div>
-        
-       
       </Drawer>
 
     </div>

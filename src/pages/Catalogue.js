@@ -94,7 +94,7 @@ function Catalogue() {
                     )}
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 pb-5">
                         <ToastContainer />
-                        <div className="flex  sm:justify-between items-start sm:items-center p-5 font-bold gap-16">
+                        <div className="flex  justify-between items-center p-5 font-bold gap-16">
                             <span className="text-md sm:text-lg font-bold">Catalogue Details</span>
                             <Link to="/sold-detail">
                                 <button className="bg-green-600 hover:bg-green-700 text-white font-bold p-2 text-xs sm:text-sm rounded">
@@ -102,8 +102,8 @@ function Catalogue() {
                                 </button>
                             </Link>
                         </div>
-                        <div className="flex  sm:justify-between gap-5 px-3 py-2">
-                            <div className="flex items-center px-2 border-2 rounded-md w-full sm:w-auto">
+                        <div className="flex  sm:justify-between gap-5 px-3 py-2 w-full">
+                            <div className="flex items-center px-2 border-2 rounded-md md:w-auto w-1/2 ">
                                 <img
                                     alt="search-icon"
                                     className="w-5 h-5"
@@ -117,12 +117,14 @@ function Catalogue() {
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
+                            <div>
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded md:w-auto w-full "
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded md:w-auto "
                                 onClick={addCatalogueModel}
                             >
                                 Add Catalogue
                             </button>
+                            </div>
                         </div>
                         {isLoading ? (
                             <div className="flex justify-center items-center h-32">
