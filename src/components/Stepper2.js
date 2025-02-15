@@ -14,19 +14,30 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
         setStepCount(stepCount - 1);
     };
 
+    let totalkhazana = 0;
     const soldCatalogeApi = async () => {
         const content = pdfRef.current;
         const canvas = await html2canvas(content, { scale: 2 });
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
 
+        const margin = 5;
+
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const halfPageHeight = (pageHeight - margin) / 3
 
         const imgWidth = pageWidth;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        if (imgHeight * 2 > pageHeight) {
+            console.warn("Bill is too large to fit twice on one page. Consider reducing content size.");
+        }
+
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, halfPageHeight);
+
+        pdf.addImage(imgData, "PNG", 0, pageHeight / 2, imgWidth, halfPageHeight);
         pdf.save(`${soldValue.buyer.label}_statement.pdf`);
 
         const grandTotal = soldValue.catalogues.reduce((total, item) => {
@@ -69,42 +80,32 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
             <div className="md:p-6 p-2 min-h-screen lg:w-[50vw] md:w-[70vw] w-[100vw] m-auto relative">
                 <div ref={pdfRef}>
                     {/* Header */}
-                    <div className="bg-orange-600 text-white p-4 pb-4 h-[100px] flex items-center justify-between">
-                        <div className="pb-6">
-                            <h1 className="text-2xl font-bold">Aveera Collection</h1>
-                            <p>03006637315</p>
+
+                    <div className="bg-orange-600 text-white px-3 py-4 h-[85px] flex items-center justify-between">
+                        <div className="flex flex-col items-start">
+                            <img className="h-9 w-9 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
+                            <h1 className="text-[16px] leading-4 font-semibold">Aveera Collection</h1>
+                            <p className='text-[12px]'>03006637315</p>
                         </div>
-                        <div className="flex justify-center items-center gap-2 pb-6">
-                            <img
-                                className="h-11 w-11 rounded-full"
-                                src={require("../assets/brandLogo.jpg")}
-                                alt="Inventory Management System"
-                            />
+
+                        <div className="flex flex-col text-center">
+                            <h2 className="text-lg font-bold">
+                                {soldValue.buyer.label}
+                            </h2>
+                            <p className="text-sm font-medium">+92-{soldValue.buyer_number}</p>
+
+                        </div>
+
+                        <div className="flex flex-col items-end">
+                            <p className='text-sm sm:text-[15px] font-bold'>
+                                Invoice Number: {invoiceNumber.invoiceNumber}
+                            </p>
+                            <p className="mt-2 text-sm">{currentDate}</p>
                         </div>
                     </div>
-
                     {/* Body */}
-                    <div className="bill-img bg-white shadow-md md:p-6 p-2 md:overflow-auto overflow-x-scroll">
-                        <div className='flex flex-col md:flex-row justify-between gap-2'>
-                            <div>
-                                <h2 className="text-[15px] sm:text-lg md:text-xl font-bold">
-                                    Party Name: {soldValue.buyer.label}
-                                </h2>
-                                <p className="text-gray-600 text-sm sm:text-[15px]">
-                                    Phone Number: +92-{soldValue.buyer_number}
-                                </p>
-                            </div>
-
-                            <div>
-                                <p className='text-sm sm:text-[15px] font-bold'>
-                                    Invoice Number: {invoiceNumber.invoiceNumber}
-                                </p>
-                                <p className="mt-2 text-sm">{currentDate}</p>
-                            </div>
-                        </div>
-
-
-                        <div className="mt-8">
+                    <div className="bill-img bg-white shadow-md p-3 md:overflow-auto overflow-x-scroll">
+                        <div className="">
                             <table className="w-full border-collapse">
                                 <thead>
                                     <tr>
@@ -125,7 +126,7 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                                         );
                                         const totalPrice = catalogeDesign?.price ? catalogeDesign.price * item.khazana : 0;
                                         grandTotal += totalPrice;
-
+                                        totalkhazana += item.khazana
                                         return (
                                             <tr key={index}>
                                                 <td className="border p-2 text-center">{index + 1}</td>
@@ -140,8 +141,10 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                                         );
                                     })}
                                     <tr>
-                                        <td colSpan="5" className="text-right font-bold p-2">Grand Total</td>
-                                        <td className="text-center font-bold p-2">{grandTotal}</td>
+                                        <td colSpan="3" className="text-right font-bold">Ghazana Total</td>
+                                        <td className="text-center font-bold">{totalkhazana}</td>
+                                        <td className="text-right font-bold">Grand Total</td>
+                                        <td className="text-center font-bold">{grandTotal}</td>
                                     </tr>
                                 </tbody>
                             </table>

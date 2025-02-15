@@ -153,7 +153,7 @@ export default function CatalogueDetail() {
                         </div>
                         <div className="flex justify-between pb-3 px-3">
                             <div className="flex gap-4 justify-center items-center">
-                                <span className="font-bold text-[16px]">Catalogue : {singlecataloge.cataloge_number}</span>
+                                <span className="font-bold text-[16px]">Catalogue : {singlecataloge.cataloge_number}({singlecataloge.total_khazana})</span>
                             </div>
                             <div className="flex gap-4">
                                 <button

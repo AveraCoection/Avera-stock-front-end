@@ -153,6 +153,9 @@ function Catalogue() {
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
                                                     {element.cataloge_number}
                                                 </td>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
+                                                    {element.total_khazana}
+                                                </td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-blue-500 font-bold">
                                                     <Link to={`/catalogue-detail/${element._id}`}>View Detail</Link>
                                                 </td>
