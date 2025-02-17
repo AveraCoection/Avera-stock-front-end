@@ -11,7 +11,7 @@ import { FaEye } from "react-icons/fa";
 
 const Billing = () => {
   const [sold, setAllSold] = useState([]);
-  const authContext = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteBillModal, setDeleteBillModal] = useState(false);
@@ -37,7 +37,7 @@ const Billing = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/get-sales/${authContext.user}`);
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/get-sales/${user.user._id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

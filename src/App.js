@@ -21,11 +21,10 @@ const App = () => {
   const [user, setUser] = useState("");
   const [loader, setLoader] = useState(true);
   let myLoginUser = JSON.parse(localStorage.getItem("user"));
-  // console.log("USER: ",user)
 
   useEffect(() => {
     if (myLoginUser) {
-      setUser(myLoginUser._id);
+      setUser(myLoginUser.user._id);
       setLoader(false);
       // console.log("inside effect", myLoginUser)
     } else {
@@ -61,12 +60,12 @@ const App = () => {
     );
 
   return (
-    <AuthContext.Provider value={value}>
+    // <AuthContext.Provider value={value}>
       <BrowserRouter>
       {/* <ToastContainer/> */}
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          {/* <Route path="/register" element={<Register />} /> */}
           <Route
             path="/"
             element={
@@ -86,7 +85,7 @@ const App = () => {
           <Route path="*" element={<NoPageFound />} />
         </Routes>
       </BrowserRouter>
-    </AuthContext.Provider>
+    // </AuthContext.Provider>
   );
 };
 

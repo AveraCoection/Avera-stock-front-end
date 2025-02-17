@@ -8,7 +8,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import EditBuyer from '../components/EditBuyer';
 import DeleteBuyer from '../components/DeleteBuyer';
 export default function Buyers() {
-    const authContext = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
 
     const [showBuyerModel, setBuyerModel] = useState(false);
     const [showEditBuyerModal, setEditBuyerModal] = useState(false);
@@ -40,7 +40,7 @@ export default function Buyers() {
     const fetchBuyerData = async () => {
         setIsLoading(true)
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${authContext.user}`);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${user.user._id}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

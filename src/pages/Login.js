@@ -42,53 +42,93 @@ function Login() {
   // };
 
 
+  // const loginUser = async (e) => {
+  //   e.preventDefault();  // Prevent form submission default behavior
+  //   setIsLoading(true)
+  //   // Cannot send empty data
+  //   if (form.email === "" || form.password === "") {
+  //     toast.warning("Please enter both email and password to proceed.");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/auth/login`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-type": "application/json",
+  //       },
+  //       body: JSON.stringify(form),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Login failed. Please check your credentials.");
+  //     }
+
+  //     // Parse the response data
+  //     const data = await response.json();
+
+  //     // Store user data in local storage
+  //     localStorage.setItem("user", JSON.stringify(data));
+  //     localStorage.setItem("token", data.token);
+  //     navigate("/buyer");
+
+  //     // Show success toast
+  //     toast.success("Successfully Logged in!");
+      
+  //   } catch (err) {
+  //     toast.error(err.message || "Something went wrong during login.");
+  //     console.error(err);
+  //   setIsLoading(false)
+
+  //   }
+  // };
+
   const loginUser = async (e) => {
-    e.preventDefault();  // Prevent form submission default behavior
-    setIsLoading(true)
-    // Cannot send empty data
+    e.preventDefault();  // Prevent default form behavior
+    setIsLoading(true);
+  
     if (form.email === "" || form.password === "") {
       toast.warning("Please enter both email and password to proceed.");
+      setIsLoading(false); // Ensure loading stops
       return;
     }
-
+  
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/login`, {
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
+        headers: { "Content-type": "application/json" },
         body: JSON.stringify(form),
       });
-
-      if (!response.ok) {
-        throw new Error("Login failed. Please check your credentials.");
-      }
-
-      // Parse the response data
+  
+      if (!response.ok) throw new Error("Login failed. Please check your credentials.");
+  
       const data = await response.json();
-
-      // Store user data in local storage
+  
+      // Store user data
       localStorage.setItem("user", JSON.stringify(data));
-
-      // Show success toast
+      localStorage.setItem("token", data.token);
+  
       toast.success("Successfully Logged in!");
+  
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      //   navigate("/buyer");
+      // }, 1000);
+  
+      authContext.signin(data, () => {
+                setTimeout(() => {
+                  navigate("/");
+                }, 1000);
+              });
 
-      // Sign the user in and navigate after 1 second delay
-      authContext.signin(data._id, () => {
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      });
 
     } catch (err) {
       toast.error(err.message || "Something went wrong during login.");
       console.error(err);
-    setIsLoading(false)
-
+      setIsLoading(false);
     }
   };
-
-
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -222,7 +262,7 @@ function Login() {
                 </span>
                 {isLoading ? 'Loading...' : 'Sign in'}
               </button>
-              <p className="mt-2 text-center text-sm text-gray-600">
+              {/* <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
                 <span
                   className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -230,7 +270,7 @@ function Login() {
                   Don't Have an Account, Please{" "}
                   <Link to="/register"> Register now </Link>
                 </span>
-              </p>
+              </p> */}
             </div>
           </form>
         </div>

@@ -8,7 +8,7 @@ import Stepper1 from '../components/Stepper1';
 import Stepper2 from '../components/Stepper2';
 
 export default function SoldCatalogeDetail() {
-    const authContext = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
     const navigate = useNavigate()
     const [buyer, setAllBuyer] = useState([]);
     const [inVoice, setInVoice] = useState('');
@@ -28,7 +28,7 @@ export default function SoldCatalogeDetail() {
     ]);
 
     const [soldValue, setSoldValue] = useState({
-        userID: authContext.user,
+        userID:user.user._id,
         buyer: "",
         buyer_number: '',
         catalogues: "",
@@ -41,7 +41,7 @@ export default function SoldCatalogeDetail() {
 
     // Fetch Buyer Data
     const fetchBuyerData = () => {
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${authContext.user}`)
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${user.user._id}`)
             .then((response) => response.json())
             .then((data) => {
                 setAllBuyer(data);
@@ -63,7 +63,7 @@ export default function SoldCatalogeDetail() {
     };
 
     const fetchCatalogeData = () => {
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${authContext.user}`)
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${user.user._id}`)
             .then((response) => response.json())
             .then((data) => {
                 setAllCataloge(data);

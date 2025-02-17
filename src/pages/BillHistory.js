@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 
 export default function BillHistory() {
-    const authContext = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
     const params = useParams()
     const pdfRef = useRef(); // Reference for the content to download
     const [updatePage, setUpdatePage] = useState(true);
@@ -27,7 +27,7 @@ export default function BillHistory() {
 
     const fetchCatalogeData = async () => {
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${authContext.user}`);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${user.user._id}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

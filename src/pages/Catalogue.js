@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 
 function Catalogue() {
-    const authContext = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
 
     const [isLoading, setIsLoading] = useState(true);
     const [showCatalogueModal, setCatalogueModal] = useState(false);
@@ -41,7 +41,7 @@ function Catalogue() {
     const fetchCatalogeData = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${authContext.user}`);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${user.user._id}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -135,6 +135,7 @@ function Catalogue() {
                                 <thead>
                                     <tr>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Catalogue Number</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Total Ghazana</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">View Book</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Edit</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Delete</th>

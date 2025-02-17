@@ -9,7 +9,7 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-    const authContext = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const [buyer, setBuyer] = useState({

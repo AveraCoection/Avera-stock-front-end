@@ -10,11 +10,11 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
   const params = useParams();
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
-  const authContext = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const [catalogeDesign, setDesignCataloge] = useState({
-    userId: authContext.user,
+    userId:user.user._id,
     design_number: '',
     stock: '',
     khazana_stock: '',

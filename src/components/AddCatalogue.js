@@ -10,11 +10,11 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
   const [open, setOpen] = useState(true);
   const [error, setError] = useState("");
   const cancelButtonRef = useRef(null);
-  const authContext = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const [cataloge, setCataloge] = useState({
-    userId: authContext.user,
+    userId:user.user._id,
     cataloge_number: "",
   });
 

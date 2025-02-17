@@ -88,8 +88,8 @@ export default function Header() {
               onClick={handleMenuClick}
             >
               <Avatar
-                alt={localStorageData.name || "User"}
-                src={localStorageData.imageUrl || ""}
+                alt={localStorageData.user.name || "User"}
+                src={localStorageData.user.imageUrl || ""}
                 sx={{ width: 28, height: 28 }}
               />
             </IconButton>
@@ -181,12 +181,12 @@ export default function Header() {
           {localStorageData && (
             <div className="flex flex-col items-center">
               <Avatar
-                alt={localStorageData.name || "User"}
-                src={localStorageData.imageUrl || ""}
+                alt={localStorageData.user.name || "User"}
+                src={localStorageData.user.imageUrl || ""}
                 sx={{ width: 54, height: 54 }}
               />
-              <p className="font-semibold">{localStorageData.firstName + " " + localStorageData.lastName}</p>
-              <p className="text-sm text-gray-500">{localStorageData.email}</p>
+              <p className="font-semibold">{localStorageData.user.firstName + " " + localStorageData.user.lastName}</p>
+              <p className="text-sm text-gray-500">{localStorageData.user.email}</p>
             </div>
           )}
         </div>
