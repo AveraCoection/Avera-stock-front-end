@@ -78,7 +78,7 @@ export default function ConfirmPrice({ editPrice, handlePageUpdate, design, edit
                                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                         <p className="text-xl text-center text-gray-500">
-                                            Are you sure you want to change the price, which was previously {editDesign.price}?
+                                            Are you sure you want to change the prices, which was previously price is  {editDesign.price} and cost price is {editDesign.cost_price} ?
                                         </p>
                                     </div>
 

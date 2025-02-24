@@ -1,24 +1,26 @@
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useRef, useState } from 'react'
-import GlobalApiState from '../utilis/globalVariable';
+import React, { Fragment, useContext, useRef, useState } from 'react'
+import GlobalApiState from "../utilis/globalVariable"
+import AuthContext from '../AuthContext';
 
-export default function DeleteDesign({deleteCatalogueModel , setUpdatePage , updatePage , singleDesign}) {
+export default function DeleteStaff({deleteCatalogueModel , setUpdatePage , updatePage , singlecatalogue}) {
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
+    const {user} = useContext(AuthContext);
 
     const deleteItem = async () => {
-  
+
         try {
-          const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/delete_design/${singleDesign._id}`, {
-            method: 'DELETE'
-          });
-          const data = await response.json(); 
-      
-          setUpdatePage(!updatePage);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/auth/delete-staff/${user.user._id}/${singlecatalogue.staffId}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+
+            setUpdatePage(!updatePage);
         } catch (error) {
-          console.error('Error deleting item:', error);
+            console.error('Error deleting item:', error);
         }
-      };
+    };
 
 
     return (
@@ -56,7 +58,7 @@ export default function DeleteDesign({deleteCatalogueModel , setUpdatePage , upd
                                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                         <p className="text-xl text-center text-gray-500">
-                                            Are you sure you want to delete this Design?</p>
+                                            Are you sure you want to delete this Staff?</p>
                                     </div>
 
                                     <div className="m-4 flex justify-end gap-4">

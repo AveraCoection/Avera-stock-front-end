@@ -8,7 +8,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import EditBuyer from '../components/EditBuyer';
 import DeleteBuyer from '../components/DeleteBuyer';
 export default function Buyers() {
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     const [showBuyerModel, setBuyerModel] = useState(false);
     const [showEditBuyerModal, setEditBuyerModal] = useState(false);
@@ -161,8 +161,13 @@ export default function Buyers() {
                                     </th>
                                     <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Edit
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Delete
-                                    </th>
+                                    {
+                                        user.user.role === "Admin" && (
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Delete
+                                            </th>
+                                        )
+                                    }
+
                                 </tr>
                             </thead>
 
@@ -200,17 +205,22 @@ export default function Buyers() {
                                                         />
                                                     </span>
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                    <RiDeleteBinLine
-                                                        color="#CC0000"
-                                                        size={22}
-                                                        cursor="pointer"
-                                                        onClick={() => {
-                                                            fetchSingleCatalogeData(element._id);
-                                                            deleteBuyerModel();
-                                                        }}
-                                                    />
-                                                </td>
+                                                {
+                                                    user.user.role === "Admin" && (
+                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                            <RiDeleteBinLine
+                                                                color="#CC0000"
+                                                                size={22}
+                                                                cursor="pointer"
+                                                                onClick={() => {
+                                                                    fetchSingleCatalogeData(element._id);
+                                                                    deleteBuyerModel();
+                                                                }}
+                                                            />
+                                                        </td>
+                                                    )
+                                                }
+
                                             </tr>
                                         ))
                                     )

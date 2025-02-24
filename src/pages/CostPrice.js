@@ -8,98 +8,120 @@ import EditCatalogue from '../components/EditCatalogue';
 import DeleteCataloge from '../components/DeleteCataloge';
 import { ToastContainer } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
+import AddCostPrice from '../components/AddCostPrice';
+import EditCostPrice from '../components/EditCostPrice';
+import DeleteCostPrice from '../components/DeleteCostPrice';
 
-function Catalogue() {
+function CostPrice() {
     const { user } = useContext(AuthContext);
-
+    const [sold, setAllSold] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [showCatalogueModal, setCatalogueModal] = useState(false);
-    const [showEditCatalogueModal, setEditCatalogueModal] = useState(false);
-    const [showDeleteCatalogueModal, setDeleteCatalogueModal] = useState(false);
-    const [catalogue, setAllCataloge] = useState([]);
-    const [singlecatalogue, setSingleCataloge] = useState([]);
+    const [showCostPriceModal, setCostPriceModal] = useState(false);
+    const [showEditCostPriceModal, setEditCostPriceModal] = useState(false);
+    const [showDeleteCostPriceModal, setDeleteCostPriceModal] = useState(false);
+    const [costPrice, setAllCostPrice] = useState([]);
+    const [singlecostPrice, setSingleCostPrice] = useState([]);
     const [updatePage, setUpdatePage] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const addCatalogueModel = () => {
-        setCatalogueModal(!showCatalogueModal);
+    const addCostPriceModel = () => {
+        setCostPriceModal(!showCostPriceModal);
     };
-    const deleteCatalogueModel = () => {
-        setDeleteCatalogueModal(!showDeleteCatalogueModal);
+    const deleteCostPriceModel = () => {
+        setDeleteCostPriceModal(!showDeleteCostPriceModal);
     };
-    const editCatalogueModel = (element) => {
-        setEditCatalogueModal(!showEditCatalogueModal);
-        setSingleCataloge(element);
+    const editCostPriceModel = (element) => {
+        setEditCostPriceModal(!showEditCostPriceModal);
+        setSingleCostPrice(element);
     };
     const handlePageUpdate = () => {
         setUpdatePage(!updatePage);
     };
-    const filteredCatalogue = catalogue.filter((element) =>
-        element.cataloge_number.toLowerCase().includes(searchTerm.toLowerCase()) // Filter by catalogue number
+    const filteredCostPrice = costPrice.filter((element) =>
+        element.cost_type.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const fetchCatalogeData = async () => {
+    const fetchCostPriceData = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${user.user._id}`);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cost_price/list_costPrice/${user.user._id}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setAllCataloge(data);
+            setAllCostPrice(data);
         } catch (error) {
-            console.error("Error fetching catalog data:", error);
+            console.error("Error fetching costprice data:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const fetchSingleCatalogeData = (id) => {
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/edit_cataloge/${id}`)
+    const fetchSingleCostPriceData = (id) => {
+        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cost_price/edit_costPrice/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                setSingleCataloge(data);
+                setSingleCostPrice(data);
             })
             .catch((err) => console.log(err));
     };
 
+
+    const fetchSalesData = async () => {
+        setIsLoading(true)
+
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/get-sales/${user.user._id}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setAllSold(data);
+        } catch (err) {
+            console.error("Failed to fetch sales data:", err); // Log the error
+        } finally {
+            setIsLoading(false)
+        }
+    };
+
     useEffect(() => {
-        fetchCatalogeData();
+        fetchCostPriceData();
+        fetchSalesData();
+
     }, [updatePage]);
+
     return (
         <>
             <div className="col-span-12 lg:col-span-10 flex justify-center px-2 sm:px-4 ">
                 <div className="flex flex-col gap-5 w-full lg:w-11/12">
-                    {showCatalogueModal && (
-                        <AddCatalogue
-                            addCatalogueModel={addCatalogueModel}
+                    {showCostPriceModal && (
+                        <AddCostPrice
+                            addCostPriceModel={addCostPriceModel}
                             handlePageUpdate={handlePageUpdate}
+                            sold={sold}
                         />
                     )}
-                    {showEditCatalogueModal && (
-                        <EditCatalogue
-                            editCatalogueModel={editCatalogueModel}
+                    {showEditCostPriceModal && (
+                        <EditCostPrice
+                            editCostPriceModel={editCostPriceModel}
                             handlePageUpdate={handlePageUpdate}
-                            singlecatalogue={singlecatalogue}
+                            singlecostPrice={singlecostPrice}
+                            sold={sold}
+
                         />
                     )}
-                    {showDeleteCatalogueModal && (
-                        <DeleteCataloge
-                            deleteCatalogueModel={deleteCatalogueModel}
+                    {showDeleteCostPriceModal && (
+                        <DeleteCostPrice
+                            deleteCostPriceModel={deleteCostPriceModel}
                             updatePage={updatePage}
                             setUpdatePage={setUpdatePage}
-                            singlecatalogue={singlecatalogue}
+                            singlecostPrice={singlecostPrice}
                         />
                     )}
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 pb-5">
                         <ToastContainer />
                         <div className="flex  justify-between items-center p-5 font-bold gap-16">
-                            <span className="text-md sm:text-lg font-bold">Catalogue Details</span>
-                            <Link to="/sold-detail">
-                                <button className="bg-green-600 hover:bg-green-700 text-white font-bold p-2 text-xs sm:text-sm rounded">
-                                    Sell Item
-                                </button>
-                            </Link>
+                            <span className="text-md sm:text-lg font-bold">CostPrice Details</span>
                         </div>
                         <div className="flex  sm:justify-between gap-5 px-3 py-2 w-full">
                             <div className="flex items-center px-2 border-2 rounded-md md:w-auto w-1/2 ">
@@ -119,9 +141,9 @@ function Catalogue() {
                             <div>
                                 <button
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded md:w-auto "
-                                    onClick={addCatalogueModel}
+                                    onClick={addCostPriceModel}
                                 >
-                                    Add Catalogue
+                                    Add CostPrice
                                 </button>
                             </div>
                         </div>
@@ -133,61 +155,54 @@ function Catalogue() {
                             <table className="min-w-full divide-y-2 divide-gray-200 text-xs ">
                                 <thead>
                                     <tr>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Catalogue Number</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Total Ghazana</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">View Book</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Cost Price type</th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Cost Name </th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Bill Detail</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Edit</th>
-                                        {
-                                            user?.user?.role === "Admin" && (
-                                                <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Delete</th>
-                                            )
-
-                                        }
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {filteredCatalogue?.length === 0 ? (
+                                    {filteredCostPrice.length === 0 ? (
                                         <tr>
                                             <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
                                                 Record Not Found
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredCatalogue?.map((element) => (
-                                            <tr key={element?._id}>
+                                        filteredCostPrice.map((element) => (
+                                            <tr key={element._id}>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
-                                                    {element?.cataloge_number}
+                                                    {element.cost_type}
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
-                                                    {element?.total_khazana}
+                                                    {element.cost_name}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-blue-500 font-bold">
-                                                    <Link to={`/catalogue-detail/${element?._id}`}>View Detail</Link>
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
+                                                    {(() => {
+                                                        const foundBuyer = sold?.find((buyer) => buyer._id === element.design_bill);
+                                                        return foundBuyer?.buyer?.label || foundBuyer?.buyer || "N/A";
+                                                    })()}
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                                     <FaRegEdit
                                                         color="#138808"
                                                         size={20}
                                                         cursor="pointer"
-                                                        onClick={() => editCatalogueModel(element)}
+                                                        onClick={() => editCostPriceModel(element)}
                                                     />
                                                 </td>
-                                                {
-                                                    user?.user?.role === "Admin" && (
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                            <RiDeleteBinLine
-                                                                color="#CC0000"
-                                                                size={20}
-                                                                cursor="pointer"
-                                                                onClick={() => {
-                                                                    fetchSingleCatalogeData(element._id);
-                                                                    deleteCatalogueModel();
-                                                                }}
-                                                            />
-                                                        </td>
-                                                    )
-                                                }
-
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                    <RiDeleteBinLine
+                                                        color="#CC0000"
+                                                        size={20}
+                                                        cursor="pointer"
+                                                        onClick={() => {
+                                                            fetchSingleCostPriceData(element._id);
+                                                            deleteCostPriceModel();
+                                                        }}
+                                                    />
+                                                </td>
                                             </tr>
                                         ))
                                     )}
@@ -201,4 +216,4 @@ function Catalogue() {
     );
 }
 
-export default Catalogue;
+export default CostPrice;

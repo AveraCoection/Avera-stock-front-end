@@ -1,30 +1,91 @@
 import React, { useContext, useEffect, useState } from "react";
 import GlobalApiState from "../utilis/globalVariable";
 import AuthContext from "../AuthContext";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import DeleteBill from "../components/DeleteBill";
 import { FaEye } from "react-icons/fa";
+import BillPaidModel from "../components/BillPaidModel";
 
 
 const Billing = () => {
   const [sold, setAllSold] = useState([]);
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteBillModal, setDeleteBillModal] = useState(false);
   const [singleBill, setSingleBill] = useState([])
-  const [updatePage, setUpdatePage] = useState(true);
-
+    const [updatePage, setUpdatePage] = useState(true);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedBill, setSelectedBill] = useState({});
 
   const filteredCatalogue = sold.filter((element) => {
     const buyer = element?.buyer;
-    const buyerLabel = typeof buyer === 'object' ? buyer?.label : buyer;
+    const buyerLabel = typeof buyer === "object" ? buyer?.label : buyer;
 
-    return buyerLabel?.toLowerCase().includes(searchTerm.toLowerCase());
+    const currentInvoice = element?.inVoice
+      ? element.inVoice.toString().padStart(4, "0")
+      : "0000";
+
+    const elementDate = new Date(element.createdAt);
+    const isPaid = element.paid ? "true" : "false";
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let filterDate = null;
+    let dateMatch = true;
+
+    if (selectedDate === "1_week") {
+      filterDate = new Date(today);
+      filterDate.setDate(today.getDate() - 7);
+      dateMatch = elementDate >= filterDate; // Shows items from last 7 days
+    } else if (selectedDate === "1_month") {
+      filterDate = new Date(today);
+      filterDate.setMonth(today.getMonth() - 1);
+      dateMatch = elementDate >= filterDate; // Shows items from last 1 month
+    } else if (selectedDate === "3_months") {
+      filterDate = new Date(today);
+      filterDate.setMonth(today.getMonth() - 3);
+      dateMatch = elementDate <= filterDate; // Shows items older than 3 months
+    }
+
+    return (
+      (buyerLabel?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        currentInvoice?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      dateMatch &&
+      (selectedStatus === "" || isPaid === selectedStatus)
+    );
   });
+
+  const handlePaidClick = (bill) => {
+    if (!bill.paid) {
+      setSelectedBill(bill);
+      setShowConfirmModal(true);
+    }
+  };
+
+  const onConfirm = async () => {
+
+    try {
+        const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/update-bill/${selectedBill._id}`, {
+            method: "PUT",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({ ...selectedBill , paid : true }),
+        });
+        setUpdatePage(!updatePage);
+       } catch (err) {
+        toast.error(`Error: ${err.message}`);
+        console.error(err);
+    }
+    setShowConfirmModal(false);
+}
 
 
   const deleteBillModel = (element) => {
@@ -64,6 +125,17 @@ const Billing = () => {
             singleBill={singleBill}
           />
         )}
+        {
+          showConfirmModal && (
+            <BillPaidModel
+              isOpen={showConfirmModal}
+              onClose={() => setShowConfirmModal(false)}
+              onConfirm={onConfirm}
+            />
+          )
+        }
+
+
         <div className=" flex flex-col gap-5 w-11/12">
           <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
             <ToastContainer />
@@ -81,17 +153,32 @@ const Billing = () => {
                   className="border-none outline-none text-xs"
                   type="text"
                   placeholder="Search here"
-                  value={searchTerm} // Bind the input value to searchTerm state
-                  onChange={(e) => setSearchTerm(e.target.value)} // Handle search term change
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="flex gap-4">
-                {/* <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs  rounded"
-                  // onClick={addCatalogueModel}
+              <div className="flex justify-center items-center px-2 border-2 rounded-md ">
+                <select
+                  className="border-none outline-none text-sm"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
                 >
-                  Add Catalogue
-                </button> */}
+                  <option value="">All</option>
+                  <option value="1_week">1 Week Old</option>
+                  <option value="1_month">1 Month Old</option>
+                  <option value="3_months">3 Months Old</option>
+                </select>
+              </div>
+              <div className="flex justify-center items-center px-2 border-2 rounded-md">
+                <select
+                  className="border-none outline-none text-sm"
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                >
+                  <option value="">All</option>
+                  <option value="true">Paid</option>
+                  <option value="false">Not Paid</option>
+                </select>
               </div>
             </div>
             {isLoading ? (
@@ -109,6 +196,9 @@ const Billing = () => {
                       Party Name
                     </th>
                     <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                      Status
+                    </th>
+                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Date
                     </th>
                     <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
@@ -120,10 +210,12 @@ const Billing = () => {
                     <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Preview
                     </th>
-
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                      Delete
-                    </th>
+                    {
+                      user.user.role === "Admin" && (
+                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                          Delete</th>
+                      )
+                    }
                   </tr>
                 </thead>
 
@@ -147,7 +239,6 @@ const Billing = () => {
                         const formattedTime = new Date(element.createdAt).toLocaleTimeString("en-US", {
                           hour: "2-digit",
                           minute: "2-digit",
-                          // second: "2-digit",
                           hour12: true,
                         });
                         const currentInvoice = element?.inVoice
@@ -164,6 +255,14 @@ const Billing = () => {
                               {element.buyer.label || element.buyer}
 
                             </td>
+                            <td
+                              className={`cursor-pointer px-4 py-2 ${element.paid ? 'text-green-600' : 'text-orange-600'} font-bold`}
+                              onClick={() => handlePaidClick(element)}
+                            >
+                              {element.paid ? "Paid" : "Not Paid"}
+                            </td>
+
+
                             <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
                               {formattedDate}
 
@@ -184,16 +283,19 @@ const Billing = () => {
                               </td>
                             </Link>
 
-                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                            {
+                              user.user.role === "Admin" && (
+                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
 
-                              <RiDeleteBinLine color="#CC0000" size={22} cursor={'pointer'}
-                                // onClick={() => deleteItem(element._id)}
-                                onClick={() => {
-                                  // fetchSingleCatalogeData(element._id);
-                                  deleteBillModel(element)
-                                }}
-                              />
-                            </td>
+                                  <RiDeleteBinLine color="#CC0000" size={22} cursor={'pointer'}
+                                    onClick={() => {
+                                      deleteBillModel(element)
+                                    }}
+                                  />
+                                </td>
+                              )
+                            }
+
                           </tr>
                         );
                       })

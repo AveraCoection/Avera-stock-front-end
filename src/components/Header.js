@@ -88,8 +88,8 @@ export default function Header() {
               onClick={handleMenuClick}
             >
               <Avatar
-                alt={localStorageData.user.name || "User"}
-                src={localStorageData.user.imageUrl || ""}
+                alt={localStorageData?.user?.name || "User"}
+                src={localStorageData?.user?.imageUrl || ""}
                 sx={{ width: 28, height: 28 }}
               />
             </IconButton>

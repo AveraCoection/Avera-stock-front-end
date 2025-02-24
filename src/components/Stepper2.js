@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { toast } from 'react-toastify';
@@ -10,10 +10,16 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
     const navigate = useNavigate();
     const currentDate = new Date().toLocaleString(); // Get current date and time
 
+    const [isChecked , setIsChecked] = useState(false)
+
     const goBack = () => {
         setStepCount(stepCount - 1);
     };
 
+    const handleChange = ()=>{
+
+        setIsChecked(!isChecked)
+    }
     let totalkhazana = 0;
     const soldCatalogeApi = async () => {
         const content = pdfRef.current;
@@ -60,7 +66,8 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                     ...soldValue
                     , grandTotal,
                     buyer_phone: soldValue.buyer_number,
-                    inVoice: invoiceNumber.invoiceNumber
+                    inVoice: invoiceNumber.invoiceNumber,
+                    paid : isChecked
                 }),
             });
             if (response.status === 200) {
@@ -152,24 +159,35 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                     </div>
                 </div>
 
-                <div className="px-4 py-3 flex flex-row-reverse items-center gap-5  sm:px-6">
-                    <button
-                        onClick={soldCatalogeApi}
-                        className="md:px-6 py-2 px-3 h-10 md:w-auto hidden md:block w-full text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md text-sm "
-                    >
-                        Done
-                    </button>
-                    <div
-                        className="md:px-6 px-3 py-2 h-10 md:w-auto w-full  inline-flex  justify-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    >
-                        <button
-                            type="button"
-                            onClick={goBack}
-                        >
-                            Edit
-                        </button>
+                <div className="py-3 flex flex-row justify-between items-center gap-5  sm:px-6">
+                    <div>
+                        <input type="checkbox" id="agree" name="terms" 
+                        value={isChecked} 
+                        onChange={handleChange}
+                        className=''
+                        />
+                        <label className='ml-2' for="agree">Bill Paid ?</label>
                     </div>
 
+                    <div className="px-4 py-3 flex flex-row-reverse items-center gap-5  sm:px-6">
+                        <button
+                            onClick={soldCatalogeApi}
+                            className="md:px-6 py-2 px-3 h-10 md:w-auto hidden md:block w-full text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md text-sm "
+                        >
+                            Done
+                        </button>
+                        <div
+                            className="md:px-6 px-3 py-2 h-10 md:w-auto w-full  inline-flex  justify-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                        >
+                            <button
+                                type="button"
+                                onClick={goBack}
+                            >
+                                Edit
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

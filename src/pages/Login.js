@@ -199,7 +199,7 @@ function Login() {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <input
                   id="remember-me"
                   name="remember-me"
@@ -212,14 +212,17 @@ function Login() {
                 >
                   Remember me
                 </label>
-              </div>
+              </div> */}
 
               <div className="text-sm">
+                <Link to={'/forget-password'}>
+                
                 <span
                   className="font-medium text-indigo-600 hover:text-indigo-500"
                 >
                   Forgot your password?
                 </span>
+                </Link>
               </div>
             </div>
 

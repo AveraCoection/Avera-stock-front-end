@@ -7,15 +7,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 
 export default function BillHistory() {
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const params = useParams()
     const pdfRef = useRef(); // Reference for the content to download
+    const navigate = useNavigate()
     const [updatePage, setUpdatePage] = useState(true);
     const [catalogue, setAllCataloge] = useState([]);
     const [sold, setAllSold] = useState({});
     const [designData, setDesignData] = useState({});
     const [grandTotal, setGrandTotal] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [isChecked, setIsChecked] = useState(sold.paid)
 
     const currentDate = new Date().toLocaleString();
     let totalkhazana = 0;
@@ -79,7 +81,14 @@ export default function BillHistory() {
         }
     };
 
+    const handleChange = () => {
+        const updatedPaidStatus = !sold.paid;
 
+        setAllSold((prevSold) => ({
+            ...prevSold,
+            paid: updatedPaidStatus,
+        }));
+    }
     useEffect(() => {
         const fetchDesignsForSoldItems = async () => {
             try {
@@ -133,6 +142,7 @@ export default function BillHistory() {
         pdf.addImage(imgData, "PNG", 0, pageHeight / 2, imgWidth, halfPageHeight);
 
         pdf.save(`${typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}_statement.pdf`);
+        navigate("/billing-detail");
     };
 
 

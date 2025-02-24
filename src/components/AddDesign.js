@@ -19,7 +19,8 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     stock: '',
     khazana_stock: '',
     cataloge: singlecataloge._id,
-    price: ''
+    price: '',
+    cost_price : '',
   });
 
   const [errors, setErrors] = useState({});
@@ -42,6 +43,9 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
     }
     if (!catalogeDesign.khazana_stock.trim()) {
       newErrors.khazana_stock = 'Ghazana Stock is required';
+    }
+    if (!catalogeDesign.cost_price.trim()) {
+      newErrors.cost_price = 'Cost Price Stock is required';
     }
     return newErrors;
   };
@@ -118,8 +122,6 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                         </Dialog.Title>
                         <form action="#">
                           <div className='flex flex-col'>
-
-
                             <div className="flex items-center gap-4 ">
                               <div>
                                 <label
@@ -204,6 +206,28 @@ export default function AddDesign({ addDesignModel, handlePageUpdate, singlecata
                                 />
                                 {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock}</p>}
                               </div>
+                            </div>
+                            <div className="flex items-center justify-between gap-4 mt-4">
+                              <div>
+                                <label
+                                  htmlFor="cost_price"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Add Cost Price 
+                                </label>
+                                <input
+                                  type="number"
+                                  name="cost_price"
+                                  id="cost_price"
+                                  value={catalogeDesign.cost_price}
+                                  onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                  className={`bg-gray-50 border ${errors.cost_price ? 'border-red-500' : 'border-gray-300'
+                                    } text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5`}
+                                  placeholder="Cost Price"
+                                />
+                                {errors.cost_price && <p className="text-red-500 text-xs mt-1">{errors.cost_price}</p>}
+                              </div>
+                            
                             </div>
                           </div>
                         </form>

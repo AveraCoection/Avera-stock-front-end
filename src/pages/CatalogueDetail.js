@@ -1,5 +1,5 @@
 import { Menu } from '@headlessui/react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import AddCatalogue from '../components/AddCatalogue';
 import AddDesign from '../components/AddDesign';
 import EditDesign from '../components/EditDesign';
@@ -14,10 +14,13 @@ import GlobalApiState from '../utilis/globalVariable';
 import EditPrice from '../components/EditPrice';
 import { BsCashCoin } from "react-icons/bs";
 import { IoMdArrowBack } from "react-icons/io";
+import AuthContext from '../AuthContext';
 
 export default function CatalogueDetail() {
     const params = useParams()
     const navigate = useNavigate()
+    const { user } = useContext(AuthContext);
+
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [showDesignModal, setDesignModal] = useState(false);
@@ -197,14 +200,28 @@ export default function CatalogueDetail() {
                                             Total Thaan</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Price</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Edit Price</th>
+                                        {
+                                            user.user.role === "Admin" && (
+                                                <>
+                                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                        Cost Price</th>
+                                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                        Edit Price</th>
+                                                </>
+                                            )
+                                        }
+
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Add</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                                             Edit</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Delete</th>
+                                        {
+                                            user.user.role === "Admin" && (
+                                                <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                    Delete</th>
+                                            )
+                                        }
+
                                     </tr>
                                 </thead>
 
@@ -226,15 +243,24 @@ export default function CatalogueDetail() {
                                                     {element.stock}</td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                     {element.price} /per gaz</td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
-                                                    <button
-                                                        className="flex items-center gap-1 border-2 border-[#CC0000] text-[#CC0000] p-1 rounded-md"
-                                                        onClick={() => editPrice(element)}
-                                                    >
-                                                        <BsCashCoin size={19} color="#CC0000" />
-                                                        Price
-                                                    </button>
-                                                </td>
+                                                {
+                                                    user.user.role === "Admin" && (
+                                                        <>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
+                                                                {element.cost_price} /per m</td>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
+                                                                <button
+                                                                    className="flex items-center gap-1 border-2 border-[#CC0000] text-[#CC0000] p-1 rounded-md"
+                                                                    onClick={() => editPrice(element)}
+                                                                >
+                                                                    <BsCashCoin size={19} color="#CC0000" />
+                                                                    Price
+                                                                </button>
+                                                            </td>
+                                                        </>
+                                                    )
+
+                                                }
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                                     <button
                                                         className="border-2 border-green-700 text-green-600 p-1 rounded-md"
@@ -255,17 +281,23 @@ export default function CatalogueDetail() {
                                                         <span className="text-red-600 px-1 cursor-pointer">Edit</span>
                                                     </button>
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                    <RiDeleteBinLine
-                                                        color="#CC0000"
-                                                        size={22}
-                                                        cursor="pointer"
-                                                        onClick={() => {
-                                                            fetchSingleDesignData(element._id);
-                                                            deleteCatalogueModel();
-                                                        }}
-                                                    />
-                                                </td>
+
+                                                {
+                                                    user.user.role === "Admin" && (
+                                                        <td className=" whitespace-nowrap px-4 py-2 text-gray-700">
+                                                            <RiDeleteBinLine
+                                                                color="#CC0000"
+                                                                size={22}
+                                                                cursor="pointer"
+                                                                onClick={() => {
+                                                                    fetchSingleDesignData(element._id);
+                                                                    deleteCatalogueModel();
+                                                                }}
+                                                            />
+                                                        </td>
+                                                    )
+                                                }
+
                                             </tr>
                                         ))
                                     )}
