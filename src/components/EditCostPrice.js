@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GlobalApiState from '../utilis/globalVariable';
 
-export default function EditCostPrice({ editCatalogueModel, handlePageUpdate, singlecostPrice, sold }) {
+export default function EditCostPrice({ editCostPriceModel, handlePageUpdate, singlecostPrice, sold }) {
     const [open, setOpen] = useState(true);
     const [error, setErrors] = useState({});
     const cancelButtonRef = useRef(null);
@@ -40,7 +40,7 @@ export default function EditCostPrice({ editCatalogueModel, handlePageUpdate, si
             if (response.status === 200) {
                 toast.success("Cost Price Updated Successfully");
                 handlePageUpdate();
-                editCatalogueModel();
+                editCostPriceModel();
             } else {
                 toast.error("Failed to add costPrice");
             }
@@ -95,7 +95,7 @@ export default function EditCostPrice({ editCatalogueModel, handlePageUpdate, si
                                                 </Dialog.Title>
                                                 <form action="#">
                                                     <div className="flex flex-col gap-4">
-                                                        {/* Cost Type & Cost Name */}
+                                                        {/* Cost Type & Cost Amount */}
                                                         <div className="grid grid-cols-2 gap-4">
                                                             {/* Cost Type */}
                                                             <div>
@@ -113,15 +113,16 @@ export default function EditCostPrice({ editCatalogueModel, handlePageUpdate, si
                                                                     <option value="Delivery Charges">Delivery Charges</option>
                                                                     <option value="Commission on Sales">Commission on Sales</option>
                                                                     <option value="Commission for Agent">Commission for Agent</option>
+                                                                    <option value="Cataloge Expense">Cataloge Expense</option>
                                                                     <option value="Others">Others</option>
                                                                 </select>
                                                                 {error.cost_type && <p className="mt-1 text-sm text-red-600">{error.cost_type}</p>}
                                                             </div>
 
-                                                            {/* Cost Name */}
+                                                            {/* Cost Amount */}
                                                             <div>
                                                                 <label htmlFor="cost_name" className="block mb-2 text-sm font-medium text-gray-900">
-                                                                    Cost Name
+                                                                    Cost Amount
                                                                 </label>
                                                                 <input
                                                                     type="number"
@@ -186,7 +187,7 @@ export default function EditCostPrice({ editCatalogueModel, handlePageUpdate, si
                                         <button
                                             type="button"
                                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                            onClick={() => editCatalogueModel()}
+                                            onClick={() => editCostPriceModel()}
                                             ref={cancelButtonRef}
                                         >
                                             Cancel

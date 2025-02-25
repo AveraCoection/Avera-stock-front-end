@@ -23,6 +23,7 @@ function CostPrice() {
     const [singlecostPrice, setSingleCostPrice] = useState([]);
     const [updatePage, setUpdatePage] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedType, setSelectedType] = useState("");
 
     const addCostPriceModel = () => {
         setCostPriceModal(!showCostPriceModal);
@@ -124,7 +125,7 @@ function CostPrice() {
                             <span className="text-md sm:text-lg font-bold">CostPrice Details</span>
                         </div>
                         <div className="flex  sm:justify-between gap-5 px-3 py-2 w-full">
-                            <div className="flex items-center px-2 border-2 rounded-md md:w-auto w-1/2 ">
+                            {/* <div className="flex items-center px-2 border-2 rounded-md md:w-auto w-1/2 ">
                                 <img
                                     alt="search-icon"
                                     className="w-5 h-5"
@@ -137,6 +138,23 @@ function CostPrice() {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
+                            </div> */}
+                            <div className="flex flex-col">
+                                {/* <label className="mb-1">Type</label> */}
+                                <div className="flex items-center px-2 border-2 rounded-md">
+                                    <select
+                                        className="border-none outline-none text-sm w-full h-full"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    >
+                                        <option value="">Select Cost Type</option>
+                                        <option value="Delivery Charges">Delivery Charges</option>
+                                        <option value="Commission on Sales">Commission on Sales</option>
+                                        <option value="Commission for Agent">Commission for Agent</option>
+                                        <option value="Cataloge Expense">Cataloge Expense</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <button
@@ -156,7 +174,7 @@ function CostPrice() {
                                 <thead>
                                     <tr>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Cost Price type</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Cost Name </th>
+                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Cost Amount </th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Bill Detail</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Edit</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Delete</th>

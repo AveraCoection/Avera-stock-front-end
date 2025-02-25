@@ -242,12 +242,12 @@ export default function CatalogueDetail() {
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                     {element.stock}</td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
-                                                    {element.price} /per gaz</td>
+                                                    {element.price} gaz</td>
                                                 {
                                                     user.user.role === "Admin" && (
                                                         <>
                                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
-                                                                {element.cost_price} /per m</td>
+                                                                {element.cost_price} gaz</td>
                                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700 lg:text-[16px] text-[14px] font-bold">
                                                                 <button
                                                                     className="flex items-center gap-1 border-2 border-[#CC0000] text-[#CC0000] p-1 rounded-md"

@@ -33,7 +33,7 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
             fieldErrors.cost_type = "Type is required";
         }
         if (!costPrice.cost_name.trim()) {
-            fieldErrors.cost_name = "Cost Name is required";
+            fieldErrors.cost_name = "Cost Amount is required";
         }
         setErrors(fieldErrors);
         return Object.keys(fieldErrors).length === 0
@@ -110,7 +110,7 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
                                                     Cost Price
                                                 </Dialog.Title>
                                                 <form action="#" className="space-y-4">
-                                                    {/* Cost Type & Cost Name Fields */}
+                                                    {/* Cost Type & Cost Amount Fields */}
                                                     <div className="grid grid-cols-2 gap-4">
                                                         {/* Cost Type */}
                                                         <div>
@@ -128,15 +128,16 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
                                                                 <option value="Delivery Charges">Delivery Charges</option>
                                                                 <option value="Commission on Sales">Commission on Sales</option>
                                                                 <option value="Commission for Agent">Commission for Agent</option>
+                                                                <option value="Cataloge Expense">Cataloge Expense</option>
                                                                 <option value="Others">Others</option>
                                                             </select>
                                                             {error.cost_type && <p className="mt-1 text-sm text-red-600">{error.cost_type}</p>}
                                                         </div>
 
-                                                        {/* Cost Name */}
+                                                        {/* Cost Amount */}
                                                         <div>
                                                             <label htmlFor="cost_name" className="block mb-2 text-sm font-medium text-gray-900">
-                                                                Cost Name
+                                                                Cost Amount
                                                             </label>
                                                             <input
                                                                 type="number"

@@ -17,7 +17,7 @@ const Billing = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteBillModal, setDeleteBillModal] = useState(false);
   const [singleBill, setSingleBill] = useState([])
-    const [updatePage, setUpdatePage] = useState(true);
+  const [updatePage, setUpdatePage] = useState(true);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -72,20 +72,20 @@ const Billing = () => {
   const onConfirm = async () => {
 
     try {
-        const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/update-bill/${selectedBill._id}`, {
-            method: "PUT",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({ ...selectedBill , paid : true }),
-        });
-        setUpdatePage(!updatePage);
-       } catch (err) {
-        toast.error(`Error: ${err.message}`);
-        console.error(err);
+      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/update-bill/${selectedBill._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ ...selectedBill, paid: true }),
+      });
+      setUpdatePage(!updatePage);
+    } catch (err) {
+      toast.error(`Error: ${err.message}`);
+      console.error(err);
     }
     setShowConfirmModal(false);
-}
+  }
 
 
   const deleteBillModel = (element) => {
@@ -142,45 +142,60 @@ const Billing = () => {
             <div className="flex gap-4 justify-between items-start p-5 ">
               <span className="font-bold text-[16px]">Billing Details</span>
             </div>
-            <div className="flex justify-between pt-5 pb-3 px-3">
-              <div className="flex justify-center items-center px-2 border-2 rounded-md ">
-                <img
-                  alt="search-icon"
-                  className="w-5 h-5"
-                  src={require("../assets/search-icon.png")}
-                />
-                <input
-                  className="border-none outline-none text-xs"
-                  type="text"
-                  placeholder="Search here"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            <div className="flex flex-wrap gap-4 pt-5 pb-3 px-3">
+              {/* Filter by Name */}
+              <div className="flex flex-col">
+                <div className="flex items-center px-2 border-2 rounded-md h-10">
+                  <img
+                    alt="search-icon"
+                    className="w-5 h-5"
+                    src={require("../assets/search-icon.png")}
+                  />
+                  <input
+                    className="border-none outline-none text-xs ml-2 w-full h-full"
+                    type="text"
+                    placeholder="Search here"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="flex justify-center items-center px-2 border-2 rounded-md ">
-                <select
-                  className="border-none outline-none text-sm"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                >
-                  <option value="">All</option>
-                  <option value="1_week">1 Week Old</option>
-                  <option value="1_month">1 Month Old</option>
-                  <option value="3_months">3 Months Old</option>
-                </select>
+
+              {/* Filter by Time */}
+              <div className="flex flex-col">
+                <label className="mb-1">Time</label>
+                <div className="flex items-center px-2 border-2 rounded-md h-10">
+                  <select
+                    className="border-none outline-none text-sm w-full h-full"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    <option value="1_week">1 Week Old</option>
+                    <option value="1_month">1 Month Old</option>
+                    <option value="3_months">3 Months Old</option>
+                  </select>
+                </div>
               </div>
-              <div className="flex justify-center items-center px-2 border-2 rounded-md">
-                <select
-                  className="border-none outline-none text-sm"
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                >
-                  <option value="">All</option>
-                  <option value="true">Paid</option>
-                  <option value="false">Not Paid</option>
-                </select>
+
+              {/* Filter by Status */}
+              <div className="flex flex-col">
+                <label className="mb-1">Status</label>
+                <div className="flex items-center px-2 border-2 rounded-md h-10">
+                  <select
+                    className="border-none outline-none text-sm w-full h-full"
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    <option value="true">Paid</option>
+                    <option value="false">Not Paid</option>
+                  </select>
+                </div>
               </div>
             </div>
+
+
             {isLoading ? (
               <div className="flex justify-center items-center h-32">
                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-700"></div>
