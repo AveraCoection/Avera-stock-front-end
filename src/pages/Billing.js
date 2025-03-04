@@ -145,6 +145,8 @@ const Billing = () => {
             <div className="flex flex-wrap gap-4 pt-5 pb-3 px-3">
               {/* Filter by Name */}
               <div className="flex flex-col">
+                <label className="mb-1">Name</label>
+
                 <div className="flex items-center px-2 border-2 rounded-md h-10">
                   <img
                     alt="search-icon"
@@ -210,9 +212,9 @@ const Billing = () => {
                     <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Party Name
                     </th>
-                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                    {/* <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Status
-                    </th>
+                    </th> */}
                     <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
                       Date
                     </th>
@@ -270,12 +272,12 @@ const Billing = () => {
                               {element.buyer.label || element.buyer}
 
                             </td>
-                            <td
+                            {/* <td
                               className={`cursor-pointer px-4 py-2 ${element.paid ? 'text-green-600' : 'text-orange-600'} font-bold`}
                               onClick={() => handlePaidClick(element)}
                             >
                               {element.paid ? "Paid" : "Not Paid"}
-                            </td>
+                            </td> */}
 
 
                             <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
@@ -290,26 +292,25 @@ const Billing = () => {
                               {element?.grandTotal}
 
                             </td>
-                            <Link to={`/bill-history/${element._id}`}>
-                              <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                              <Link to={`/bill-history/${element._id}`}>
+                                <FaEye color="#138808" size={22} cursor="pointer" />
+                              </Link>
+                            </td>
 
-                                <FaEye color="#138808" size={22} cursor={'pointer'}
-                                />
-                              </td>
-                            </Link>
+                            {user.user.role === "Admin" && (
+                              <>
 
-                            {
-                              user.user.role === "Admin" && (
                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-
-                                  <RiDeleteBinLine color="#CC0000" size={22} cursor={'pointer'}
-                                    onClick={() => {
-                                      deleteBillModel(element)
-                                    }}
+                                  <RiDeleteBinLine
+                                    color="#CC0000"
+                                    size={22}
+                                    cursor="pointer"
+                                    onClick={() => deleteBillModel(element)}
                                   />
                                 </td>
-                              )
-                            }
+                              </>
+                            )}
 
                           </tr>
                         );

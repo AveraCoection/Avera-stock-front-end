@@ -5,6 +5,7 @@ import { IoIosPerson } from "react-icons/io";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { ImPriceTags } from "react-icons/im";
 import { MdPersonAdd } from "react-icons/md";
+import { TbBasketDiscount } from "react-icons/tb";
 import { Avatar } from "@mui/material";
 
 function SideMenu() {
@@ -41,13 +42,23 @@ function SideMenu() {
           </Link>
           {
             localStorageData?.user?.role === "Admin" && (
-              <Link
+              <>
+               <Link
                 to="/cost-price"
                 className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
               >
                 <ImPriceTags size={20} color="grey" />
                 <span className="text-sm font-medium">Cost Price</span>
               </Link>
+              <Link
+                to="/commision"
+                className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+              >
+                <TbBasketDiscount  size={20} color="grey" />
+                <span className="text-sm font-medium">Commision Based Staff</span>
+              </Link>
+              </>
+             
             )
           }
 

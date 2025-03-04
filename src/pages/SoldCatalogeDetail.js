@@ -8,13 +8,16 @@ import Stepper1 from '../components/Stepper1';
 import Stepper2 from '../components/Stepper2';
 
 export default function SoldCatalogeDetail() {
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate()
     const [buyer, setAllBuyer] = useState([]);
     const [inVoice, setInVoice] = useState('');
     const [catalogue, setAllCataloge] = useState([]);
     const [stepCount, setStepCount] = useState(1);
     const [catalogueDesignMap, setCatalogueDesignMap] = useState({});
+    const [filteredCommission, setFilteredCommission] = useState([])
+    const [isChecked, setIsChecked] = useState(false);
+    const [isDelivery, setIsDelivery] = useState(false);
 
     const [fields, setFields] = useState([
         {
@@ -28,17 +31,61 @@ export default function SoldCatalogeDetail() {
     ]);
 
     const [soldValue, setSoldValue] = useState({
-        userID:user.user._id,
+        userID: user.user._id,
         buyer: "",
         buyer_number: '',
         catalogues: "",
     })
-    const selectedBuyer = buyer.find(buyer => buyer.buyer_name === soldValue.buyer);
 
-    const formatInvoiceNumber = (number) => {
-        return number.toString().padStart(4, '0'); // Formats as 4 digits (e.g., 0001, 0002)
+    const [deliveryCharges, setDeliveryCharges] = useState({
+        userId: user.user._id,
+        cost_type: "",
+        cost_name: "",
+        design_bill: "",
+        // commission_name:null,
+        // commission_type:null,
+    });
+
+    const [salesCharges, setSalesCharges] = useState({
+        userId: user.user._id,
+        cost_type: "",
+        cost_name: "",
+        design_bill: "",
+        commission_name: "",
+        commission_type: "",
+    })
+
+    const handleInputChange = (key, value) => { 
+                setDeliveryCharges({ ...deliveryCharges, [key]: value });
     };
 
+    const handleSelectOption = (name, value) => {
+        const selectedCommission = filteredCommission.find(commission => commission._id === value);
+        
+        if (selectedCommission) {
+            setSalesCharges(prevState => ({
+                ...prevState,
+                commission_name: selectedCommission.id,
+                cost_type: "Commision on Sales",
+                cost_name: selectedCommission.commissionPrice,
+                commission_type: "Sale"
+            }));
+        }
+    };
+    
+
+    const selectedBuyer = buyer.find(buyer => buyer.buyer_name === soldValue.buyer);
+
+    const handlecommision = () => {
+        const newCheckedState = !isChecked;
+    
+        setIsChecked(newCheckedState);
+    
+        if (newCheckedState) {
+            fetchCommissionOnSales(); 
+        }
+    };
+    
     // Fetch Buyer Data
     const fetchBuyerData = () => {
         fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${user.user._id}`)
@@ -84,11 +131,26 @@ export default function SoldCatalogeDetail() {
         }
     };
 
+    const fetchCommissionOnSales = async () => {
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/commision/get-commision/${user.user._id}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            const filterType = data.filter((item) => item.type === "Sale")
+            setFilteredCommission(filterType);
+        } catch (error) {
+            console.error("Error fetching commision data:", error);
+        }
+    };
 
     useEffect(() => {
         fetchCatalogeData();
         fetchBuyerData();
         fetchInVoice()
+        
     }, []);
 
     return (
@@ -105,6 +167,15 @@ export default function SoldCatalogeDetail() {
                         stepCount={stepCount}
                         setFields={setFields}
                         fields={fields}
+                        handleInputChange={handleInputChange}
+                        deliveryCharges={deliveryCharges}
+                        filteredCommission={filteredCommission}
+                        salesCharges={salesCharges}
+                        isChecked={isChecked}
+                        handlecommision={handlecommision}
+                        handleSelectOption={handleSelectOption}
+                        setIsDelivery={setIsDelivery}
+                        isDelivery={isDelivery}
                     />
                 ) : stepCount === 2 ? (
                     <Stepper2
@@ -116,6 +187,11 @@ export default function SoldCatalogeDetail() {
                         stepCount={stepCount}
                         updateInvoiceNumber={updateInvoiceNumber}
                         invoiceNumber={inVoice}
+                        deliveryCharges={deliveryCharges}
+                        salesCharges={salesCharges}
+                        isChecked={isChecked}
+                        isDelivery={isDelivery}
+                        userId={user.user._id}
                     />
                 ) : null
             }

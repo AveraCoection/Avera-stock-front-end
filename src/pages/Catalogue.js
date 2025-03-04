@@ -136,10 +136,14 @@ function Catalogue() {
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Catalogue Number</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Total Ghazana</th>
                                         <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">View Book</th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Edit</th>
                                         {
                                             user?.user?.role === "Admin" && (
-                                                <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Delete</th>
+                                                <>
+                                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Edit</th>
+
+                                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">Delete</th>
+
+                                                </>
                                             )
 
                                         }
@@ -164,27 +168,31 @@ function Catalogue() {
                                                 <td className="whitespace-nowrap px-4 py-2 text-blue-500 font-bold">
                                                     <Link to={`/catalogue-detail/${element?._id}`}>View Detail</Link>
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                    <FaRegEdit
-                                                        color="#138808"
-                                                        size={20}
-                                                        cursor="pointer"
-                                                        onClick={() => editCatalogueModel(element)}
-                                                    />
-                                                </td>
+
                                                 {
                                                     user?.user?.role === "Admin" && (
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                            <RiDeleteBinLine
-                                                                color="#CC0000"
-                                                                size={20}
-                                                                cursor="pointer"
-                                                                onClick={() => {
-                                                                    fetchSingleCatalogeData(element._id);
-                                                                    deleteCatalogueModel();
-                                                                }}
-                                                            />
-                                                        </td>
+                                                        <>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                                <FaRegEdit
+                                                                    color="#138808"
+                                                                    size={20}
+                                                                    cursor="pointer"
+                                                                    onClick={() => editCatalogueModel(element)}
+                                                                />
+                                                            </td>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                                <RiDeleteBinLine
+                                                                    color="#CC0000"
+                                                                    size={20}
+                                                                    cursor="pointer"
+                                                                    onClick={() => {
+                                                                        fetchSingleCatalogeData(element._id);
+                                                                        deleteCatalogueModel();
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                        </>
+
                                                     )
                                                 }
 

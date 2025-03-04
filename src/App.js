@@ -21,6 +21,10 @@ import CreateStaff from "./components/CreateStaff";
 import RoleProtectedRoute from "./utilis/RoleProtectedRoutes";
 import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Commision from "./pages/Commision";
+import BuyerBillDetail from "./pages/BuyerBillDetail";
+import BuyerBillTransaction from "./pages/BuyerBillAndTransaction";
+import BuyerBillAndTransaction from "./pages/BuyerBillAndTransaction";
 // import { ToastContainer } from "react-toastify";
 
 const App = () => {
@@ -98,6 +102,8 @@ const App = () => {
             <Route path="/cost-price" element={<CostPrice />} />
             <Route path="/staff" element={<Staff />} />
             <Route path="/create-staff" element={<CreateStaff />} />
+            <Route path="/commision" element={<Commision />} />
+          <Route path="/buyer-bills/:id" element={<BuyerBillAndTransaction />} />
           </Route>
 
           <Route path="/bill-history/:id" element={<BillHistory />} />

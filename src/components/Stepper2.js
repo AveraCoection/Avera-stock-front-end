@@ -5,79 +5,140 @@ import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 import { useNavigate } from 'react-router-dom';
 
-export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, stepCount, setStepCount, updateInvoiceNumber, invoiceNumber }) {
+export default function Stepper2({buyer, userId, salesCharges,soldValue, catalogue, catalogueDesignMap, stepCount, setStepCount, updateInvoiceNumber, invoiceNumber , deliveryCharges , isChecked ,isDelivery}) {
     const pdfRef = useRef(); // Reference for the content to download
     const navigate = useNavigate();
     const currentDate = new Date().toLocaleString(); // Get current date and time
-
-    const [isChecked , setIsChecked] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const goBack = () => {
         setStepCount(stepCount - 1);
     };
 
-    const handleChange = ()=>{
-
-        setIsChecked(!isChecked)
-    }
     let totalkhazana = 0;
-    const soldCatalogeApi = async () => {
-        const content = pdfRef.current;
+    const generatePDF = async (contentRef, soldValue) => {
+        const content = contentRef.current;
         const canvas = await html2canvas(content, { scale: 2 });
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+    
         const margin = 5;
-
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-
-        const halfPageHeight = (pageHeight - margin) / 3
-
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        if (imgHeight * 2 > pageHeight) {
-            console.warn("Bill is too large to fit twice on one page. Consider reducing content size.");
-        }
-
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, halfPageHeight);
-
-        pdf.addImage(imgData, "PNG", 0, pageHeight / 2, imgWidth, halfPageHeight);
+        const halfPageHeight = (pageHeight - margin) / 3;
+    
+        pdf.addImage(imgData, "PNG", 0, 0, pageWidth, halfPageHeight);
+        pdf.addImage(imgData, "PNG", 0, pageHeight / 2, pageWidth, halfPageHeight);
         pdf.save(`${soldValue.buyer.label}_statement.pdf`);
-
-        const grandTotal = soldValue.catalogues.reduce((total, item) => {
+    };
+    
+    const calculateGrandTotal = (soldValue, catalogueDesignMap) => {
+        return soldValue.catalogues.reduce((total, item) => {
             const catalogeDesign = catalogueDesignMap[item.catalogeId]?.find(
                 (design) => design._id === item.designId
             );
             return total + (catalogeDesign?.price || 0) * item.khazana;
-        }, 0)
-
-        const currentInvoice = parseInt(Number(invoiceNumber.invoiceNumber) + 1, 10);
-        await updateInvoiceNumber(currentInvoice)
-
+        }, 0);
+    };
+    
+    const updateInvoice = async (invoiceNumber) => {
+        const newInvoice = parseInt(Number(invoiceNumber.invoiceNumber) + 1, 10);
+        await updateInvoiceNumber(newInvoice);
+        return newInvoice;
+    };
+    
+    const addSale = async (soldValue, grandTotal, invoiceNumber, isChecked) => {
         try {
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/adds`, {
                 method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                },
+                headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
-                    ...soldValue
-                    , grandTotal,
+                    ...soldValue,
+                    grandTotal,
                     buyer_phone: soldValue.buyer_number,
-                    inVoice: invoiceNumber.invoiceNumber,
-                    paid : isChecked
+                    inVoice: invoiceNumber,
+                    paid: isChecked
                 }),
             });
             if (response.status === 200) {
                 toast.success("Sales Added Successfully");
             }
+            return await response.json();
         } catch (err) {
             toast.error(`Error: ${err.message}`);
             console.error(err);
+            return null;
         }
-        navigate("/");
+    };
+    
+    const addCostPrice = async (billId, deliveryCharges) => {
+        if (!billId) return;
+        try {
+            await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cost_price/add`, {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    ...deliveryCharges,
+                    design_bill: billId
+                }),
+            });
+        } catch (err) {
+            console.error("Error adding cost price:", err);
+        }
+    };
+    
+    const addBuyer = async (buyerName, phoneNumber) => {
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/add`, {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    userId:userId,
+                    buyer_name: buyerName,
+                    phone_number: phoneNumber
+                }),
+            });
+    
+            if (response.status === 200) {
+                const data = await response.json();
+                return data._id;
+            } else {
+                toast.error("Failed to add buyer");
+                return null;
+            }
+        } catch (err) {
+            console.error("Error adding buyer:", err);
+            return null;
+        }
+    };
+
+    const soldCatalogeApi = async () => {
+        setIsLoading(true);
+        try {
+            await generatePDF(pdfRef, soldValue);
+        let buyerId =buyer.find((item)=>item.buyer_name === soldValue.buyer.label) || null;
+        if (!buyerId) {
+            buyerId = await addBuyer(soldValue.buyer.label, soldValue.buyer_number);
+            if (!buyerId) {
+                setIsLoading(false);
+                return; 
+            }
+        }
+            const grandTotal = calculateGrandTotal(soldValue, catalogueDesignMap);
+            const currentInvoice = await updateInvoice(invoiceNumber);
+            const billResult = await addSale(soldValue, grandTotal, currentInvoice, isChecked);
+            if (billResult?.billId) {
+                if(isDelivery){
+                    await addCostPrice(billResult.billId, deliveryCharges);
+                }
+                if (isChecked) {
+                    await addCostPrice(billResult.billId, salesCharges);
+                }
+            }
+            navigate('/')
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     let grandTotal = 0;
@@ -133,7 +194,7 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                                         );
                                         const totalPrice = catalogeDesign?.price ? catalogeDesign.price * item.khazana : 0;
                                         grandTotal += totalPrice;
-                                        totalkhazana += item.khazana
+                                        totalkhazana += +item.khazana
                                         return (
                                             <tr key={index}>
                                                 <td className="border p-2 text-center">{index + 1}</td>
@@ -159,24 +220,30 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                     </div>
                 </div>
 
-                <div className="py-3 flex flex-row justify-between items-center gap-5  sm:px-6">
-                    <div>
-                        <input type="checkbox" id="agree" name="terms" 
-                        value={isChecked} 
-                        onChange={handleChange}
-                        className=''
+                <div className="py-3 flex flex-row-reverse justify-between items-center gap-5  sm:px-6">
+                    {/* <div>
+                        <input type="checkbox" id="agree" name="terms"
+                            value={isChecked}
+                            onChange={handleChange}
+                            className=''
                         />
                         <label className='ml-2' for="agree">Bill Paid ?</label>
-                    </div>
+                    </div> */}
 
                     <div className="px-4 py-3 flex flex-row-reverse items-center gap-5  sm:px-6">
                         <button
                             onClick={soldCatalogeApi}
-                            className="md:px-6 py-2 px-3 h-10 md:w-auto hidden md:block w-full text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md text-sm "
+                            disabled={isLoading}
+                            className="md:px-6 py-2 px-3 h-10 md:w-auto w-full text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md text-sm flex items-center justify-center"
                         >
-                            Done
+                            {isLoading ? (
+                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                            ) : (
+                                "Done"
+                            )}
                         </button>
-                        <div
+
+                        < div
                             className="md:px-6 px-3 py-2 h-10 md:w-auto w-full  inline-flex  justify-center rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                         >
                             <button
@@ -190,6 +257,6 @@ export default function Stepper2({ soldValue, catalogue, catalogueDesignMap, ste
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

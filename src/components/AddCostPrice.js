@@ -12,17 +12,29 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
     const cancelButtonRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useContext(AuthContext);
-
+    const [filteredCommission, setFilteredCommission] = useState([])
     const [costPrice, setCostPrice] = useState({
         userId: user.user._id,
         cost_type: "",
         cost_name: "",
         design_bill: "",
+        // commission_name: "",
+        // commission_type: "",
     });
 
     // Function to handle input change
     const handleInputChange = (key, value) => {
-        setCostPrice({ ...costPrice, [key]: value });
+        if (key === "cost_type" && value === "Commission for Agent") {
+            fetchBuyerData(value);
+            setCostPrice(prevState => ({
+                ...prevState,
+                commission_type: "Agent"
+            }));
+        }
+        setCostPrice(prevState => ({
+            ...prevState,
+            [key]: value
+        }));
         if (value.trim()) {
             setErrors("");
         }
@@ -67,6 +79,25 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
             setIsLoading(false);
         }
     }
+
+    const fetchBuyerData = async (selectedType) => {
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/commision/get-commision/${user.user._id}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            const filterType = data.filter((item) => item.type === "Agent")
+            setFilteredCommission(filterType);
+        } catch (error) {
+            console.error("Error fetching commision data:", error);
+        }
+    };
+
+
+
+
     return (
         <>
             <Transition.Root show={open} as={Fragment}>
@@ -125,8 +156,6 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
                                                                 className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
                                                             >
                                                                 <option value="">Select Cost Type</option>
-                                                                <option value="Delivery Charges">Delivery Charges</option>
-                                                                <option value="Commission on Sales">Commission on Sales</option>
                                                                 <option value="Commission for Agent">Commission for Agent</option>
                                                                 <option value="Cataloge Expense">Cataloge Expense</option>
                                                                 <option value="Others">Others</option>
@@ -153,26 +182,70 @@ export default function AddCostPrice({ addCostPriceModel, handlePageUpdate, sold
                                                     </div>
 
                                                     {/* Design Bill Selection */}
-                                                    <div>
-                                                        <label htmlFor="design_bill" className="block mb-2 text-sm font-medium text-gray-900">
-                                                            Bill
-                                                        </label>
-                                                        <select
-                                                            name="design_bill"
-                                                            id="design_bill"
-                                                            value={costPrice.design_bill}
-                                                            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                                            className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
-                                                        >
-                                                            <option value="">Select Buyer</option>
-                                                            {sold?.map((buyer, index) => (
-                                                                <option key={index} value={buyer._id}>
-                                                                    {buyer.buyer?.label || buyer.buyer}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        {error.design_bill && <p className="mt-1 text-sm text-red-600">{error.design_bill}</p>}
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label htmlFor="design_bill" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                Bill
+                                                            </label>
+                                                            <select
+                                                                name="design_bill"
+                                                                id="design_bill"
+                                                                value={costPrice.design_bill}
+                                                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                            >
+                                                                <option value="">Select Buyer</option>
+                                                                {sold?.map((buyer, index) => (
+                                                                    <option key={index} value={buyer._id}>
+                                                                        {buyer.buyer?.label || buyer.buyer}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                            {error.design_bill && <p className="mt-1 text-sm text-red-600">{error.design_bill}</p>}
+                                                        </div>
+                                                        {/* <div>
+                                                            <label htmlFor="cost_type" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                Commission Type
+                                                            </label>
+                                                            <select
+                                                                name="commission_type"
+                                                                id="commission_type"
+                                                                value={costPrice.commission_type}
+                                                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                            >
+                                                                <option value="">Commission Type</option>
+                                                                <option value="Sale"> Sale</option>
+                                                                <option value="Agent">Agent</option>
+                                                            </select>
+                                                            {error.commission_type && <p className="mt-1 text-sm text-red-600">{error.cost_type}</p>}
+                                                        </div> */}
+                                                        {costPrice.cost_type === "Commission for Agent" && (
+                                                            <div>
+                                                                <label htmlFor="commission_name" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                    Commission Name
+                                                                </label>
+                                                                <select
+                                                                    name="commission_name"
+                                                                    id="commission_name"
+                                                                    value={costPrice.commission_name}
+                                                                    onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                    className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                                >
+                                                                    <option value="">Select Commission</option>
+                                                                    {filteredCommission.map((commission, index) => (
+                                                                        <option key={index} value={commission._id}>
+                                                                            {commission.name}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+                                                            </div>
+                                                        )}
                                                     </div>
+
+
+
+
                                                 </form>
 
                                             </div>

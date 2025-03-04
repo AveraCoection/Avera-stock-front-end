@@ -12,12 +12,15 @@ export default function EditCostPrice({ editCostPriceModel, handlePageUpdate, si
     const cancelButtonRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useContext(AuthContext);
+    const [filteredCommission, setFilteredCommission] = useState([])
 
     const [costPrice, setCostPrice] = useState({
         userId: user.user._id,
         cost_type: singlecostPrice.cost_type,
         cost_name: singlecostPrice.cost_name,
         design_bill: singlecostPrice.design_bill,
+        commission_name: singlecostPrice.commission_name,
+        commission_type: singlecostPrice.commission_type,
     });
 
     // Function to handle input change
@@ -26,9 +29,35 @@ export default function EditCostPrice({ editCostPriceModel, handlePageUpdate, si
 
     };
 
+    const fetchBuyerData = async (selectedType) => {
+        try {
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/commision/get-commision/${user.user._id}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            const filterType = data.filter((item) => item.type === selectedType);
+            setFilteredCommission(filterType);
+        } catch (error) {
+            console.error("Error fetching commission data:", error);
+        }
+    };
+
+    // Fetch commission data when cost type changes
+    useEffect(() => {
+        if (costPrice.commission_type) {
+            fetchBuyerData(costPrice.commission_type);
+        }
+    }, [costPrice.cost_type]);
+
     const editCostPrice = async (id) => {
 
         setIsLoading(true);
+        let updatedCostPrice = {...costPrice}
+        if (updatedCostPrice.cost_type !== "Commission for Agent") {
+            delete updatedCostPrice.commission_type;
+            delete updatedCostPrice.commission_name;
+        }
         try {
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cost_price/update_costPrice/${id}`, {
                 method: "PUT",
@@ -137,27 +166,69 @@ export default function EditCostPrice({ editCostPriceModel, handlePageUpdate, si
                                                             </div>
                                                         </div>
 
-                                                        {/* Design Bill (Buyer Selection) */}
-                                                        <div>
-                                                            <label htmlFor="design_bill" className="block mb-2 text-sm font-medium text-gray-900">
-                                                                Bill
-                                                            </label>
-                                                            <select
-                                                                name="design_bill"
-                                                                id="design_bill"
-                                                                value={costPrice.design_bill}
-                                                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                                                                className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
-                                                            >
-                                                                <option value="">Select Buyer</option>
-                                                                {sold?.map((buyer, index) => (
-                                                                    <option key={index} value={buyer._id}>
-                                                                        {buyer.buyer?.label || buyer.buyer}
-                                                                    </option>
-                                                                ))}
-                                                            </select>
-                                                            {error.design_bill && <p className="mt-1 text-sm text-red-600">{error.design_bill}</p>}
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            {/* Design Bill (Buyer Selection) */}
+                                                            <div>
+                                                                <label htmlFor="design_bill" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                    Bill
+                                                                </label>
+                                                                <select
+                                                                    name="design_bill"
+                                                                    id="design_bill"
+                                                                    value={costPrice.design_bill}
+                                                                    onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                    className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                                >
+                                                                    <option value="">Select Buyer</option>
+                                                                    {sold?.map((buyer, index) => (
+                                                                        <option key={index} value={buyer._id}>
+                                                                            {buyer.buyer?.label || buyer.buyer}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+                                                                {error.design_bill && <p className="mt-1 text-sm text-red-600">{error.design_bill}</p>}
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="cost_type" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                    Commission Type
+                                                                </label>
+                                                                <select
+                                                                    name="commission_type"
+                                                                    id="commission_type"
+                                                                    value={costPrice.commission_type}
+                                                                    onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                    className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                                >
+                                                                    <option value="">Commission Type</option>
+                                                                    <option value="Sale"> Sale</option>
+                                                                    <option value="Agent">Agent</option>
+                                                                </select>
+                                                                {error.commission_type && <p className="mt-1 text-sm text-red-600">{error.cost_type}</p>}
+                                                            </div>
                                                         </div>
+
+
+                                                        {costPrice.commission_type && (
+                                                            <div>
+                                                                <label htmlFor="commission_name" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                    Commission Name
+                                                                </label>
+                                                                <select
+                                                                    name="commission_name"
+                                                                    id="commission_name"
+                                                                    value={costPrice.commission_name}
+                                                                    onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                    className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                                >
+                                                                    <option value="">Select Commission</option>
+                                                                    {filteredCommission.map((commission, index) => (
+                                                                        <option key={index} value={commission._id}>
+                                                                            {commission.name}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
+                                                            </div>
+                                                        )}
                                                     </div>
 
                                                 </form>
@@ -179,7 +250,7 @@ export default function EditCostPrice({ editCostPriceModel, handlePageUpdate, si
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <p>Add</p>
+                                                    <p>Edit</p>
                                                 </>
                                             )}
 
