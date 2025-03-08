@@ -106,7 +106,7 @@ const App = () => {
           <Route path="/buyer-bills/:id" element={<BuyerBillAndTransaction />} />
           </Route>
 
-          <Route path="/bill-history/:id" element={<BillHistory />} />
+          <Route path="/billing-detail/bill-preview/:id" element={<BillHistory />} />
         </Route>
         <Route path="*" element={<NoPageFound />} />
       </Routes>

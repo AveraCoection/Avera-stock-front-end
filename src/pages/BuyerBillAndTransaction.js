@@ -4,7 +4,7 @@ import BuyerTransaction from './BuyerTransaction'
 
 function BuyerBillAndTransaction() {
     return (
-        <div className='flex justify-center flex-col items-center w-[1100px] mx-auto'>
+        <div className='flex justify-center  flex-col items-start lg:items-center lg:w-[1100px] overflow-x-auto mx-auto'>
         <BuyerBillDetail />
         <BuyerTransaction />
     </div>

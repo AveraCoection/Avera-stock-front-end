@@ -382,7 +382,7 @@ export default function Stepper1({
                     type="checkbox"
                     name="cost_type"
                     id="deliveryCharges"
-                    value={deliveryCharges.cost_type}
+                    checked={deliveryCharges.cost_type}
                     onChange={(e) => {
                       handleInputChange(e.target.name, "Delivery Charges")
                       setIsDelivery(!isDelivery);
@@ -413,7 +413,7 @@ export default function Stepper1({
                   <input
                     type="checkbox"
                     id="selectOption"
-                    value={isChecked}
+                    checked={isChecked}
                     onChange={handlecommision}
                     className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
                   />

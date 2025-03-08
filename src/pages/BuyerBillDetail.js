@@ -178,8 +178,9 @@ const BuyerBillDetail = () => {
                     />
                 )}
 
-                <div className=" flex flex-col gap-5 max-h-[600px] w-[700px] overflow-y-auto">
-                    <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
+                <div className="flex flex-col gap-5 w-[100vw] lg:w-[900px]">
+                    <div className="w-full overflow-x-auto rounded-lg border bg-white border-gray-200">
+
                         <ToastContainer />
                         <div className='flex justify-start items-center px-4 py-2'>
                             <IoMdArrowBack
@@ -194,7 +195,7 @@ const BuyerBillDetail = () => {
                         <div className="flex justify-between items-center px-2">
                             <div className="flex flex-wrap gap-4 px-3">
                                 {/* Filter by Name */}
-                                <div className="flex flex-col">
+                                <div className="flex flex-col w-full lg:w-auto">
                                     <label className="mb-1 text-sm">Name</label>
 
                                     <div className="flex items-center px-2 border-2 rounded-md h-10">
@@ -214,7 +215,7 @@ const BuyerBillDetail = () => {
                                 </div>
 
                                 {/* Filter by Time */}
-                                <div className="flex flex-col">
+                                <div className="flex flex-col w-full lg:w-auto">
                                     <label className="mb-1 text-sm">Time</label>
                                     <div className="flex items-center px-2 border-2 rounded-md h-10">
                                         <select
@@ -237,127 +238,127 @@ const BuyerBillDetail = () => {
                                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-700"></div>
                             </div>
                         ) : (
-                            <table className="min-w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden text-base mt-2">
-                                <thead className="bg-gray-100">
-                                    <tr>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Sr No
-                                        </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Party Name
-                                        </th>
+                            <div className="overflow-x-auto max-h-96 mt-3">
 
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Date
-                                        </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Time
-                                        </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Total
-                                        </th>
-                                        <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                            Preview
-                                        </th>
+                                <table className="min-w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden text-base mt-2">
+                                    <thead className="bg-gray-100">
+                                        <tr>
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                Sr No
+                                            </th>
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                Party Name
+                                            </th>
+
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                Date
+                                            </th>
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                Time
+                                            </th>
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                Total
+                                            </th>
+                                            <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                Preview
+                                            </th>
+                                            {
+                                                user.user.role === "Admin" && (
+                                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
+                                                        Delete</th>
+                                                )
+                                            }
+                                        </tr>
+                                    </thead>
+
+
+                                    <tbody className="divide-y divide-gray-200">
                                         {
-                                            user.user.role === "Admin" && (
-                                                <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">
-                                                    Delete</th>
+                                            filteredCatalogue.length == 0 ? (
+                                                <tr>
+                                                    <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
+                                                        Record Not Found
+                                                    </td>
+                                                </tr>) : (
+
+                                                filteredCatalogue.map((element, index) => {
+                                                    const formattedDate = new Date(element.createdAt).toLocaleDateString("en-US", {
+                                                        year: "numeric",
+                                                        month: "short",
+                                                        day: "2-digit",
+                                                    });
+
+                                                    const formattedTime = new Date(element.createdAt).toLocaleTimeString("en-US", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        hour12: true,
+                                                    });
+                                                    const currentInvoice = element?.inVoice
+                                                        ? element.inVoice.toString().padStart(4, "0")
+                                                        : "0000";
+
+                                                    return (
+                                                        <tr
+                                                            key={element._id}
+                                                            className={`hover:bg-gray-100 transition ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                                                }`}
+                                                        >
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                                {currentInvoice}
+                                                            </td>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                                {element.buyer.label || element.buyer}
+
+                                                            </td>
+
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                                {formattedDate}
+
+                                                            </td>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                                {formattedTime}
+
+                                                            </td>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                                {element?.grandTotal}
+
+                                                            </td>
+                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                                <Link to={`/billing-detail/bill-preview/${element._id}`}>
+                                                                    <FaEye color="#138808" size={22} cursor="pointer" />
+                                                                </Link>
+                                                            </td>
+
+                                                            {user.user.role === "Admin" && (
+                                                                <>
+
+                                                                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                                        <RiDeleteBinLine
+                                                                            color="#CC0000"
+                                                                            size={22}
+                                                                            cursor="pointer"
+                                                                            onClick={() => deleteBillModel(element)}
+                                                                        />
+                                                                    </td>
+                                                                </>
+                                                            )}
+
+                                                        </tr>
+                                                    );
+                                                })
+
                                             )
                                         }
-                                    </tr>
-                                </thead>
 
-
-                                <tbody className="divide-y divide-gray-200">
-                                    {
-                                        filteredCatalogue.length == 0 ? (
-                                            <tr>
-                                                <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
-                                                    Record Not Found
-                                                </td>
-                                            </tr>) : (
-
-                                            filteredCatalogue.map((element, index) => {
-                                                const formattedDate = new Date(element.createdAt).toLocaleDateString("en-US", {
-                                                    year: "numeric",
-                                                    month: "short",
-                                                    day: "2-digit",
-                                                });
-
-                                                const formattedTime = new Date(element.createdAt).toLocaleTimeString("en-US", {
-                                                    hour: "2-digit",
-                                                    minute: "2-digit",
-                                                    hour12: true,
-                                                });
-                                                const currentInvoice = element?.inVoice
-                                                    ? element.inVoice.toString().padStart(4, "0")
-                                                    : "0000";
-
-                                                return (
-                                                    <tr
-                                                        key={element._id}
-                                                        className={`hover:bg-gray-100 transition ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                                                            }`}
-                                                    >
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                            {currentInvoice}
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                            {element.buyer.label || element.buyer}
-
-                                                        </td>
-
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                            {formattedDate}
-
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                            {formattedTime}
-
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                            {element?.grandTotal}
-
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                            <Link to={`/bill-history/${element._id}`}>
-                                                                <FaEye color="#138808" size={22} cursor="pointer" />
-                                                            </Link>
-                                                        </td>
-
-                                                        {user.user.role === "Admin" && (
-                                                            <>
-
-                                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                                                                    <RiDeleteBinLine
-                                                                        color="#CC0000"
-                                                                        size={22}
-                                                                        cursor="pointer"
-                                                                        onClick={() => deleteBillModel(element)}
-                                                                    />
-                                                                </td>
-                                                            </>
-                                                        )}
-
-                                                    </tr>
-                                                );
-                                            })
-
-                                        )
-                                    }
-
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         )}
 
 
                     </div>
                 </div>
             </div>
-
-
-
         </>
     );
 };

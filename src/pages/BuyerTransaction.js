@@ -45,13 +45,13 @@ const BuyerTransaction = () => {
     };
 
     const filterPaymentsByDate = buyer?.paymentHistory?.filter((element) => {
-        const elementDate = new Date(element.createdAt);
+        const elementDate = new Date(element.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Remove time component for consistency
-    
+
         let filterDate = null;
         let dateMatch = true;
-    
+
         if (selectedDate === "1_week") {
             filterDate = new Date(today);
             filterDate.setDate(today.getDate() - 7);
@@ -65,12 +65,12 @@ const BuyerTransaction = () => {
             filterDate.setMonth(today.getMonth() - 3);
             dateMatch = elementDate <= filterDate; // Shows items older than 3 months
         }
-    
+
         return dateMatch;
     });
-    
- 
-    
+
+
+
 
     const onConfirm = async () => {
 
@@ -146,21 +146,21 @@ const BuyerTransaction = () => {
                         userId={user.user._id}
                     />
                 )}
-
-                <div className="flex flex-col gap-5 max-h-[600px] w-[700px] overflow-y-auto">
-                    <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 shadow-lg">
+                    <div className="flex flex-col gap-5 w-[100vw] lg:w-[900px]">
+                {/* <div className="flex flex-col gap-5 max-h-[600px] md:w-[1000px] w-full  items-start"> */}
+                    <div className="w-full overflow-x-auto rounded-lg border bg-white border-gray-200">
                         <ToastContainer />
                         <div className='flex justify-start items-center px-4 pt-3 rounded-t-lg'>
                             <IoMdArrowBack onClick={() => { navigate(-1) }} size={'22px'} className="cursor-pointer hover:text-gray-600" />
                             <span className="font-bold text-[16px] ml-4">BuyerTransaction Details</span>
                         </div>
 
-                        <div className="flex justify-between items-center px-4 gap-2 ">
-                            <div className="flex flex-wrap gap-4">
-                              
+                        <div className="lg:flex justify-between  items-center px-4 gap-2 ">
+                            <div className="flex flex-wrap  gap-4">
+
 
                                 {/* Filter by Time */}
-                                <div className="flex flex-col">
+                                <div className="flex flex-col mb-2 w-full lg:w-auto">
                                     <label className="mb-1 text-sm font-semibold">Time</label>
                                     <div className="flex items-center px-2 border rounded-md h-10 bg-white shadow-sm">
                                         <select className="border-none outline-none text-sm w-full h-full" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
@@ -190,10 +190,10 @@ const BuyerTransaction = () => {
                                 <table className="min-w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden text-base">
                                     <thead className="bg-gray-100">
                                         <tr className="border-b border-gray-300">
-                                            <th className="px-6 py-3 text-left font-bold text-gray-900 text-[17px]">Sr No</th>
-                                            <th className="px-6 py-3 text-left font-bold text-gray-900 text-[17px]">Paid Amount</th>
-                                            <th className="px-6 py-3 text-left font-bold text-gray-900 text-[17px]">Date</th>
-                                            <th className="px-6 py-3 text-left font-bold text-gray-900 text-[17px]">Time</th>
+                                            <th className="px-4 py-2 text-left font-bold text-gray-900 text-[17px]">Sr No</th>
+                                            <th className="px-4 py-2 text-left font-bold text-gray-900 text-[17px]">Paid Amount</th>
+                                            <th className="px-4 py-2 text-left font-bold text-gray-900 text-[17px]">Date</th>
+                                            <th className="px-4 py-2 text-left font-bold text-gray-900 text-[17px]">Time</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
@@ -221,10 +221,10 @@ const BuyerTransaction = () => {
                                                         className={`hover:bg-gray-100 transition ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
                                                             }`}
                                                     >
-                                                        <td className="px-6 py-3 text-gray-700 font-medium text-[16px] text-center">{index + 1}</td>
-                                                        <td className="px-6 py-3 text-gray-700 font-medium text-[16px] text-center">${element.amountPaid}</td>
-                                                        <td className="px-6 py-3 text-gray-700 font-medium text-[16px]">{formattedDate}</td>
-                                                        <td className="px-6 py-3 text-gray-700 font-medium text-[16px]">{formattedTime}</td>
+                                                        <td className="px-4 py-2 text-gray-700 font-medium text-[16px] ">{index + 1}</td>
+                                                        <td className="px-4 py-2 text-gray-700 font-medium text-[16px] ">Rs {element.amountPaid}</td>
+                                                        <td className="px-4 py-2 text-gray-700 font-medium text-[16px]">{formattedDate}</td>
+                                                        <td className="px-4 py-2 text-gray-700 font-medium text-[16px]">{formattedTime}</td>
                                                     </tr>
                                                 );
                                             })

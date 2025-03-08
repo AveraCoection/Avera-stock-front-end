@@ -190,19 +190,19 @@ function CostPrice() {
                                     ) : (
                                         filteredCostPrice.map((element) => (
                                             <tr key={element._id}>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
+                                                <td className="whitespace-nowrap px-4 text-[15px] py-2 text-gray-700 font-bold">
                                                     {element.cost_type}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
+                                                <td className="whitespace-nowrap px-4 text-[15px] py-2 text-gray-700 font-bold">
                                                     {element.cost_name}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 font-bold">
+                                                <td className="whitespace-nowrap px-4 py-2 text-[15px] text-gray-700 font-bold">
                                                     {(() => {
                                                         const foundBuyer = sold?.find((buyer) => buyer._id === element.design_bill);
                                                         return foundBuyer?.buyer?.label || foundBuyer?.buyer || "N/A";
                                                     })()}
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-[15px] text-gray-700">
                                                     <FaRegEdit
                                                         color="#138808"
                                                         size={20}
@@ -210,7 +210,7 @@ function CostPrice() {
                                                         onClick={() => editCostPriceModel(element)}
                                                     />
                                                 </td>
-                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <td className="whitespace-nowrap px-4 py-2 text-[15px] text-gray-700">
                                                     <RiDeleteBinLine
                                                         color="#CC0000"
                                                         size={20}

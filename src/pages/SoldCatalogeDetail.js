@@ -65,7 +65,7 @@ export default function SoldCatalogeDetail() {
         if (selectedCommission) {
             setSalesCharges(prevState => ({
                 ...prevState,
-                commission_name: selectedCommission.id,
+                commission_name: selectedCommission._id,
                 cost_type: "Commision on Sales",
                 cost_name: selectedCommission.commissionPrice,
                 commission_type: "Sale"

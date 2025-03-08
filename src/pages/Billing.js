@@ -181,7 +181,7 @@ const Billing = () => {
               </div>
 
               {/* Filter by Status */}
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col">
                 <label className="mb-1">Status</label>
                 <div className="flex items-center px-2 border-2 rounded-md h-10">
                   <select
@@ -194,7 +194,7 @@ const Billing = () => {
                     <option value="false">Not Paid</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
             </div>
 
 
@@ -293,7 +293,7 @@ const Billing = () => {
 
                             </td>
                             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                              <Link to={`/bill-history/${element._id}`}>
+                              <Link to={`/billing-detail/bill-preview/${element._id}`}>
                                 <FaEye color="#138808" size={22} cursor="pointer" />
                               </Link>
                             </td>
