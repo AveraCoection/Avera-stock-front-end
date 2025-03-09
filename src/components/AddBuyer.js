@@ -11,10 +11,10 @@ export default function AddBuyer({ addBuyerModel, handlePageUpdate }) {
   const [error, setErrors] = useState({});
   const cancelButtonRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const authContext = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
 
   const [buyer, setCataloge] = useState({
-    userId: authContext.user,
+    userId:user.user._id,
     buyer_name: "",
     phone_number: "",
   });

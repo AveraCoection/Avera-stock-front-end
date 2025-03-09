@@ -5,17 +5,18 @@ import AuthContext from '../AuthContext';
 import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 
-export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuyer }) {
+export default function EditCommission({ editBuyerModel, handlePageUpdate, singleBuyer }) {
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const [buyer, setBuyer] = useState({
         id: singleBuyer._id,
-        buyer_name: singleBuyer.buyer_name,
-        phone_number: singleBuyer.phone_number,
+        name: singleBuyer.name,
+        commissionPrice: singleBuyer.commissionPrice,
+        type: singleBuyer.type,
     });
 
     const handleInputChange = (key, value) => {
@@ -24,33 +25,33 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
 
     const editBuyer = async (id) => {
         const buyerData = {
-          ...buyer,
-          phone_number: Number(buyer.phone_number),
+            ...buyer,
+            commissionPrice: Number(buyer.commissionPrice),
         };
         setIsLoading(true)
         try {
-          const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/update_buyer/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(buyerData),
-          });
-      
-          if (response.ok) {
-            toast.success("Buyer Updated Successfully");
-            handlePageUpdate();
-            editBuyerModel();
-          }
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/commision/update/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(buyerData),
+            });
+
+            if (response.ok) {
+                toast.success("Buyer Updated Successfully");
+                handlePageUpdate();
+                editBuyerModel();
+            }
         } catch (err) {
-          toast.error(`Error: ${err.message}`);
-          console.error(err);
-        }finally{
+            toast.error(`Error: ${err.message}`);
+            console.error(err);
+        } finally {
             setIsLoading(false)
 
         }
-      };
-      
+    };
+
 
 
     return (
@@ -96,52 +97,66 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
                                                     Buyer
                                                 </Dialog.Title>
                                                 <form action="#">
-                                                    <div className="flex gap-4 mb-4 items-center justify-center">
-                                                        <div className='flex gap-4 mb-4 items-center justify-start w-full'>
-                                                            <div>
-                                                                <label
-                                                                    htmlFor="buyer_name"
-                                                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                                >
-                                                                    Buyer Name                            </label>
-                                                                <input
-                                                                    type="text"
-                                                                    name="buyer_name"
-                                                                    id="buyer_name"
-                                                                    value={buyer.buyer_name}
-                                                                    onChange={(e) =>
-                                                                        handleInputChange(e.target.name, e.target.value)
-                                                                    }
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                    placeholder="Name"
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <label
-                                                                    htmlFor="phone_number"
-                                                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                                >
-                                                                    Phone Number                            </label>
-                                                                <input
-                                                                    type="number"
-                                                                    name="phone_number"
-                                                                    id="phone_number"
-                                                                    value={buyer.phone_number}
-                                                                    onChange={(e) =>
-                                                                        handleInputChange(e.target.name, e.target.value)
-                                                                    }
-                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                    placeholder="Number"
-                                                                />
-                                                            </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label
+                                                                htmlFor="name"
+                                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                                            >
+                                                                Buyer Name                            </label>
+                                                            <input
+                                                                type="text"
+                                                                name="name"
+                                                                id="name"
+                                                                value={buyer.name}
+                                                                onChange={(e) =>
+                                                                    handleInputChange(e.target.name, e.target.value)
+                                                                }
+                                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                                placeholder="Name"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label
+                                                                htmlFor="commissionPrice"
+                                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                                            >
+                                                                Phone Number                            </label>
+                                                            <input
+                                                                type="number"
+                                                                name="commissionPrice"
+                                                                id="commissionPrice"
+                                                                value={buyer.commissionPrice}
+                                                                onChange={(e) =>
+                                                                    handleInputChange(e.target.name, e.target.value)
+                                                                }
+                                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                                placeholder="Number"
+                                                            />
                                                         </div>
 
+                                                        <div className='mt-2'>
+                                                            <label htmlFor="type" className="block mb-2 text-sm font-medium text-gray-900">
+                                                                Type
+                                                            </label>
+                                                            <select
+                                                                name="type"
+                                                                id="type"
+                                                                value={buyer.type}
+                                                                onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                                                className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                                                            >
+                                                                <option value="">Select Type</option>
+                                                                <option value="Sale">Commission on Sales</option>
+                                                                <option value="Agent">Commission for Agent</option>
+                                                            </select>
+                                                      </div>
                                                     </div>
                                                     <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                                         <button
                                                             type="button"
                                                             className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500 text-white"
-                                                            }`}    
+                                                                }`}
                                                             disabled={isLoading}
                                                             onClick={() => editBuyer(singleBuyer._id)}
                                                         >
@@ -165,6 +180,9 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
                                                             Cancel
                                                         </button>
                                                     </div>
+
+
+
                                                 </form>
                                             </div>
                                         </div>

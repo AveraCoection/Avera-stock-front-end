@@ -7,17 +7,20 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 
 export default function BillHistory() {
-    const authContext = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const params = useParams()
+    const pdfRef = useRef(); // Reference for the content to download
+    const navigate = useNavigate()
     const [updatePage, setUpdatePage] = useState(true);
     const [catalogue, setAllCataloge] = useState([]);
     const [sold, setAllSold] = useState({});
     const [designData, setDesignData] = useState({});
     const [grandTotal, setGrandTotal] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [isChecked, setIsChecked] = useState(sold.paid)
 
     const currentDate = new Date().toLocaleString();
-
+    let totalkhazana = 0;
     const currentInvoice = sold?.inVoice
         ? sold.inVoice.toString().padStart(4, "0")
         : "0000";
@@ -26,7 +29,7 @@ export default function BillHistory() {
 
     const fetchCatalogeData = async () => {
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${authContext.user}`);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/list_cataloge/${user.user._id}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -78,7 +81,14 @@ export default function BillHistory() {
         }
     };
 
+    const handleChange = () => {
+        const updatedPaidStatus = !sold.paid;
 
+        setAllSold((prevSold) => ({
+            ...prevSold,
+            paid: updatedPaidStatus,
+        }));
+    }
     useEffect(() => {
         const fetchDesignsForSoldItems = async () => {
             try {
@@ -106,6 +116,35 @@ export default function BillHistory() {
         fetchDesignsForSoldItems();
     }, [updatePage, sold]);
 
+    const soldCatalogeApi = async () => {
+        const content = pdfRef.current;
+        const canvas = await html2canvas(content, { scale: 2 });
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const margin = 5;
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const halfPageHeight = (pageHeight - margin) / 3
+
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        if (imgHeight * 2 > pageHeight) {
+            console.warn("Bill is too large to fit twice on one page. Consider reducing content size.");
+        }
+
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, halfPageHeight);
+
+        pdf.addImage(imgData, "PNG", 0, pageHeight / 2, imgWidth, halfPageHeight);
+
+        pdf.save(`${typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}_statement.pdf`);
+        navigate("/billing-detail");
+    };
+
 
 
     const calculateGrandTotal = () => {
@@ -131,47 +170,36 @@ export default function BillHistory() {
     return (
         <div className="flex items-start justify-center flex-row lg:w-[80vw] w-[100vw] min-h-[100vh] bg-gray-100">
             <div className="md:p-6 p-2 min-h-screen lg:w-[50vw] md:w-[70vw] w-[100vw] m-auto relative">
-                <div>
+                <div ref={pdfRef}>
                     {/* Header */}
-                    <div className="bg-orange-600 text-white p-4 pb-4 h-[100px] flex items-center justify-between">
-                        <div className="pb-6">
-                            <h1 className="text-2xl font-bold">Aveera Collection</h1>
-                            <p>03006637315</p>
+                    <div className="bg-orange-600 text-white px-3 py-4 h-[85px] flex items-center justify-between">
+                        <div className="flex flex-col items-start">
+                            <img className="h-9 w-9 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
+                            <h1 className="text-[16px] leading-4 font-semibold">Aveera Collection</h1>
+                            <p className='text-[12px]'>03006637315</p>
                         </div>
-                        <div className="flex justify-center items-center gap-2 pb-6">
-                            <img
-                                className="h-11 w-11 rounded-full"
-                                src={require("../assets/brandLogo.jpg")}
-                                alt="Inventory Management System"
-                            />
+
+                        <div className="flex flex-col text-center">
+                            <h2 className="text-lg font-bold">
+                                {typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}
+                            </h2>
+                            <p className="text-sm font-medium">+92-{sold.buyer_phone}</p>
+
                         </div>
+
+                        <div className="flex flex-col items-end">
+                            <p className="text-sm font-semibold">Invoice: {currentInvoice}</p>
+                            <p className="text-sm">{currentDate}</p>                        </div>
                     </div>
 
-                    {/* Body */}
+
                     {loading ? (
                         <div className="flex items-center justify-center w-full h-full">
                             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                         </div>
                     ) : (
-                        <div className="bill-img bg-white shadow-md md:p-6 p-2 md:overflow-auto overflow-x-scroll">
-                            <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-4">
-                                <div>
-                                    <h2 className="text-[15px] sm:text-lg md:text-xl font-bold">
-                                        Party Name: {typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}
-                                    </h2>
-                                    <p className="text-sm sm:text-[15px] font-normal">
-                                        Phone Number: +92-{sold.buyer_phone}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p className="text-sm sm:text-[15px] font-bold">Invoice Number: {currentInvoice}</p>
-                                    <p className="mt-2 text-sm">{currentDate}</p>
-                                </div>
-                            </div>
-
-
-                            <div className="mt-8">
+                        <div className="bill-img bg-white shadow-md p-3  md:overflow-auto overflow-x-scroll">
+                            <div className="">
                                 <table className="w-full border-collapse">
                                     <thead>
                                         <tr>
@@ -189,7 +217,7 @@ export default function BillHistory() {
 
                                             const design = designData[item.designId] || {};
                                             const totalPrice = (design.price || 0) * (item.khazana || 0);
-
+                                            totalkhazana += item.khazana
                                             return (
                                                 <tr key={index}>
                                                     <td className="border p-2 text-center">{index + 1}</td>
@@ -202,16 +230,29 @@ export default function BillHistory() {
                                             );
                                         })}
                                         <tr>
-                                            <td colSpan="5" className="text-right font-bold p-2">Grand Total</td>
-                                            <td className="text-center font-bold p-2">{grandTotal}</td>
+                                            <td colSpan="3" className="text-right font-bold">Ghazana Total</td>
+                                            <td className="text-center font-bold">{totalkhazana}</td>
+                                            <td className="text-right font-bold"> Grand Total</td>
+                                            <td className="text-center font-bold">{grandTotal}</td>
                                         </tr>
+
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
                     )}
 
 
+                </div>
+                <div className="px-4 py-3 flex flex-row-reverse items-center gap-5  sm:px-6">
+                    <button
+                        onClick={soldCatalogeApi}
+                        className="md:px-6 py-2 px-3 h-10 md:w-auto hidden md:block w-full text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md text-sm "
+                    >
+                        Print
+                    </button>
                 </div>
             </div>
         </div>

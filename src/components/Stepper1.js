@@ -16,9 +16,17 @@ export default function Stepper1({
   setCatalogueDesignMap,
   setFields,
   fields,
+  handleInputChange,
+  deliveryCharges,
+  filteredCommission,
+  salesCharges,
+  isChecked,
+  handlecommision,
+  handleSelectOption,
+  setIsDelivery,
+  isDelivery
 }) {
   const [errors, setErrors] = useState({});
-
 
   const selectedBuyer = buyer.find((buyer) => buyer._id === soldValue.buyer.value);
 
@@ -110,7 +118,10 @@ export default function Stepper1({
     if (!soldValue.buyer) {
       newErrors.buyer = 'Party Name is required.';
     }
-
+    if (!soldValue.buyer_number) {
+      newErrors.buyer_number = 'Phone Number is required.';
+    }
+    
     fields.forEach((field, index) => {
       if (!field.catalogeId) {
         newErrors[`catalogue-${index}`] = 'Catalogue is required.';
@@ -176,25 +187,6 @@ export default function Stepper1({
                     >
                       Add Party Name
                     </label>
-                    {/* <CreatableSelect
-                      options={buyer.map((item) => ({
-                        value: item._id,
-                        label: item.buyer_name,
-                      }))}
-                      onChange={(selectedOption) => {
-                        setSoldValue({ ...soldValue, buyer: selectedOption?.value });
-                      }}
-                      value={
-                        soldValue.buyer
-                          ? {
-                            value: soldValue.buyer,
-                            label: buyer.find((item) => item._id === soldValue.buyer)?.buyer_name,
-                          }
-                          : null
-                      }
-                      placeholder="Select a Party Name"
-                      className="shadow-sm rounded-lg border border-gray-200"
-                    /> */}
                     <CreatableSelect
                       options={buyer.map((item) => ({
                         value: item._id,
@@ -202,7 +194,7 @@ export default function Stepper1({
                       }))}
                       onChange={(selectedOption) => {
                         if (selectedOption) {
-                          setSoldValue({ ...soldValue, buyer: { value: selectedOption.value, label: selectedOption.label } , buyer_number:"" });
+                          setSoldValue({ ...soldValue, buyer: { value: selectedOption.value, label: selectedOption.label }, buyer_number: "" });
                         }
                       }}
                       value={
@@ -221,40 +213,43 @@ export default function Stepper1({
                       <span className="text-sm text-red-500 mt-1">{errors.buyer}</span>
                     )}
                   </div>
-                
-                    <div className="w-full">
-                      <label
-                        htmlFor="phone"
-                        className="block mb-2 text-sm font-medium text-gray-700"
-                      >
-                        Phone Number
-                      </label>
-                      <div className="flex items-center rounded-lg">
-                        {selectedBuyer && selectedBuyer.phone_number ? (
-                          <div className="bg-gray-100 w-full p-2 rounded-lg ">
-                            <span className="text-gray-500 font-semibold">+92</span>
-                            <span className="ml-2 text-gray-700 font-medium">
-                              {selectedBuyer.phone_number}
-                            </span>
-                          </div>
-                        ) : (
-                          <input
-                            type="number"
-                            name="buyer_number"
-                            id="buyer_number"
-                            value={soldValue.buyer_number || ""}  
-                            onChange={(e) =>
-                              setSoldValue({
-                                ...soldValue,
-                                buyer_number: e.target.value, 
-                              })
-                            }
-                            className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter phone number"
-                          />
-                        )}
-                      </div>
+
+                  <div className="w-full">
+                    <label
+                      htmlFor="phone"
+                      className="block mb-2 text-sm font-medium text-gray-700"
+                    >
+                      Phone Number
+                    </label>
+                    <div className="flex items-center rounded-lg">
+                      {selectedBuyer && selectedBuyer.phone_number ? (
+                        <div className="bg-gray-100 w-full p-2 rounded-lg ">
+                          <span className="text-gray-500 font-semibold">+92</span>
+                          <span className="ml-2 text-gray-700 font-medium">
+                            {selectedBuyer.phone_number}
+                          </span>
+                        </div>
+                      ) : (
+                        <input
+                          type="number"
+                          name="buyer_number"
+                          id="buyer_number"
+                          value={soldValue.buyer_number || ""}
+                          onChange={(e) =>
+                            setSoldValue({
+                              ...soldValue,
+                              buyer_number: e.target.value,
+                            })
+                          }
+                          className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Enter phone number"
+                        />
+                      )}
                     </div>
+                    {errors.buyer_number && (
+                      <span className="text-sm text-red-500 mt-1">{errors.buyer_number}</span>
+                    )}
+                  </div>
                 </div>
 
                 {fields.map((field, index) => (
@@ -379,6 +374,74 @@ export default function Stepper1({
                   Add Another Item
                 </button>
               </div>
+              <div className="w-full  bg-white  mt-4">
+
+                {/* Delivery Charges Checkbox */}
+                <div className="flex items-center gap-3 my-3">
+                  <input
+                    type="checkbox"
+                    name="cost_type"
+                    id="deliveryCharges"
+                    checked={deliveryCharges.cost_type}
+                    onChange={(e) => {
+                      handleInputChange(e.target.name, "Delivery Charges")
+                      setIsDelivery(!isDelivery);
+                    }}
+                    className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="deliveryCharges" className="text-gray-700 font-medium">Include Delivery Charges</label>
+                </div>
+
+                {isDelivery && (
+                  <input
+                    type="number"
+                    name="cost_name"
+                    id="cost_name"
+                    value={deliveryCharges.cost_name}
+                    onChange={(e) => {
+                      handleInputChange(e.target.name, e.target.value);
+
+                    }}
+
+                    className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter Delivery Charges"
+                  />
+                )}
+
+                {/* Select Options Checkbox */}
+                <div className="flex items-center gap-3 my-3">
+                  <input
+                    type="checkbox"
+                    id="selectOption"
+                    checked={isChecked}
+                    onChange={handlecommision}
+                    className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="selectOption" className="text-gray-700 font-medium">Sales Commission</label>
+                </div>
+                {
+                  isChecked && (
+                    <div>
+                      <select
+                        name="commission_name"
+                        id="commission_name"
+                        value={salesCharges.commission_name}
+                        onChange={(e) => handleSelectOption(e.target.name, e.target.value)}
+                        className="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-primary-600 focus:border-primary-600"
+                      >
+                        <option value="">Select Commission</option>
+                        {filteredCommission.map((commission, index) => (
+                          <option key={index} value={commission._id}>
+                            {commission.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )
+                }
+
+
+              </div>
               <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
                 <button
                   type="button"
@@ -388,6 +451,7 @@ export default function Stepper1({
                   Next
                 </button>
               </div>
+
             </form>
           </div>
         </div>

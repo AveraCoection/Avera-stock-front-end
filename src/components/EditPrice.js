@@ -17,7 +17,8 @@ export default function EditPrice({ editPrice, handlePageUpdate, editDesign, sin
         cataloge_number: editDesign.cataloge_number,
         stock: editDesign.stock,
         khazana_stock: editDesign.khazana_stock,
-        price: editDesign.price
+        price: editDesign.price,
+        cost_price : editDesign.cost_price,
     });
 
     const deleteBuyerModel = () => {
@@ -96,8 +97,7 @@ export default function EditPrice({ editPrice, handlePageUpdate, editDesign, sin
 
                                                 </Dialog.Title>
                                                 <form action="#">
-                                                    <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                                                        <div className='flex items-center justify-center'>
+                                                        <div className='grid gap-4 mb-4 sm:grid-cols-2'>
                                                             <div>
                                                                 <label
                                                                     htmlFor="stock"
@@ -118,8 +118,27 @@ export default function EditPrice({ editPrice, handlePageUpdate, editDesign, sin
                                                                     placeholder="price"
                                                                 />
                                                             </div>
+                                                            <div>
+                                                                <label
+                                                                    htmlFor="stock"
+                                                                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                                                                >
+                                                                   Cost Price
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    name="cost_price"
+                                                                    id="cost_price"
+                                                                    min={"0"}
+                                                                    value={design.cost_price}
+                                                                    onChange={(e) =>
+                                                                        handleInput(e.target.name, e.target.value)
+                                                                    }
+                                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                                    placeholder="cost price"
+                                                                />
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                 </form>
                                             </div>
                                         </div>

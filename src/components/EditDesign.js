@@ -17,7 +17,8 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
         cataloge_number: editDesign.cataloge_number,
         stock: editDesign.stock,
         khazana_stock: editDesign.khazana_stock,
-        price : editDesign.price
+        price : editDesign.price,
+        cost_price : editDesign.cost_price,
     });
 
     const handleInput = (key, value) => {

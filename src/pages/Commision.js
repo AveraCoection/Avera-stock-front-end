@@ -7,14 +7,17 @@ import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import EditBuyer from '../components/EditBuyer';
 import DeleteBuyer from '../components/DeleteBuyer';
-import { Link } from 'react-router-dom';
-export default function Buyers() {
+import AddCommision from '../components/AddCommission';
+import EditCommission from '../components/EditCommission';
+import DeleteCommission from '../components/DeleteCommision';
+
+export default function Commision() {
     const { user } = useContext(AuthContext);
 
     const [showBuyerModel, setBuyerModel] = useState(false);
     const [showEditBuyerModal, setEditBuyerModal] = useState(false);
     const [showDeleteBuyerModal, setDeleteBuyerModal] = useState(false);
-    const [buyer, setAllBuyer] = useState([]);
+    const [commision, setAllCommision] = useState([]);
     const [singleBuyer, setSingleBuyer] = useState([]);
     const [updatePage, setUpdatePage] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -23,8 +26,9 @@ export default function Buyers() {
     const addBuyerModel = () => {
         setBuyerModel(!showBuyerModel);
     };
-    const deleteBuyerModel = () => {
+    const deleteBuyerModel = (element) => {
         setDeleteBuyerModal(!showDeleteBuyerModal);
+        setSingleBuyer(element)
     };
     const editBuyerModel = (element) => {
         setEditBuyerModal(!showEditBuyerModal);
@@ -33,35 +37,28 @@ export default function Buyers() {
     const handlePageUpdate = () => {
         setUpdatePage(!updatePage);
     };
-    const filteredCatalogue = buyer.filter((element) =>
-        element.buyer_name.toLowerCase().includes(searchTerm.toLowerCase()) || element.phone_number.toString().includes(searchTerm)
+    const filteredCatalogue = commision.filter((element) =>
+        element.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
 
     const fetchBuyerData = async () => {
         setIsLoading(true)
         try {
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${user.user._id}`);
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/commision/get-commision/${user.user._id}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setAllBuyer(data);
+            setAllCommision(data);
         } catch (error) {
-            console.error("Error fetching buyer data:", error);
+            console.error("Error fetching commision data:", error);
         } finally {
             setIsLoading(false)
         }
     };
 
-    const fetchSingleCatalogeData = (id) => {
-        fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/edit_buyer/${id}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setSingleBuyer(data);
-            })
-            .catch((err) => console.log(err));
-    };
+   
 
     useEffect(() => {
         fetchBuyerData();
@@ -75,14 +72,14 @@ export default function Buyers() {
                 <div className=" flex flex-col gap-5 w-11/12">
 
                     {showBuyerModel && (
-                        <AddBuyer
+                        <AddCommision
                             addBuyerModel={addBuyerModel}
                             handlePageUpdate={handlePageUpdate}
                         />
                     )}
 
                     {showEditBuyerModal && (
-                        <EditBuyer
+                        <EditCommission
                             editBuyerModel={editBuyerModel}
                             handlePageUpdate={handlePageUpdate}
                             singleBuyer={singleBuyer}
@@ -90,7 +87,7 @@ export default function Buyers() {
                     )}
 
                     {showDeleteBuyerModal && (
-                        <DeleteBuyer
+                        <DeleteCommission
                             deleteBuyerModel={deleteBuyerModel}
                             updatePage={updatePage}
                             setUpdatePage={setUpdatePage}
@@ -100,39 +97,16 @@ export default function Buyers() {
                     <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
                         <ToastContainer />
 
-                        {/* <div className="flex  sm:justify-between gap-4 px-3 py-2">
-                            <div className="flex items-center px-2 border-2 rounded-md w-full sm:w-auto">
-                                <img
-                                    alt="search-icon"
-                                    className="w-5 h-5"
-                                    src={require("../assets/search-icon.png")}
-                                />
-                                <input
-                                    className="border-none outline-none text-xs  w-full"
-                                    type="text"
-                                    placeholder="Search here"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                            </div>
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded md:w-auto w-full "
-                                onClick={addBuyerModel}
-                            >
-                                Add Buyer
-                            </button>
-                        </div> */}
-
                         <div className="flex justify-between py-3 px-3">
                             <div className="flex gap-4 justify-center items-center">
-                                <span className="font-bold text-[16px]">Buyer Details</span>
+                                <span className="font-bold text-[16px]">Commission Details</span>
                             </div>
                             <div className="flex gap-4">
                                 <button
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded"
                                     onClick={addBuyerModel}
                                 >
-                                    Add Buyer
+                                    Add Commission
                                 </button>
                             </div>
                         </div>
@@ -156,24 +130,22 @@ export default function Buyers() {
                         <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
                             <thead>
                                 <tr>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Buyer Name
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                         Name
                                     </th>
-                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Phone number
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                       Type
                                     </th>
-
+                                    <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                       Commission Price
+                                    </th>
 
                                     {
                                         user.user.role === "Admin" && (
                                             <>
-                                                <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Remaining Amount
-                                                </th>
-                                                <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                       View Detail
-                                                </th>
                                                 <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Edit
                                                 </th>
                                                 <th className="whitespace-nowrap px-4 py-2 text-left font-bold text-gray-900 lg:text-[17px] text-[14px]">                                        Delete
                                                 </th>
                                             </>
+
                                         )
                                     }
 
@@ -200,22 +172,17 @@ export default function Buyers() {
                                         filteredCatalogue.map((element) => (
                                             <tr key={element._id}>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                    {element.buyer_name}
+                                                    {element.name}
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                    {element.phone_number}
+                                                    {element.type}
                                                 </td>
-
-
+                                                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
+                                                    {element.commissionPrice}
+                                                </td>
                                                 {
                                                     user.user.role === "Admin" && (
                                                         <>
-                                                            <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
-                                                                {element.remaining_amount}
-                                                            </td>
-                                                            <td className="whitespace-nowrap px-4 py-2 text-blue-500 font-bold">
-                                                                <Link to={`/buyer-bills/${element?._id}`}>View Detail</Link>
-                                                            </td>
                                                             <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-[15px] font-bold">
                                                                 <span onClick={() => editBuyerModel(element)}>
                                                                     <FaRegEdit
@@ -231,8 +198,7 @@ export default function Buyers() {
                                                                     size={22}
                                                                     cursor="pointer"
                                                                     onClick={() => {
-                                                                        fetchSingleCatalogeData(element._id);
-                                                                        deleteBuyerModel();
+                                                                        deleteBuyerModel(element);
                                                                     }}
                                                                 />
                                                             </td>
