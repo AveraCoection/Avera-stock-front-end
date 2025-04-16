@@ -8,6 +8,7 @@ import EditCatalogue from '../components/EditCatalogue';
 import DeleteCataloge from '../components/DeleteCataloge';
 import { ToastContainer } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
+import ReportGenerator from '../components/charts/Report';
 
 function Catalogue() {
     const { user } = useContext(AuthContext);
@@ -205,6 +206,8 @@ function Catalogue() {
                     </div>
                 </div>
             </div>
+
+          
         </>
     );
 }

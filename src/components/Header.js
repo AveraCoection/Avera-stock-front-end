@@ -9,6 +9,7 @@ const navigation = [
   { name: "Catalogue", href: "/", current: true },
   { name: "Buyer", href: "/buyer", current: false },
   { name: "Bills", href: "/billing-detail", current: false },
+  { name: "Report", href: "/report", current: false },
 ];
 
 const userNavigation = [{ name: "Sign out", href: "./login" }];

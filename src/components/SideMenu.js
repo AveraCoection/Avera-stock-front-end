@@ -5,6 +5,7 @@ import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { ImPriceTags } from "react-icons/im";
 import { TbBasketDiscount } from "react-icons/tb";
 import { MdPersonAdd } from "react-icons/md";
+import { TbReport } from "react-icons/tb";
 import { Avatar } from "@mui/material";
 
 const Sidebar = () => {
@@ -49,6 +50,8 @@ const Sidebar = () => {
             <span className="text-sm font-medium">Bills</span>
           </Link>
 
+
+
           {/* Admin Only Links */}
           {localStorageData?.user?.role === "Admin" && (
             <>
@@ -69,6 +72,16 @@ const Sidebar = () => {
                 <TbBasketDiscount size={20} />
                 <span className="text-sm font-medium">Commision Based Staff</span>
               </Link>
+
+              
+          <Link
+            to="/report"
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ${location.pathname.startsWith("/report") ? "bg-gray-200 text-gray-900" : ""
+              }`}
+          >
+            <TbReport  size={20} />
+            <span className="text-sm font-medium">Report</span>
+          </Link>
             </>
           )}
         </nav>
@@ -86,6 +99,7 @@ const Sidebar = () => {
             <span className="text-sm font-medium">Staff</span>
           </Link>
         )}
+
 
         <div className="inset-x-0 bottom-0 border-t border-gray-100">
           <div className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">

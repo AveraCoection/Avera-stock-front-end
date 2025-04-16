@@ -5,17 +5,25 @@ import SideMenu from "./SideMenu";
 
 function Layout() {
   return (
-    <>
-      <div className="md:h-16">
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <header className="h-16 shadow-md z-10">
         <Header />
-      </div>
-      <div className="grid grid-cols-12 bg-gray-100 items-baseline min-h-[100vh] py-3 lg:py-0">
-        <div className="col-span-2 h-screen sticky top-0 hidden lg:flex">
+      </header>
+
+      {/* Content Wrapper */}
+      <div className="flex flex-1 h-[100vh] bg-gray-100">
+
+        <div className="hidden lg:flex w-64 h-[100vh] sticky top-0 bottom-0 bg-white shadow-md">
           <SideMenu />
         </div>
-        <Outlet />
+
+        {/* Main Content */}
+        <main className="flex-1 p-4 overflow-y-auto">
+          <Outlet />
+        </main>
       </div>
-    </>
+    </div>
   );
 }
 

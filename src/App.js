@@ -25,6 +25,7 @@ import Commision from "./pages/Commision";
 import BuyerBillDetail from "./pages/BuyerBillDetail";
 import BuyerBillTransaction from "./pages/BuyerBillAndTransaction";
 import BuyerBillAndTransaction from "./pages/BuyerBillAndTransaction";
+import Report from "./pages/ReportGenerator";
 // import { ToastContainer } from "react-toastify";
 
 const App = () => {
@@ -94,6 +95,7 @@ const App = () => {
           <Route path="/buyer" element={<Buyers />} />
           <Route path="/sold-detail" element={<SoldCatalogeDetail />} />
           <Route path="/billing-detail" element={<Billing />} />
+          <Route path="/report" element={<Report />} />
 
 
           <Route
