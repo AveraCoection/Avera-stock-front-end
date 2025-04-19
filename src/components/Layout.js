@@ -19,7 +19,7 @@ function Layout() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 overflow-y-auto">
+        <main className="flex-1 p-4 h-[100vh] overflow-y-auto">
           <Outlet />
         </main>
       </div>
