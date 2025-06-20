@@ -23,3 +23,27 @@ code {
   flex-direction: column;
   justify-content: flex-start; /* Keep table content at the top */
 }
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  /* Ensure your bill has proper print margins */
+  .bill-no-print {
+    margin: 0;
+    padding: 0px;
+  }
+}
+  @media print {
+    #pdf-content {
+      width: 210mm; 
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  #pdf-content {
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+  }
+

@@ -117,35 +117,98 @@ export default function BillHistory() {
     }, [updatePage, sold]);
 
     const soldCatalogeApi = async () => {
-        const content = pdfRef.current;
-        const canvas = await html2canvas(content, { scale: 2 });
-        const imgData = canvas.toDataURL("image/png");
-
+        const itemsPerPage = 8;
+        const totalItems = sold.catalogues?.length || 0;
         const pdf = new jsPDF("p", "mm", "a4");
-
-        const margin = 5;
-
-        const pageWidth = pdf.internal.pageSize.getWidth();
+        const content = pdfRef.current;
         const pageHeight = pdf.internal.pageSize.getHeight();
+        const pageWidth = pdf.internal.pageSize.getWidth();
 
-        const halfPageHeight = (pageHeight - margin) / 3
+        const renderCanvas = async () => {
+            const canvas = await html2canvas(content, { scale: 2 });
+            return canvas.toDataURL("image/png");
+        };
 
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const showRows = (start, end) => {
+            const allRows = content.querySelectorAll("tbody tr");
+            allRows.forEach((row, index) => {
+                row.style.display = index >= start && index < end ? "" : "none";
+            });
+        };
 
-        if (imgHeight * 2 > pageHeight) {
-            console.warn("Bill is too large to fit twice on one page. Consider reducing content size.");
+        const restoreRows = () => {
+            const allRows = content.querySelectorAll("tbody tr");
+            allRows.forEach((row) => (row.style.display = ""));
+        };
+
+        if (totalItems <= 8) {
+            // ✅ Case 1: Short bill — Original + Copy on same page
+            const imgData = await renderCanvas();
+            const imgWidth = pageWidth;
+            const imgHeight = (content.offsetHeight * imgWidth) / content.offsetWidth;
+            const halfPageHeight = pageHeight / 2;
+            const scale = Math.min(1, halfPageHeight / imgHeight);
+            const scaledHeight = imgHeight * scale;
+            const scaledWidth = imgWidth * scale;
+
+            pdf.addImage(imgData, "PNG", 0, 0, scaledWidth, scaledHeight);
+            pdf.setLineWidth(0.5);
+            pdf.setDrawColor(150, 150, 150);
+            pdf.setLineDash([2, 2], 0);
+            pdf.line(0, pageHeight / 2, pageWidth, pageHeight / 2);
+            pdf.setFontSize(10);
+            pdf.setTextColor(180);
+            pdf.text("Cut or Fold Here", pageWidth / 2, pageHeight / 2 - 2, { align: "center" });
+            pdf.addImage(imgData, "PNG", 0, pageHeight / 2 + 2, scaledWidth, scaledHeight);
+            pdf.text("COPY", pageWidth - 5, pageHeight / 2 + scaledHeight + 5, { align: "right" });
+
+        } else if (totalItems <= 15) {
+            // ✅ Case 2: Medium bill — Original on page 1, Copy on page 2
+            const imgData = await renderCanvas();
+            const imgWidth = pageWidth;
+            const imgHeight = (content.offsetHeight * imgWidth) / content.offsetWidth;
+            const scale = Math.min(1, pageHeight / imgHeight);
+
+            // Original
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+
+            // Copy
+            pdf.addPage();
+            pdf.setFontSize(10);
+            pdf.setTextColor(150, 150, 150);
+            pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+
+        } else {
+            // ✅ Case 3: Long bill — Paginated original and copy
+            for (let copy = 0; copy < 2; copy++) {
+                const isCopy = copy === 1;
+
+                for (let i = 0; i < totalItems; i += itemsPerPage) {
+                    if (i > 0 || isCopy) pdf.addPage();
+
+                    if (isCopy) {
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(150, 150, 150);
+                        pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
+                    }
+
+                    showRows(i, i + itemsPerPage);
+                    const imgData = await renderCanvas();
+                    const imgWidth = pageWidth;
+                    const imgHeight = (content.offsetHeight * imgWidth) / content.offsetWidth;
+                    const scale = Math.min(1, pageHeight / imgHeight);
+                    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+                    restoreRows();
+                }
+            }
         }
 
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, halfPageHeight);
-
-        pdf.addImage(imgData, "PNG", 0, pageHeight / 2, imgWidth, halfPageHeight);
-
-        pdf.save(`${typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}_statement.pdf`);
+        restoreRows();
+        const buyerName = typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer;
+        pdf.save(`${buyerName}_invoice.pdf`);
         navigate("/billing-detail");
     };
-
-
 
     const calculateGrandTotal = () => {
         if (sold && sold.catalogues) {
@@ -168,9 +231,9 @@ export default function BillHistory() {
         fetchCatalogeData()
     }, [updatePage]);
     return (
-        <div className="flex items-start justify-center flex-row lg:w-[80vw] w-[100vw] min-h-[100vh] bg-gray-100">
-            <div className="md:p-6 p-2 min-h-screen lg:w-[50vw] md:w-[70vw] w-[100vw] m-auto relative">
-                <div ref={pdfRef}>
+        <div className="flex justify-center items-start min-h-screen bg-gray-100 px-2">
+            <div className="md:p-6 p-2 w-full max-w-4xl relative">
+                <div ref={pdfRef} id='pdf-content' className=" bill-container bg-white border-2 border-gray-400 shadow-lg">
                     {/* Header */}
                     <div className="bg-orange-600 text-white px-3 py-4 h-[85px] flex items-center justify-between">
                         <div className="flex flex-col items-start">
@@ -198,50 +261,79 @@ export default function BillHistory() {
                             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                         </div>
                     ) : (
-                        <div className="bill-img bg-white shadow-md p-3  md:overflow-auto overflow-x-scroll">
-                            <div className="">
-                                <table className="w-full border-collapse">
+                        <div className="p-2 border-gray-400 bg-white shadow-md md:overflow-auto overflow-x-scroll">
+                            <div>
+                                <table className="w-full border-collapse border border-black" style={{ borderColor: "#000000", borderWidth: "1px" }}>
                                     <thead>
-                                        <tr>
-                                            <th className="border p-2">Sr No</th>
-                                            <th className="border p-2">Catalogue</th>
-                                            <th className="border p-2">Design</th>
-                                            <th className="border p-2">Ghazana</th>
-                                            <th className="border p-2">Price</th>
-                                            <th className="border p-2">Total</th>
+                                        <tr className="bg-gray-100 border-black">
+                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Catalogue</th>
+                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
+                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
+                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
+                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {sold.catalogues?.map((item, index) => {
                                             const cataloge = catalogue.find((cata) => cata._id === item.catalogeId) || {};
-
                                             const design = designData[item.designId] || {};
                                             const totalPrice = (design.price || 0) * (item.khazana || 0);
-                                            totalkhazana += item.khazana
+                                            totalkhazana += item.khazana;
+
                                             return (
-                                                <tr key={index}>
-                                                    <td className="border p-2 text-center">{index + 1}</td>
-                                                    <td className="border p-2 text-center">{cataloge?.cataloge_number || "Not Found"}</td>
-                                                    <td className="border p-2 text-center">{design?.design_number || "Not Found"}</td>
-                                                    <td className="border p-2 text-center">{item.khazana}</td>
-                                                    <td className="border p-2 text-center">{design?.price || "Not Found"}</td>
-                                                    <td className="border p-2 text-center">{totalPrice || "Not Found"}</td>
+                                                <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
+                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
+                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.design_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
+                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.price?.toFixed(2) || "N/A"}</td>
+                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{totalPrice.toFixed(2)}</td>
                                                 </tr>
                                             );
                                         })}
-                                        <tr>
-                                            <td colSpan="3" className="text-right font-bold">Ghazana Total</td>
-                                            <td className="text-center font-bold">{totalkhazana}</td>
-                                            <td className="text-right font-bold"> Grand Total</td>
-                                            <td className="text-center font-bold">{grandTotal}</td>
-                                        </tr>
 
-
+                                        {/* Append empty rows if less than 8 */}
+                                        {Array.from({ length: Math.max(0, 8 - (sold.catalogues?.length || 0)) }).map((_, index) => (
+                                            <tr key={`empty-${index}`} className={((sold.catalogues?.length || 0) + index) % 2 === 0 ? 'bg-gray-50' : ''}>
+                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
+
                                 </table>
+                                <div className="px-4">
+
+                                    <div className="flex justify-between text-md mb-2 gap-4">
+                                        <div className="flex flex-row gap-1">
+                                            <span className="font-semibold text-md">Total Ghazana:</span>
+                                            <span className="font-bold text-md">{totalkhazana}</span>
+                                        </div>
+
+                                        <div className="flex flex-row gap-1">
+                                            <span className="font-semibold text-md">Gross Total:</span>
+                                            <span className="font-bold text-md">{grandTotal.toFixed(2)}</span>
+                                        </div>
+
+                                        {sold.discount > 0 && (
+                                            <div className="flex justify-between text-red-600">
+                                                <span className="font-semibold text-md">Discount:</span>
+                                                <span className="text-md font-bold">-{sold.discount.toFixed(2)}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-between text-lg mb-2">
+                                        <span className="font-bold">Net Payable:</span>
+                                        <span className="font-bold text-blue-700">{(grandTotal - (sold.discount || 0)).toFixed(2)}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                     )}
 
 

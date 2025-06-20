@@ -171,9 +171,9 @@ export default function Stepper1({
 
   return (
     <>
-      <div className="flex items-center justify-center lg:w-[80vw] md:w-[100vw] w-[100vw]  min-h-[100vh] relative ">
-        <div className="flex items-center justify-center md:w-[75vw] mx-7">
-          <div className="md:w-[80vw] w-[85vw] lg:w-[60vw] min-h-[90vh] mx-auto mb-4 md:p-6 p-2 bg-white shadow-lg rounded-xl relative">
+       <div className="flex justify-center items-start min-h-screen bg-gray-100 px-2">
+            <div className="md:p-6 p-2 w-full max-w-4xl relative">
+               <div className="md:w-[80vw] w-[85vw] lg:w-[60vw] min-h-[90vh] mx-auto mb-4 md:p-6 p-2 bg-white shadow-lg rounded-xl relative">
             <h3 className="text-xl md:py-4 py-1 font-bold text-gray-800 border-b border-gray-300">
               Sold Details
             </h3>

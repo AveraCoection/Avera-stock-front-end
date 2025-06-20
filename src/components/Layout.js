@@ -12,14 +12,14 @@ function Layout() {
       </header>
 
       {/* Content Wrapper */}
-      <div className="flex flex-1 h-[100vh] bg-gray-100">
-
-        <div className="hidden lg:flex w-64 h-[100vh] sticky top-0 bottom-0 bg-white shadow-md">
+      <div className="flex flex-1 overflow-hidden bg-gray-100">
+        {/* Sidebar - now with visible shadow */}
+        <div className="hidden lg:flex w-64 bg-white shadow-lg z-0 relative">
           <SideMenu />
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 h-[100vh] overflow-y-auto">
+        <main className="flex-1 p-4 overflow-y-auto">
           <Outlet />
         </main>
       </div>
