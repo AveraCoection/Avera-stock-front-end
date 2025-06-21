@@ -55,13 +55,17 @@ export default function SoldCatalogeDetail() {
         commission_type: "",
     })
 
-    const handleInputChange = (key, value) => { 
-                setDeliveryCharges({ ...deliveryCharges, [key]: value });
+    const [discountType, setDiscountType] = useState('none'); // 'none', 'fixed', 'percentage'
+    const [discountValue, setDiscountValue] = useState(0);
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+
+    const handleInputChange = (key, value) => {
+        setDeliveryCharges({ ...deliveryCharges, [key]: value });
     };
 
     const handleSelectOption = (name, value) => {
         const selectedCommission = filteredCommission.find(commission => commission._id === value);
-        
+
         if (selectedCommission) {
             setSalesCharges(prevState => ({
                 ...prevState,
@@ -72,20 +76,20 @@ export default function SoldCatalogeDetail() {
             }));
         }
     };
-    
+
 
     const selectedBuyer = buyer.find(buyer => buyer.buyer_name === soldValue.buyer);
 
     const handlecommision = () => {
         const newCheckedState = !isChecked;
-    
+
         setIsChecked(newCheckedState);
-    
+
         if (newCheckedState) {
-            fetchCommissionOnSales(); 
+            fetchCommissionOnSales();
         }
     };
-    
+
     // Fetch Buyer Data
     const fetchBuyerData = () => {
         fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/list_buyer/${user.user._id}`)
@@ -150,7 +154,7 @@ export default function SoldCatalogeDetail() {
         fetchCatalogeData();
         fetchBuyerData();
         fetchInVoice()
-        
+
     }, []);
 
     return (
@@ -192,6 +196,12 @@ export default function SoldCatalogeDetail() {
                         isChecked={isChecked}
                         isDelivery={isDelivery}
                         userId={user.user._id}
+                        discountType={discountType}
+                        setDiscountType={setDiscountType}
+                        discountPercentage={discountPercentage}
+                        setDiscountPercentage={setDiscountPercentage}
+                        discountValue={discountValue}
+                        setDiscountValue={setDiscountValue}
                     />
                 ) : null
             }
