@@ -16,8 +16,8 @@ export default function Stepper1({
   setCatalogueDesignMap,
   setFields,
   fields,
-  handleInputChange,
-  deliveryCharges,
+  // handleInputChange,
+  // deliveryCharges,
   filteredCommission,
   salesCharges,
   isChecked,
@@ -121,7 +121,7 @@ export default function Stepper1({
     if (!soldValue.buyer_number) {
       newErrors.buyer_number = 'Phone Number is required.';
     }
-    
+
     fields.forEach((field, index) => {
       if (!field.catalogeId) {
         newErrors[`catalogue-${index}`] = 'Catalogue is required.';
@@ -171,9 +171,9 @@ export default function Stepper1({
 
   return (
     <>
-       <div className="flex justify-center items-start min-h-screen bg-gray-100 px-2">
-            <div className="md:p-6 p-2 w-full max-w-4xl relative">
-               <div className="md:w-[80vw] w-[85vw] lg:w-[60vw] min-h-[90vh] mx-auto mb-4 md:p-6 p-2 bg-white shadow-lg rounded-xl relative">
+      <div className="flex justify-center items-start min-h-screen bg-gray-100 px-2">
+        <div className="md:p-6 p-2 w-full max-w-4xl relative">
+          <div className="md:w-[80vw] w-[85vw] lg:w-[60vw] min-h-[90vh] mx-auto mb-4 md:p-6 p-2 bg-white shadow-lg rounded-xl relative">
             <h3 className="text-xl md:py-4 py-1 font-bold text-gray-800 border-b border-gray-300">
               Sold Details
             </h3>
@@ -380,11 +380,10 @@ export default function Stepper1({
                 <div className="flex items-center gap-3 my-3">
                   <input
                     type="checkbox"
-                    name="cost_type"
+                    name="deliveryCharges"
                     id="deliveryCharges"
-                    checked={deliveryCharges.cost_type}
+                    checked={isDelivery}
                     onChange={(e) => {
-                      handleInputChange(e.target.name, "Delivery Charges")
                       setIsDelivery(!isDelivery);
                     }}
                     className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
@@ -395,14 +394,19 @@ export default function Stepper1({
                 {isDelivery && (
                   <input
                     type="number"
-                    name="cost_name"
-                    id="cost_name"
-                    value={deliveryCharges.cost_name}
-                    onChange={(e) => {
-                      handleInputChange(e.target.name, e.target.value);
+                    name="deliveryCharges"
+                    id="deliveryCharges"
+                    value={soldValue.deliveryCharges}
+                    // onChange={(e) => {
+                    //   handleInputChange(e.target.name, e.target.value);
 
-                    }}
-
+                    // }}
+                    onChange={(e) =>
+                      setSoldValue({
+                        ...soldValue,
+                        deliveryCharges: e.target.value,
+                      })
+                    }
                     className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter Delivery Charges"
                   />
