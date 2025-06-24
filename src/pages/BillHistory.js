@@ -235,24 +235,28 @@ export default function BillHistory() {
             <div className="md:p-6 p-2 w-full max-w-4xl relative">
                 <div ref={pdfRef} id='pdf-content' className=" bill-container bg-white border-2 border-gray-400 shadow-lg">
                     {/* Header */}
-                    <div className="bg-orange-600 text-white px-3 py-4 h-[85px] flex items-center justify-between">
-                        <div className="flex flex-col items-start">
-                            <img className="h-9 w-9 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
-                            <h1 className="text-[16px] leading-4 font-semibold">Aveera Collection</h1>
-                            <p className='text-[12px]'>03006637315</p>
+                    <div className="bg-black text-white px-3 py-4 h-[85px] flex items-center justify-between">
+                        <div className="flex flex-row gap-3 items-center">
+                            <div>
+                                <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
+                            </div>
+                            <div className='flex flex-col items-start'>
+                                <h1 className="text-[18px] leading-4 font-bold">Aveera Collection</h1>
+                                <p className='text-[16px]'>03006637315</p>
+                            </div>
                         </div>
 
                         <div className="flex flex-col text-center">
-                            <h2 className="text-lg font-bold">
+                            <h2 className="text-[24px]  font-bold">
                                 {typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}
                             </h2>
-                            <p className="text-sm font-medium">+92-{sold.buyer_phone}</p>
+                            <p className="text-[18px] font-medium">+92-{sold.buyer_phone}</p>
 
                         </div>
 
                         <div className="flex flex-col items-end">
-                            <p className="text-sm font-semibold">Invoice: {currentInvoice}</p>
-                            <p className="text-sm">{currentDate}</p>                        </div>
+                            <p className="text-[18px] font-semibold">Invoice: {currentInvoice}</p>
+                            <p className="text-[16px]">{currentDate}</p>                        </div>
                     </div>
 
 
@@ -266,12 +270,12 @@ export default function BillHistory() {
                                 <table className="w-full border-collapse border border-black" style={{ borderColor: "#000000", borderWidth: "1px" }}>
                                     <thead>
                                         <tr className="bg-gray-100 border-black">
-                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
                                             <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Catalogue</th>
-                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
-                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
-                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
-                                            <th className="border p-1 border-black text-left text-lg" style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -283,12 +287,12 @@ export default function BillHistory() {
 
                                             return (
                                                 <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
-                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "Not Found"}</td>
-                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.design_number || "Not Found"}</td>
-                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
-                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.price?.toFixed(2) || "N/A"}</td>
-                                                    <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{totalPrice.toFixed(2)}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.design_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.price?.toFixed(2) || "N/A"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{totalPrice.toFixed(2)}</td>
                                                 </tr>
                                             );
                                         })}
@@ -296,12 +300,12 @@ export default function BillHistory() {
                                         {/* Append empty rows if less than 8 */}
                                         {Array.from({ length: Math.max(0, 8 - (sold.catalogues?.length || 0)) }).map((_, index) => (
                                             <tr key={`empty-${index}`} className={((sold.catalogues?.length || 0) + index) % 2 === 0 ? 'bg-gray-50' : ''}>
-                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
-                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
-                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
-                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
-                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
-                                                <td className="border p-1 border-black text-md text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
+                                                <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>&nbsp;</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -311,23 +315,28 @@ export default function BillHistory() {
 
                                     <div className="flex justify-between text-md mb-2 gap-4">
                                         <div className="flex flex-row gap-1">
-                                            <span className="font-semibold text-md">Total Ghazana:</span>
-                                            <span className="font-bold text-md">{totalkhazana}</span>
+                                            <span className="font-semibold text-[18px]">Total Ghazana:</span>
+                                            <span className="font-bold text-[18px]">{totalkhazana}</span>
                                         </div>
 
                                         <div className="flex flex-row gap-1">
-                                            <span className="font-semibold text-md">Gross Total:</span>
-                                            <span className="font-bold text-md">{grandTotal.toFixed(2)}</span>
+                                            <span className="font-semibold text-[18px]">Gross Total:</span>
+                                            <span className="font-bold text-[18px]">{grandTotal.toFixed(2)}</span>
                                         </div>
-
+                                        {sold.deliveryCharges > 0 && (
+                                            <div className="flex flex-row gap-1">
+                                                <span className="font-semibold text-[18px]">Delivery Charges:</span>
+                                                <span className="font-bold text-[18px]">{sold.deliveryCharges}</span>
+                                            </div>
+                                        )}
                                         {sold.discount > 0 && (
                                             <div className="flex justify-between text-red-600">
-                                                <span className="font-semibold text-md">Discount:</span>
-                                                <span className="text-md font-bold">-{sold.discount.toFixed(2)}</span>
+                                                <span className="font-semibold text-[18px]">Discount:</span>
+                                                <span className="text-[18px] font-bold">-{sold.discount.toFixed(2)}</span>
                                             </div>
                                         )}
                                     </div>
-                                    <div className="flex justify-between text-lg mb-2">
+                                    <div className="flex justify-between text-[22px] mb-2">
                                         <span className="font-bold">Net Payable:</span>
                                         <span className="font-bold text-blue-700">{(grandTotal - (sold.discount || 0)).toFixed(2)}</span>
                                     </div>

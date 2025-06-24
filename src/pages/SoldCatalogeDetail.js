@@ -35,16 +35,17 @@ export default function SoldCatalogeDetail() {
         buyer: "",
         buyer_number: '',
         catalogues: "",
+        deliveryCharges:""
     })
 
-    const [deliveryCharges, setDeliveryCharges] = useState({
-        userId: user.user._id,
-        cost_type: "",
-        cost_name: "",
-        design_bill: "",
-        // commission_name:null,
-        // commission_type:null,
-    });
+    // const [deliveryCharges, setDeliveryCharges] = useState({
+    //     userId: user.user._id,
+    //     cost_type: "",
+    //     cost_name: "",
+    //     design_bill: "",
+    //     // commission_name:null,
+    //     // commission_type:null,
+    // });
 
     const [salesCharges, setSalesCharges] = useState({
         userId: user.user._id,
@@ -59,9 +60,9 @@ export default function SoldCatalogeDetail() {
     const [discountValue, setDiscountValue] = useState(0);
     const [discountPercentage, setDiscountPercentage] = useState(0);
 
-    const handleInputChange = (key, value) => {
-        setDeliveryCharges({ ...deliveryCharges, [key]: value });
-    };
+    // const handleInputChange = (key, value) => {
+    //     setDeliveryCharges({ ...deliveryCharges, [key]: value });
+    // };
 
     const handleSelectOption = (name, value) => {
         const selectedCommission = filteredCommission.find(commission => commission._id === value);
@@ -171,8 +172,8 @@ export default function SoldCatalogeDetail() {
                         stepCount={stepCount}
                         setFields={setFields}
                         fields={fields}
-                        handleInputChange={handleInputChange}
-                        deliveryCharges={deliveryCharges}
+                        // handleInputChange={handleInputChange}
+                        // deliveryCharges={deliveryCharges}
                         filteredCommission={filteredCommission}
                         salesCharges={salesCharges}
                         isChecked={isChecked}
@@ -191,7 +192,7 @@ export default function SoldCatalogeDetail() {
                         stepCount={stepCount}
                         updateInvoiceNumber={updateInvoiceNumber}
                         invoiceNumber={inVoice}
-                        deliveryCharges={deliveryCharges}
+                        // deliveryCharges={deliveryCharges}
                         salesCharges={salesCharges}
                         isChecked={isChecked}
                         isDelivery={isDelivery}

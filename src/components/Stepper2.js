@@ -6,108 +6,107 @@ import GlobalApiState from '../utilis/globalVariable';
 import { useNavigate } from 'react-router-dom';
 
 export default function Stepper2({ buyer, userId, salesCharges, soldValue, catalogue, catalogueDesignMap,
-     stepCount, setStepCount, updateInvoiceNumber, invoiceNumber, deliveryCharges, isChecked, isDelivery,
-    discountType,setDiscountType,discountPercentage,setDiscountPercentage,discountValue,setDiscountValue
-    }) {
+    stepCount, setStepCount, updateInvoiceNumber, invoiceNumber, deliveryCharges, isChecked, isDelivery,
+    discountType, setDiscountType, discountPercentage, setDiscountPercentage, discountValue, setDiscountValue
+}) {
     const pdfRef = useRef(); // Reference for the content to download
     const navigate = useNavigate();
     const currentDate = new Date().toLocaleString(); // Get current date and time
     const [isLoading, setIsLoading] = useState(false);
-   
     const goBack = () => {
         setStepCount(stepCount - 1);
     };
     let totalkhazana = 0;
-    
-const generatePDF = async (contentRef, soldValue) => {
-    const itemsPerPage = 8;
-    const totalItems = soldValue.catalogues.length;
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const pageWidth = pdf.internal.pageSize.getWidth();
 
-    const renderCanvas = async () => {
-        const canvas = await html2canvas(contentRef.current, { scale: 2 });
-        return canvas.toDataURL("image/png");
-    };
+    const generatePDF = async (contentRef, soldValue) => {
+        const itemsPerPage = 8;
+        const totalItems = soldValue.catalogues.length;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const pageWidth = pdf.internal.pageSize.getWidth();
 
-    const showRows = (start, end) => {
-        const allRows = contentRef.current.querySelectorAll('tbody tr');
-        allRows.forEach((row, index) => {
-            row.style.display = (index >= start && index < end) ? '' : 'none';
-        });
-    };
+        const renderCanvas = async () => {
+            const canvas = await html2canvas(contentRef.current, { scale: 2 });
+            return canvas.toDataURL("image/png");
+        };
 
-    const restoreRows = () => {
-        const allRows = contentRef.current.querySelectorAll('tbody tr');
-        allRows.forEach(row => row.style.display = '');
-    };
+        const showRows = (start, end) => {
+            const allRows = contentRef.current.querySelectorAll('tbody tr');
+            allRows.forEach((row, index) => {
+                row.style.display = (index >= start && index < end) ? '' : 'none';
+            });
+        };
 
-    // Case 1: Short bill (<= 8 items) — same page original + copy
-    if (totalItems <= 8) {
-        const imgData = await renderCanvas();
-        const imgWidth = pageWidth;
-        const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
-        const halfPageHeight = pageHeight / 2;
-        const scale = Math.min(1, halfPageHeight / imgHeight);
-        const scaledHeight = imgHeight * scale;
-        const scaledWidth = imgWidth * scale;
+        const restoreRows = () => {
+            const allRows = contentRef.current.querySelectorAll('tbody tr');
+            allRows.forEach(row => row.style.display = '');
+        };
 
-        pdf.addImage(imgData, "PNG", 0, 0, scaledWidth, scaledHeight);
-        pdf.setLineWidth(0.5);
-        pdf.setDrawColor(150, 150, 150);
-        pdf.setLineDash([2, 2], 0);
-        pdf.line(0, pageHeight / 2, pageWidth, pageHeight / 2);
-        pdf.setFontSize(10);
-        pdf.setTextColor(180);
-        pdf.text("Cut or Fold Here", pageWidth / 2, pageHeight / 2 - 2, { align: "center" });
-        pdf.addImage(imgData, "PNG", 0, pageHeight / 2 + 2, scaledWidth, scaledHeight);
-        pdf.text("COPY", pageWidth - 5, pageHeight / 2 + scaledHeight + 5, { align: "right" });
+        // Case 1: Short bill (<= 8 items) — same page original + copy
+        if (totalItems <= 8) {
+            const imgData = await renderCanvas();
+            const imgWidth = pageWidth;
+            const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
+            const halfPageHeight = pageHeight / 2;
+            const scale = Math.min(1, halfPageHeight / imgHeight);
+            const scaledHeight = imgHeight * scale;
+            const scaledWidth = imgWidth * scale;
 
-    } 
-    // Case 2: Medium bill (9 to 15 items) — original on page 1, copy on page 2
-    else if (totalItems <= 15) {
-        // Original
-        const imgData = await renderCanvas();
-        const imgWidth = pageWidth;
-        const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
-        const scale = Math.min(1, pageHeight / imgHeight);
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+            pdf.addImage(imgData, "PNG", 0, 0, scaledWidth, scaledHeight);
+            pdf.setLineWidth(0.5);
+            pdf.setDrawColor(150, 150, 150);
+            pdf.setLineDash([2, 2], 0);
+            pdf.line(0, pageHeight / 2, pageWidth, pageHeight / 2);
+            pdf.setFontSize(10);
+            pdf.setTextColor(180);
+            pdf.text("Cut or Fold Here", pageWidth / 2, pageHeight / 2 - 2, { align: "center" });
+            pdf.addImage(imgData, "PNG", 0, pageHeight / 2 + 2, scaledWidth, scaledHeight);
+            pdf.text("COPY", pageWidth - 5, pageHeight / 2 + scaledHeight + 5, { align: "right" });
 
-        // Copy
-        pdf.addPage();
-        pdf.setFontSize(10);
-        pdf.setTextColor(150, 150, 150);
-        pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
-    } 
-    // Case 3: Long bill (> 15 items) — paginated original and copy
-    else {
-        for (let copy = 0; copy < 2; copy++) {
-            const isCopy = copy === 1;
+        }
+        // Case 2: Medium bill (9 to 15 items) — original on page 1, copy on page 2
+        else if (totalItems <= 15) {
+            // Original
+            const imgData = await renderCanvas();
+            const imgWidth = pageWidth;
+            const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
+            const scale = Math.min(1, pageHeight / imgHeight);
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
 
-            for (let i = 0; i < totalItems; i += itemsPerPage) {
-                if (i > 0 || isCopy) pdf.addPage();
-                if (isCopy) {
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(150, 150, 150);
-                    pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
+            // Copy
+            pdf.addPage();
+            pdf.setFontSize(10);
+            pdf.setTextColor(150, 150, 150);
+            pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+        }
+        // Case 3: Long bill (> 15 items) — paginated original and copy
+        else {
+            for (let copy = 0; copy < 2; copy++) {
+                const isCopy = copy === 1;
+
+                for (let i = 0; i < totalItems; i += itemsPerPage) {
+                    if (i > 0 || isCopy) pdf.addPage();
+                    if (isCopy) {
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(150, 150, 150);
+                        pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
+                    }
+
+                    showRows(i, i + itemsPerPage);
+                    const imgData = await renderCanvas();
+                    const imgWidth = pageWidth;
+                    const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
+                    const scale = Math.min(1, pageHeight / imgHeight);
+                    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+                    restoreRows();
                 }
-
-                showRows(i, i + itemsPerPage);
-                const imgData = await renderCanvas();
-                const imgWidth = pageWidth;
-                const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
-                const scale = Math.min(1, pageHeight / imgHeight);
-                pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
-                restoreRows();
             }
         }
-    }
 
-    restoreRows(); // just in case
-    pdf.save(`${soldValue.buyer.label}_invoice.pdf`);
-};
+        restoreRows(); // just in case
+        pdf.save(`${soldValue.buyer.label}_invoice.pdf`);
+    };
 
     const calculateGrandTotal = (soldValue, catalogueDesignMap) => {
         return soldValue.catalogues.reduce((total, item) => {
@@ -120,7 +119,7 @@ const generatePDF = async (contentRef, soldValue) => {
 
     const calculateDiscount = (grandTotal) => {
         if (discountType === 'fixed') {
-            return Math.min(discountValue, grandTotal); 
+            return Math.min(discountValue, grandTotal);
         } else if (discountType === 'percentage') {
             return (grandTotal * discountPercentage) / 100;
         }
@@ -129,7 +128,8 @@ const generatePDF = async (contentRef, soldValue) => {
 
     const calculateFinalTotal = (grandTotal) => {
         const discount = calculateDiscount(grandTotal);
-        return grandTotal - discount;
+        let total = grandTotal + Number(soldValue.deliveryCharges)
+        return  total - discount ;
     };
 
     const updateInvoice = async (invoiceNumber) => {
@@ -236,9 +236,9 @@ const generatePDF = async (contentRef, soldValue) => {
             );
 
             if (billResult?.billId) {
-                if (isDelivery) {
-                    await addCostPrice(billResult.billId, deliveryCharges);
-                }
+                // if (isDelivery) {
+                //     await addCostPrice(billResult.billId, deliveryCharges);
+                // }
                 if (isChecked) {
                     await addCostPrice(billResult.billId, salesCharges);
                 }
@@ -258,25 +258,29 @@ const generatePDF = async (contentRef, soldValue) => {
                 {/* Invoice/Bill Paper - Header remains exactly the same */}
                 <div ref={pdfRef} id='pdf-content' className=" bill-container bg-white border-2 border-gray-400 shadow-lg">
                     {/* Your Original Header - Unchanged */}
-                    <div className="bg-orange-600 text-white px-3 py-4 h-[85px] flex items-center justify-between">
-                        <div className="flex flex-col items-start">
-                            <img className="h-9 w-9 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
-                            <h1 className="text-[16px] leading-4 font-semibold">Aveera Collection</h1>
-                            <p className='text-[12px]'>03006637315</p>
+                    <div className="bg-black text-white px-3 py-3 h-[85px] flex items-center justify-between">
+                        <div className="flex flex-row gap-3 items-center">
+                            <div>
+                            <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
+                            </div>
+                            <div className='flex flex-col items-start'> 
+                            <h1 className="text-[18px] leading-4 font-bold">Aveera Collection</h1>
+                            <p className='text-[16px]'>03006637315</p>
+                            </div>
                         </div>
 
                         <div className="flex flex-col text-center">
-                            <h2 className="text-lg font-bold">
+                            <h2 className="text-[24px] font-bold">
                                 {soldValue.buyer.label}
                             </h2>
-                            <p className="text-sm font-medium">+92-{soldValue.buyer_number}</p>
+                            <p className="text-[18px] font-medium">+92-{soldValue.buyer_number}</p>
                         </div>
 
                         <div className="flex flex-col items-end">
-                            <p className='text-sm sm:text-[15px] font-bold'>
+                            <p className='text-[18px] font-bold'>
                                 Invoice Number: {invoiceNumber.invoiceNumber}
                             </p>
-                            <p className="mt-2 text-sm">{currentDate}</p>
+                            <p className="mt-2 text-[16px]">{currentDate}</p>
                         </div>
                     </div>
 
@@ -284,13 +288,13 @@ const generatePDF = async (contentRef, soldValue) => {
                     <div className="p-2 border-gray-400">
                         <table className="w-full border-collapse border  border-black">
                             <thead>
-                                <tr className="bg-gray-100 border-black"  style={{ borderColor: "#000", borderWidth: "1px" }}>
-                                    <th className="border p-1  border-black text-left text-lg "  style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
-                                    <th className="border p-1  border-black text-left text-[18px] "  style={{ borderColor: "#000", borderWidth: "1px" }}>Catalogue</th>
-                                    <th className="border p-1  border-black text-left text-lg "  style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
-                                    <th className="border p-1  border-black text-left text-lg "  style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
-                                    <th className="border p-1  border-black text-left text-lg "  style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
-                                    <th className="border p-1  border-black text-left text-lg "  style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
+                                <tr className="bg-gray-100 border-black" style={{ borderColor: "#000", borderWidth: "1px" }}>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
+                                    <th className="border p-1  border-black text-left text-[18px] " style={{ borderColor: "#000", borderWidth: "1px" }}>Catalogue</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -305,12 +309,12 @@ const generatePDF = async (contentRef, soldValue) => {
 
                                     return (
                                         <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                            <td className="border p-1  border-black text-md text-center"  style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
-                                            <td className="border p-1  border-black text-md text-center"  style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "N/A"}</td>
-                                            <td className="border p-1  border-black text-md text-center"  style={{ borderColor: "#000", borderWidth: "1px" }}>{catalogeDesign?.design_number || "N/A"}</td>
-                                            <td className="border p-1  border-black text-md text-center"  style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
-                                            <td className="border p-1  border-black text-md text-center"  style={{ borderColor: "#000", borderWidth: "1px" }}>{catalogeDesign?.price?.toFixed(2) || "N/A"}</td>
-                                            <td className="border p-1  border-black text-md text-center font-medium"  style={{ borderColor: "#000", borderWidth: "1px" }}>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "N/A"}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{catalogeDesign?.design_number || "N/A"}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{catalogeDesign?.price?.toFixed(2) || "N/A"}</td>
+                                            <td className="border  border-black text-[24px] text-center font-medium" style={{ borderColor: "#000", borderWidth: "1px" }}>
                                                 {catalogeDesign?.price ? (catalogeDesign.price * item.khazana).toFixed(2) : "N/A"}
                                             </td>
                                         </tr>
@@ -337,27 +341,35 @@ const generatePDF = async (contentRef, soldValue) => {
                         {/* Single row for Ghazana, Gross Total, and Discount */}
                         <div className="flex justify-between text-md mb-2 gap-4">
                             <div className="flex flex-row gap-1">
-                                <span className="font-semibold text-md">Total Ghazana:</span>
-                                <span className="font-bold text-md">{totalkhazana}</span>
+                                <span className="font-semibold text-[18px]">Total Ghazana:</span>
+                                <span className="font-bold text-[18px]">{totalkhazana}</span>
                             </div>
 
                             <div className="flex flex-row gap-1">
-                                <span className="font-semibold text-md">Gross Total:</span>
-                                <span className="font-bold text-md">{grandTotal.toFixed(2)}</span>
+                                <span className="font-semibold text-[18px]">Gross Total:</span>
+                                <span className="font-bold text-[18px]">{grandTotal.toFixed(2)}</span>
                             </div>
+                            {
+                                isDelivery && (
+                                    <div className="flex flex-row gap-1">
+                                        <span className="font-semibold text-[18px]">Delivery Charges:</span>
+                                        <span className="font-bold text-[18px]">{soldValue.deliveryCharges}</span>
+                                    </div>
+                                )
+                            }
 
                             {discountType !== 'none' && calculateDiscount(grandTotal) > 0 && (
                                 <div className="flex flex-row gap-1 text-red-600">
-                                    <span className="font-semibold text-md">
+                                    <span className="font-semibold text-[18px]">
                                         Discount {discountType === 'percentage' ? `(${discountPercentage}%)` : ''}:
                                     </span>
-                                    <span className="text-md font-bold">-{calculateDiscount(grandTotal).toFixed(2)}</span>
+                                    <span className="text-[18px] font-bold">-{calculateDiscount(grandTotal).toFixed(2)}</span>
                                 </div>
                             )}
                         </div>
 
                         {/* Net Payable */}
-                        <div className="flex justify-between text-lg mb-2">
+                        <div className="flex justify-between text-[22px] mb-2">
                             <span className="font-bold">Net Payable:</span>
                             <span className="font-bold text-blue-700">{calculateFinalTotal(grandTotal).toFixed(2)}</span>
                         </div>
