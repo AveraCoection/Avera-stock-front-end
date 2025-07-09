@@ -289,12 +289,12 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
                         <table className="w-full border-collapse border  border-black">
                             <thead>
                                 <tr className="bg-gray-100 border-black" style={{ borderColor: "#000", borderWidth: "1px" }}>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
-                                    <th className="border p-1  border-black text-left text-[18px] " style={{ borderColor: "#000", borderWidth: "1px" }}>Catalogue</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>#</th>
+                                    <th className="border p-1  border-black text-left text-[18px] " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Catalogue</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Design</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Ghazana</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Rate</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -309,12 +309,12 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
 
                                     return (
                                         <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "N/A"}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{catalogeDesign?.design_number || "N/A"}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{catalogeDesign?.price?.toFixed(2) || "N/A"}</td>
-                                            <td className="border  border-black text-[24px] text-center font-medium" style={{ borderColor: "#000", borderWidth: "1px" }}>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{index + 1}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{cataloge?.cataloge_number || "N/A"}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{catalogeDesign?.design_number || "N/A"}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px"  ,paddingBottom: "10px" }}>{item.khazana}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{catalogeDesign?.price?.toFixed(2) || "N/A"}</td>
+                                            <td className="border  border-black text-[24px] text-center font-medium" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>
                                                 {catalogeDesign?.price ? (catalogeDesign.price * item.khazana).toFixed(2) : "N/A"}
                                             </td>
                                         </tr>
