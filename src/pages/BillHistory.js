@@ -270,12 +270,12 @@ export default function BillHistory() {
                                 <table className="w-full border-collapse border border-black" style={{ borderColor: "#000000", borderWidth: "1px" }}>
                                     <thead>
                                         <tr className="bg-gray-100 border-black">
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>#</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Catalogue</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Design</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Ghazana</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Rate</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" }}>Amount</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>#</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px"  ,paddingBottom: "10px" }}>Catalogue</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px"  ,paddingBottom: "10px"}}>Design</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>Ghazana</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>Rate</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -287,12 +287,12 @@ export default function BillHistory() {
 
                                             return (
                                                 <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{index + 1}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{cataloge?.cataloge_number || "Not Found"}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.design_number || "Not Found"}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{item.khazana}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{design?.price?.toFixed(2) || "N/A"}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" }}>{totalPrice.toFixed(2)}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>{index + 1}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{cataloge?.cataloge_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{design?.design_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{item.khazana}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{design?.price?.toFixed(2) || "N/A"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{totalPrice.toFixed(2)}</td>
                                                 </tr>
                                             );
                                         })}
