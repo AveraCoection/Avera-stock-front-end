@@ -235,27 +235,25 @@ export default function BillHistory() {
             <div className="md:p-6 p-2 w-full max-w-4xl relative">
                 <div ref={pdfRef} id='pdf-content' className=" bill-container bg-white border-2 border-gray-400 shadow-lg">
                     {/* Header */}
-                    <div className="bg-black text-white px-3 py-4 h-[85px] flex items-center justify-between">
-                        <div className="flex flex-row gap-3 items-center">
+                    <div className="bg-black text-white px-3 py-3 grid grid-cols-3 items-center">
+                           <div className="flex items-center gap-3">
+                            <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Logo" />
                             <div>
-                                <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
-                            </div>
-                            <div className='flex flex-col items-start'>
-                                <h1 className="text-[18px] leading-4 font-bold">Aveera Collection</h1>
-                                <p className='text-[16px]'>03006637315</p>
+                                <h1 className="text-[18px] leading-3 font-bold">Aveera Collection</h1>
+                                <p className="text-[16px]">03006637315</p>
                             </div>
                         </div>
 
-                        <div className="flex flex-col text-center">
-                            <h2 className="text-[24px]  font-bold">
+                          <div className="text-center px-2">
+                            <h2 className="text-[21px] leading-6 font-semibold break-words">
                                 {typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}
                             </h2>
                             <p className="text-[18px] font-medium">+92-{sold.buyer_phone}</p>
 
                         </div>
 
-                        <div className="flex flex-col items-end">
-                            <p className="text-[18px] font-semibold">Invoice: {currentInvoice}</p>
+                      <div className="text-right">
+                            <p className="text-[18px] font-bold">Invoice: {currentInvoice}</p>
                             <p className="text-[16px]">{currentDate}</p>                        </div>
                     </div>
 
