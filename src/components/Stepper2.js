@@ -129,13 +129,13 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
     const calculateFinalTotal = (grandTotal) => {
         const discount = calculateDiscount(grandTotal);
         let total = grandTotal + Number(soldValue.deliveryCharges)
-        return  total - discount ;
+        return total - discount;
     };
 
     const updateInvoice = async (invoiceNumber) => {
         const newInvoice = parseInt(Number(invoiceNumber.invoiceNumber) + 1, 10);
         await updateInvoiceNumber(newInvoice);
-        return newInvoice;
+        return invoiceNumber.invoiceNumber;
     };
 
     const addSale = async (soldValue, grandTotal, invoiceNumber, isChecked) => {
@@ -257,30 +257,30 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
             <div className="md:p-6 p-2 w-full max-w-4xl relative">
                 {/* Invoice/Bill Paper - Header remains exactly the same */}
                 <div ref={pdfRef} id='pdf-content' className=" bill-container bg-white border-2 border-gray-400 shadow-lg">
-                    {/* Your Original Header - Unchanged */}
-                    <div className="bg-black text-white px-3 py-3 h-[85px] flex items-center justify-between">
-                        <div className="flex flex-row gap-3 items-center">
+                    <div className="bg-black text-white px-3 py-3 grid grid-cols-3 items-center">
+                        {/* Left Section */}
+                        <div className="flex items-center gap-3">
+                            <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Logo" />
                             <div>
-                            <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Inventory Management System" />
-                            </div>
-                            <div className='flex flex-col items-start'> 
-                            <h1 className="text-[18px] leading-4 font-bold">Aveera Collection</h1>
-                            <p className='text-[16px]'>03006637315</p>
+                                <h1 className="text-[18px] leading-3 font-bold">Aveera Collection</h1>
+                                <p className="text-[16px]">03006637315</p>
                             </div>
                         </div>
 
-                        <div className="flex flex-col text-center">
-                            <h2 className="text-[24px] font-bold">
+                        {/* Middle Section */}
+                        <div className="text-center px-2">
+                            <h2 className="text-[21px] leading-6 font-semibold break-words">
                                 {soldValue.buyer.label}
                             </h2>
                             <p className="text-[18px] font-medium">+92-{soldValue.buyer_number}</p>
                         </div>
 
-                        <div className="flex flex-col items-end">
-                            <p className='text-[18px] font-bold'>
+                        {/* Right Section */}
+                        <div className="text-right">
+                            <p className="text-[18px] font-bold">
                                 Invoice Number: {invoiceNumber.invoiceNumber}
                             </p>
-                            <p className="mt-2 text-[16px]">{currentDate}</p>
+                            <p className="text-[16px]">{currentDate}</p>
                         </div>
                     </div>
 
@@ -289,12 +289,12 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
                         <table className="w-full border-collapse border  border-black">
                             <thead>
                                 <tr className="bg-gray-100 border-black" style={{ borderColor: "#000", borderWidth: "1px" }}>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>#</th>
-                                    <th className="border p-1  border-black text-left text-[18px] " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Catalogue</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Design</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Ghazana</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Rate</th>
-                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>Amount</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>#</th>
+                                    <th className="border p-1  border-black text-left text-[18px] " style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Catalogue</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Design</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Ghazana</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Rate</th>
+                                    <th className="border p-1  border-black text-left text-lg " style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -309,12 +309,12 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
 
                                     return (
                                         <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{index + 1}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{cataloge?.cataloge_number || "N/A"}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{catalogeDesign?.design_number || "N/A"}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px"  ,paddingBottom: "10px" }}>{item.khazana}</td>
-                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"  }}>{catalogeDesign?.price?.toFixed(2) || "N/A"}</td>
-                                            <td className="border  border-black text-[24px] text-center font-medium" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{index + 1}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{cataloge?.cataloge_number || "N/A"}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{catalogeDesign?.design_number || "N/A"}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{item.khazana}</td>
+                                            <td className="border   border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{catalogeDesign?.price?.toFixed(2) || "N/A"}</td>
+                                            <td className="border  border-black text-[24px] text-center font-medium" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>
                                                 {catalogeDesign?.price ? (catalogeDesign.price * item.khazana).toFixed(2) : "N/A"}
                                             </td>
                                         </tr>

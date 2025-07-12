@@ -104,7 +104,7 @@ export default function SoldCatalogeDetail() {
     const fetchInVoice = async () => {
         try {
 
-            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/in_voice/last_inVoice`)
+            const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/in_voice/last_inVoice/${ user.user._id}`)
 
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
@@ -129,7 +129,7 @@ export default function SoldCatalogeDetail() {
             await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/in_voice/add_inVoice`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ in_voice: newInvoice }),
+                body: JSON.stringify({ in_voice: newInvoice , userID :user.user._id }),
             });
         } catch (error) {
             console.error("Error updating invoice number:", error);
