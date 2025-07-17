@@ -239,7 +239,7 @@ export default function BillHistory() {
                            <div className="flex items-center gap-3">
                             <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Logo" />
                             <div>
-                                <h1 className="text-[18px] leading-3 font-bold">Aveera Collection</h1>
+                                <h1 className="text-[18px] leading-3 font-bold">Avera Collection</h1>
                                 <p className="text-[16px]">03006637315</p>
                             </div>
                         </div>
