@@ -18,95 +18,119 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
     };
     let totalkhazana = 0;
 
-    const generatePDF = async (contentRef, soldValue) => {
-        const itemsPerPage = 8;
-        const totalItems = soldValue.catalogues.length;
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const pageWidth = pdf.internal.pageSize.getWidth();
+  const generatePDF = async (contentRef, soldValue) => {
+    const itemsPerPage = 18;
+    const totalItems = soldValue.catalogues.length;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
 
-        const renderCanvas = async () => {
-            const canvas = await html2canvas(contentRef.current, { scale: 2 });
-            return canvas.toDataURL("image/png");
-        };
+    const renderCanvas = async () => {
+        const canvas = await html2canvas(contentRef.current, { scale: 2 });
+        return canvas.toDataURL("image/png");
+    };
 
-        const showRows = (start, end) => {
-            const allRows = contentRef.current.querySelectorAll('tbody tr');
-            allRows.forEach((row, index) => {
-                row.style.display = (index >= start && index < end) ? '' : 'none';
-            });
-        };
+    const showRows = (start, end) => {
+        const allRows = contentRef.current.querySelectorAll("tbody tr");
+        allRows.forEach((row, index) => {
+            row.style.display = index >= start && index < end ? "" : "none";
+        });
+    };
 
-        const restoreRows = () => {
-            const allRows = contentRef.current.querySelectorAll('tbody tr');
-            allRows.forEach(row => row.style.display = '');
-        };
+    const restoreRows = () => {
+        const allRows = contentRef.current.querySelectorAll("tbody tr");
+        allRows.forEach((row) => (row.style.display = ""));
+    };
 
-        // Case 1: Short bill (<= 8 items) — same page original + copy
-        if (totalItems <= 8) {
-            const imgData = await renderCanvas();
-            const imgWidth = pageWidth;
-            const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
-            const halfPageHeight = pageHeight / 2;
-            const scale = Math.min(1, halfPageHeight / imgHeight);
-            const scaledHeight = imgHeight * scale;
-            const scaledWidth = imgWidth * scale;
+    // Case 1: Short bill (<= 8 items) — same page original + copy
+    if (totalItems <= 8) {
+        const imgData = await renderCanvas();
+        const imgWidth = pageWidth;
+        const imgHeight =
+            (contentRef.current.offsetHeight * imgWidth) /
+            contentRef.current.offsetWidth;
+        const halfPageHeight = pageHeight / 2;
+        const scale = Math.min(1, halfPageHeight / imgHeight);
+        const scaledHeight = imgHeight * scale;
+        const scaledWidth = imgWidth * scale;
 
-            pdf.addImage(imgData, "PNG", 0, 0, scaledWidth, scaledHeight);
-            pdf.setLineWidth(0.5);
-            pdf.setDrawColor(150, 150, 150);
-            pdf.setLineDash([2, 2], 0);
-            pdf.line(0, pageHeight / 2, pageWidth, pageHeight / 2);
-            pdf.setFontSize(10);
-            pdf.setTextColor(180);
-            pdf.text("Cut or Fold Here", pageWidth / 2, pageHeight / 2 - 2, { align: "center" });
-            pdf.addImage(imgData, "PNG", 0, pageHeight / 2 + 2, scaledWidth, scaledHeight);
-            pdf.text("COPY", pageWidth - 5, pageHeight / 2 + scaledHeight + 5, { align: "right" });
+        pdf.addImage(imgData, "PNG", 0, 0, scaledWidth, scaledHeight);
+        pdf.setLineWidth(0.5);
+        pdf.setDrawColor(150, 150, 150);
+        pdf.setLineDash([2, 2], 0);
+        pdf.line(0, pageHeight / 2, pageWidth, pageHeight / 2);
+        pdf.setFontSize(10);
+        pdf.setTextColor(180);
+        pdf.text("Cut or Fold Here", pageWidth / 2, pageHeight / 2 - 2, {
+            align: "center",
+        });
+        pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            pageHeight / 2 + 2,
+            scaledWidth,
+            scaledHeight
+        );
+        pdf.text("COPY", pageWidth - 5, pageHeight / 2 + scaledHeight + 5, {
+            align: "right",
+        });
+    }
+    // Case 2: Medium bill (9 to 13 items) — original on page 1, copy on page 2
+    else if (totalItems <= 18) {
+        // Original
+        const imgData = await renderCanvas();
+        const imgWidth = pageWidth;
+        const imgHeight =
+            (contentRef.current.offsetHeight * imgWidth) /
+            contentRef.current.offsetWidth;
+        const scale = Math.min(1, pageHeight / imgHeight);
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
 
-        }
-        // Case 2: Medium bill (9 to 15 items) — original on page 1, copy on page 2
-        else if (totalItems <= 15) {
-            // Original
-            const imgData = await renderCanvas();
-            const imgWidth = pageWidth;
-            const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
-            const scale = Math.min(1, pageHeight / imgHeight);
-            pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+        // Copy
+        pdf.addPage();
+        pdf.setFontSize(10);
+        pdf.setTextColor(150, 150, 150);
+        pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
+    }
+    // Case 3: Long bill (>= 14 items) — paginated original and copy
+    else {
+        for (let copy = 0; copy < 2; copy++) {
+            const isCopy = copy === 1;
 
-            // Copy
-            pdf.addPage();
-            pdf.setFontSize(10);
-            pdf.setTextColor(150, 150, 150);
-            pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
-            pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
-        }
-        // Case 3: Long bill (> 15 items) — paginated original and copy
-        else {
-            for (let copy = 0; copy < 2; copy++) {
-                const isCopy = copy === 1;
-
-                for (let i = 0; i < totalItems; i += itemsPerPage) {
-                    if (i > 0 || isCopy) pdf.addPage();
-                    if (isCopy) {
-                        pdf.setFontSize(10);
-                        pdf.setTextColor(150, 150, 150);
-                        pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
-                    }
-
-                    showRows(i, i + itemsPerPage);
-                    const imgData = await renderCanvas();
-                    const imgWidth = pageWidth;
-                    const imgHeight = (contentRef.current.offsetHeight * imgWidth) / contentRef.current.offsetWidth;
-                    const scale = Math.min(1, pageHeight / imgHeight);
-                    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
-                    restoreRows();
+            for (let i = 0; i < totalItems; i += itemsPerPage) {
+                if (i > 0 || isCopy) pdf.addPage();
+                if (isCopy) {
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(150, 150, 150);
+                    pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
                 }
+
+                showRows(i, i + itemsPerPage);
+                const imgData = await renderCanvas();
+                const imgWidth = pageWidth;
+                const imgHeight =
+                    (contentRef.current.offsetHeight * imgWidth) /
+                    contentRef.current.offsetWidth;
+                const scale = Math.min(1, pageHeight / imgHeight);
+                pdf.addImage(
+                    imgData,
+                    "PNG",
+                    0,
+                    0,
+                    imgWidth * scale,
+                    imgHeight * scale
+                );
+                restoreRows();
             }
         }
+    }
 
-        restoreRows(); // just in case
-        pdf.save(`${soldValue.buyer.label}_invoice.pdf`);
-    };
+    restoreRows(); 
+    pdf.save(`${soldValue.buyer.label}_invoice.pdf`);
+};
+
 
     const calculateGrandTotal = (soldValue, catalogueDesignMap) => {
         return soldValue.catalogues.reduce((total, item) => {
@@ -369,7 +393,7 @@ export default function Stepper2({ buyer, userId, salesCharges, soldValue, catal
                         </div>
 
                         {/* Net Payable */}
-                        <div className="flex justify-between text-[22px] mb-2">
+                        <div className="flex justify-between text-[22px] mb-8">
                             <span className="font-bold">Net Payable:</span>
                             <span className="font-bold text-blue-700">{calculateFinalTotal(grandTotal).toFixed(2)}</span>
                         </div>

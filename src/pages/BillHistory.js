@@ -115,9 +115,8 @@ export default function BillHistory() {
 
         fetchDesignsForSoldItems();
     }, [updatePage, sold]);
-
     const soldCatalogeApi = async () => {
-        const itemsPerPage = 8;
+        const itemsPerPage = 18; 
         const totalItems = sold.catalogues?.length || 0;
         const pdf = new jsPDF("p", "mm", "a4");
         const content = pdfRef.current;
@@ -141,8 +140,8 @@ export default function BillHistory() {
             allRows.forEach((row) => (row.style.display = ""));
         };
 
+        // Case 1: Short bill (<= 8 items) — same page original + copy
         if (totalItems <= 8) {
-            // ✅ Case 1: Short bill — Original + Copy on same page
             const imgData = await renderCanvas();
             const imgWidth = pageWidth;
             const imgHeight = (content.offsetHeight * imgWidth) / content.offsetWidth;
@@ -162,8 +161,9 @@ export default function BillHistory() {
             pdf.addImage(imgData, "PNG", 0, pageHeight / 2 + 2, scaledWidth, scaledHeight);
             pdf.text("COPY", pageWidth - 5, pageHeight / 2 + scaledHeight + 5, { align: "right" });
 
-        } else if (totalItems <= 15) {
-            // ✅ Case 2: Medium bill — Original on page 1, Copy on page 2
+        }
+        // Case 2: Medium bill (9 to 13 items) — original on page 1, copy on page 2
+        else if (totalItems <= 18) {
             const imgData = await renderCanvas();
             const imgWidth = pageWidth;
             const imgHeight = (content.offsetHeight * imgWidth) / content.offsetWidth;
@@ -179,8 +179,9 @@ export default function BillHistory() {
             pdf.text("COPY", pageWidth - 5, 5, { align: "right" });
             pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scale, imgHeight * scale);
 
-        } else {
-            // ✅ Case 3: Long bill — Paginated original and copy
+        }
+        // Case 3: Long bill (>= 14 items) — paginated original and copy
+        else {
             for (let copy = 0; copy < 2; copy++) {
                 const isCopy = copy === 1;
 
@@ -204,11 +205,12 @@ export default function BillHistory() {
             }
         }
 
-        restoreRows();
+        restoreRows(); // safety
         const buyerName = typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer;
         pdf.save(`${buyerName}_invoice.pdf`);
         navigate("/billing-detail");
     };
+
 
     const calculateGrandTotal = () => {
         if (sold && sold.catalogues) {
@@ -236,7 +238,7 @@ export default function BillHistory() {
                 <div ref={pdfRef} id='pdf-content' className=" bill-container bg-white border-2 border-gray-400 shadow-lg">
                     {/* Header */}
                     <div className="bg-black text-white px-3 py-3 grid grid-cols-3 items-center">
-                           <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3">
                             <img className="h-14 w-14 rounded-full" src={require("../assets/brandLogo.jpg")} alt="Logo" />
                             <div>
                                 <h1 className="text-[18px] leading-3 font-bold">Avera Collection</h1>
@@ -244,7 +246,7 @@ export default function BillHistory() {
                             </div>
                         </div>
 
-                          <div className="text-center px-2">
+                        <div className="text-center px-2">
                             <h2 className="text-[21px] leading-6 font-semibold break-words">
                                 {typeof sold.buyer === "object" ? sold.buyer?.label : sold.buyer}
                             </h2>
@@ -252,7 +254,7 @@ export default function BillHistory() {
 
                         </div>
 
-                      <div className="text-right">
+                        <div className="text-right">
                             <p className="text-[18px] font-bold">Invoice: {currentInvoice}</p>
                             <p className="text-[16px]">{currentDate}</p>                        </div>
                     </div>
@@ -268,12 +270,12 @@ export default function BillHistory() {
                                 <table className="w-full border-collapse border border-black" style={{ borderColor: "#000000", borderWidth: "1px" }}>
                                     <thead>
                                         <tr className="bg-gray-100 border-black">
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>#</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px"  ,paddingBottom: "10px" }}>Catalogue</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px"  ,paddingBottom: "10px"}}>Design</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>Ghazana</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>Rate</th>
-                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>Amount</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>#</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Catalogue</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Design</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Ghazana</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Rate</th>
+                                            <th className="border p-1 border-black text-left text-[18px]" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -285,12 +287,12 @@ export default function BillHistory() {
 
                                             return (
                                                 <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px" }}>{index + 1}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{cataloge?.cataloge_number || "Not Found"}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{design?.design_number || "Not Found"}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{item.khazana}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{design?.price?.toFixed(2) || "N/A"}</td>
-                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px" ,paddingBottom: "10px"}}>{totalPrice.toFixed(2)}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{index + 1}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{cataloge?.cataloge_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{design?.design_number || "Not Found"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{item.khazana}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{design?.price?.toFixed(2) || "N/A"}</td>
+                                                    <td className="border p-1 border-black text-[24px] text-center" style={{ borderColor: "#000", borderWidth: "1px", paddingBottom: "10px" }}>{totalPrice.toFixed(2)}</td>
                                                 </tr>
                                             );
                                         })}
