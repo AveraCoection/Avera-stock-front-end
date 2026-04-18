@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { GrCatalog } from "react-icons/gr";
 import { IoIosPerson } from "react-icons/io";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
-import { ImPriceTags } from "react-icons/im";
+import { ImPriceTags, ImStatsBars } from "react-icons/im";
 import { TbBasketDiscount } from "react-icons/tb";
 import { MdPersonAdd } from "react-icons/md";
 import { TbReport } from "react-icons/tb";
@@ -16,13 +16,23 @@ const Sidebar = () => {
 
 
   return (
-    <div className="h-full flex-col justify-between bg-white hidden lg:flex">
+    <div className="flex-col justify-between hidden h-full bg-white lg:flex">
       <div className="px-4 py-6">
-        <nav aria-label="Main Nav" className="mt-6 flex flex-col space-y-1">
+        <nav aria-label="Main Nav" className="flex flex-col mt-6 space-y-1">
+
+           <Link
+            to="/"
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ${location.pathname === "/"? "bg-gray-200 text-gray-900"
+                : ""
+              }`}
+          >
+            <ImStatsBars size={20} />
+            <span className="text-sm font-medium">Data Summary</span>
+          </Link>
           {/* Catalogue (Active on / and /catalogue-detail/:id) */}
           <Link
-            to="/"
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ${location.pathname === "/" || location.pathname.startsWith("/catalogue-detail")
+            to="/catalogue"
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ${location.pathname === "/catalogue" || location.pathname.startsWith("/catalogue-detail")
                 ? "bg-gray-200 text-gray-900"
                 : ""
               }`}
@@ -102,7 +112,7 @@ const Sidebar = () => {
 
 
         <div className="inset-x-0 bottom-0 border-t border-gray-100">
-          <div className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50">
+          <div className="flex items-center gap-2 p-4 bg-white hover:bg-gray-50">
             <Avatar
               alt={localStorageData?.user?.name || "User"}
               src={localStorageData?.user?.imageUrl || ""}

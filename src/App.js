@@ -25,6 +25,7 @@ import BuyerBillDetail from "./pages/BuyerBillDetail";
 import BuyerBillTransaction from "./pages/BuyerBillAndTransaction";
 import BuyerBillAndTransaction from "./pages/BuyerBillAndTransaction";
 import Report from "./pages/ReportGenerator";
+import OverViewReport from "./pages/OverViewReport";
 
 const App = () => {
   const [users, setUser] = useState(null);
@@ -86,7 +87,8 @@ const App = () => {
             </ProtectedWrapper>
           }
         >
-          <Route index element={<Catalogue />} />
+          <Route index element={<OverViewReport />} />
+          <Route path="/catalogue" element={<Catalogue />} />
           <Route path="/catalogue-detail/:cataloge" element={<CatalogueDetail />} />
           <Route path="/buyer" element={<Buyers />} />
           <Route path="/sold-detail" element={<SoldCatalogeDetail />} />
