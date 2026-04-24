@@ -12,7 +12,7 @@ export default function DeleteDesign({deleteCatalogueModel , setUpdatePage , upd
           const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge_design/delete_design/${singleDesign._id}`, {
             method: 'DELETE'
           });
-          const data = await response.json(); 
+          await response.json(); 
       
           setUpdatePage(!updatePage);
         } catch (error) {

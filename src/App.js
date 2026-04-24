@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
 import "./index.css";
 import Layout from "./components/Layout";
 import NoPageFound from "./pages/NoPageFound";
@@ -21,8 +19,6 @@ import RoleProtectedRoute from "./utilis/RoleProtectedRoutes";
 import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Commision from "./pages/Commision";
-import BuyerBillDetail from "./pages/BuyerBillDetail";
-import BuyerBillTransaction from "./pages/BuyerBillAndTransaction";
 import BuyerBillAndTransaction from "./pages/BuyerBillAndTransaction";
 import Report from "./pages/ReportGenerator";
 import OverViewReport from "./pages/OverViewReport";
@@ -40,17 +36,7 @@ const App = () => {
     setLoader(false);
   }, []);
 
-  const signin = (newUser, callback) => {
-    setUser(newUser);
-    callback();
-  };
 
-  const signout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
-
-  const value = { users, signin, signout };
 
   if (loader) {
     return (
