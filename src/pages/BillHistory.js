@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 import { useNavigate, useParams } from 'react-router-dom';
 import AuthContext from '../AuthContext';
@@ -17,7 +16,6 @@ export default function BillHistory() {
     const [designData, setDesignData] = useState({});
     const [grandTotal, setGrandTotal] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [isChecked, setIsChecked] = useState(sold.paid)
 
     const currentDate = new Date().toLocaleString();
     let totalkhazana = 0;
@@ -81,14 +79,7 @@ export default function BillHistory() {
         }
     };
 
-    const handleChange = () => {
-        const updatedPaidStatus = !sold.paid;
-
-        setAllSold((prevSold) => ({
-            ...prevSold,
-            paid: updatedPaidStatus,
-        }));
-    }
+   
     useEffect(() => {
         const fetchDesignsForSoldItems = async () => {
             try {

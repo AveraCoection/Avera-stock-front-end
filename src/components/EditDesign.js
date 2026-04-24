@@ -1,17 +1,12 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
 import React, { Fragment, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 
 export default function EditDesignBySell({ editDesignModel, handlePageUpdate, editDesign, singlecataloge }) {
-    const params = useParams()
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-    const [soldStock, setSoldStock] = useState(editDesign.stock)
-    const [soldKhazana, setSoldKhazana] = useState(editDesign.khazana_stock)
     const [design, setDesign] = useState({
         id: editDesign._id,
         cataloge_number: editDesign.cataloge_number,
@@ -67,7 +62,7 @@ export default function EditDesignBySell({ editDesignModel, handlePageUpdate, ed
                 throw new Error(errorMessage || "Failed to update stock");
             }
 
-            const result = await response.json();
+           await response.json();
 
             toast.success("Stock Updated Successfully");
 

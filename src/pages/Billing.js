@@ -3,7 +3,6 @@ import GlobalApiState from "../utilis/globalVariable";
 import AuthContext from "../AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
-import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import DeleteBill from "../components/DeleteBill";
 import { FaEye } from "react-icons/fa";
@@ -62,17 +61,12 @@ const Billing = () => {
     );
   });
 
-  const handlePaidClick = (bill) => {
-    if (!bill.paid) {
-      setSelectedBill(bill);
-      setShowConfirmModal(true);
-    }
-  };
+
 
   const onConfirm = async () => {
 
     try {
-      const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/update-bill/${selectedBill._id}`, {
+       await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/update-bill/${selectedBill._id}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",

@@ -1,11 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import AddCatalogue from '../components/AddCatalogue';
-import { Link } from 'react-router-dom';
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import AuthContext from '../AuthContext';
-import EditCatalogue from '../components/EditCatalogue';
-import DeleteCataloge from '../components/DeleteCataloge';
 import { ToastContainer } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 import AddCostPrice from '../components/AddCostPrice';
@@ -23,7 +19,6 @@ function CostPrice() {
     const [singlecostPrice, setSingleCostPrice] = useState([]);
     const [updatePage, setUpdatePage] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedType, setSelectedType] = useState("");
 
     const addCostPriceModel = () => {
         setCostPriceModal(!showCostPriceModal);

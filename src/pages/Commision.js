@@ -1,12 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
-import AddBuyer from '../components/AddBuyer'
 import AuthContext from '../AuthContext';
 import GlobalApiState from '../utilis/globalVariable';
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import EditBuyer from '../components/EditBuyer';
-import DeleteBuyer from '../components/DeleteBuyer';
 import AddCommision from '../components/AddCommission';
 import EditCommission from '../components/EditCommission';
 import DeleteCommission from '../components/DeleteCommision';

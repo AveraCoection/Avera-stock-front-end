@@ -40,7 +40,7 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
         },
         body: JSON.stringify(cataloge),
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         toast.success("Catalogue Added Successfully");
       }
       handlePageUpdate();

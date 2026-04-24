@@ -1,15 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import GlobalApiState from '../utilis/globalVariable';
 import AuthContext from '../AuthContext';
-import { toast, ToastContainer } from 'react-toastify';
-import CreatableSelect from 'react-select/creatable';
-import { Navigate, useNavigate } from 'react-router-dom';
 import Stepper1 from '../components/Stepper1';
 import Stepper2 from '../components/Stepper2';
 
 export default function SoldCatalogeDetail() {
     const { user } = useContext(AuthContext);
-    const navigate = useNavigate()
     const [buyer, setAllBuyer] = useState([]);
     const [inVoice, setInVoice] = useState('');
     const [catalogue, setAllCataloge] = useState([]);
@@ -79,7 +75,6 @@ export default function SoldCatalogeDetail() {
     };
 
 
-    const selectedBuyer = buyer.find(buyer => buyer.buyer_name === soldValue.buyer);
 
     const handlecommision = () => {
         const newCheckedState = !isChecked;

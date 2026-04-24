@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Drawer, IconButton, Menu, MenuItem, List, ListItem, ListItemText } from "@mui/material";
 import { Menu as MenuIcon, Close as CloseIcon, Notifications as NotificationsIcon } from "@mui/icons-material";
 import AuthContext from "../AuthContext";

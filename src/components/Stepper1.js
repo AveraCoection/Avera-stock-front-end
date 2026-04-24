@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GlobalApiState from '../utilis/globalVariable';
-import AuthContext from '../AuthContext';
-import { toast, ToastContainer } from 'react-toastify';
+import {ToastContainer } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 import { RxCross1 } from "react-icons/rx";
