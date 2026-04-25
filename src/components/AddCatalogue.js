@@ -1,8 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useContext, useRef, useState } from 'react';
 import AuthContext from '../AuthContext';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GlobalApiState from '../utilis/globalVariable';
 
@@ -41,7 +40,7 @@ export default function AddCatalogue({ addCatalogueModel, handlePageUpdate }) {
         },
         body: JSON.stringify(cataloge),
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         toast.success("Catalogue Added Successfully");
       }
       handlePageUpdate();

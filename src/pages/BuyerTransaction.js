@@ -2,12 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import GlobalApiState from "../utilis/globalVariable";
 import AuthContext from "../AuthContext";
 import { toast, ToastContainer } from "react-toastify";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBinLine } from "react-icons/ri";
-import DeleteBill from "../components/DeleteBill";
-import { FaEye } from "react-icons/fa";
-import BillPaidModel from "../components/BillPaidModel";
+import {  useNavigate, useParams } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import DeductTotalModal from "../components/DeductTotalModel";
 
@@ -18,12 +13,8 @@ const BuyerTransaction = () => {
     const [sold, setAllSold] = useState([]);
     const { user } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [showDeleteBillModal, setDeleteBillModal] = useState(false);
-    const [singleBill, setSingleBill] = useState([])
     const [updatePage, setUpdatePage] = useState(true);
     const [selectedDate, setSelectedDate] = useState("");
-    const [selectedStatus, setSelectedStatus] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [selectedBill, setSelectedBill] = useState({});
     const [showDeductModal, setShowDeductModal] = useState(false);
@@ -34,12 +25,7 @@ const BuyerTransaction = () => {
         setShowDeductModal(true);
     };
 
-    const handlePaidClick = (bill) => {
-        if (!bill.paid) {
-            setSelectedBill(bill);
-            setShowConfirmModal(true);
-        }
-    };
+   
     const handlePageUpdate = () => {
         setUpdatePage(!updatePage);
     };
@@ -90,10 +76,7 @@ const BuyerTransaction = () => {
         setShowConfirmModal(false);
     }
 
-    const deleteBillModel = (element) => {
-        setDeleteBillModal(!showDeleteBillModal);
-        setSingleBill(element)
-    };
+
 
     const fetchSalesData = async () => {
         setIsLoading(true)

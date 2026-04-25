@@ -1,9 +1,5 @@
-import { Menu } from '@headlessui/react'
 import React, { useState, useEffect, useContext } from 'react'
-import AddCatalogue from '../components/AddCatalogue';
 import AddDesign from '../components/AddDesign';
-import EditDesign from '../components/EditDesign';
-import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useNavigate, useParams } from 'react-router-dom';
 import DeleteDesign from '../components/DeleteDesign';

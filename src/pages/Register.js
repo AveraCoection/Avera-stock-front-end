@@ -36,7 +36,7 @@ function Register() {
       // if (!response.ok) {
       //   throw new Error("Registration failed. Please try again.");
       // }
-debugger
+
       const data = await response.json();
 
       if (data.message === "Signup successful") {

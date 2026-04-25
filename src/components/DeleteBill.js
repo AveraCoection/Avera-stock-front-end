@@ -12,7 +12,7 @@ export default function DeleteBill({deleteBillModel , setUpdatePage , updatePage
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/sold_design/delete_bill/${singleBill._id}`, {
                 method: 'DELETE'
             });
-            const data = await response.json();
+            await response.json();
 
             setUpdatePage(!updatePage);
         } catch (error) {

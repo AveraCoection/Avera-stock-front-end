@@ -14,7 +14,7 @@ export default function DeleteStaff({deleteCatalogueModel , setUpdatePage , upda
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/auth/delete-staff/${user.user._id}/${singlecatalogue.staffId}`, {
                 method: 'DELETE'
             });
-            const data = await response.json();
+            await response.json();
 
             setUpdatePage(!updatePage);
         } catch (error) {

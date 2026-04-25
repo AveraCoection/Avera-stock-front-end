@@ -1,11 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import AddCatalogue from '../components/AddCatalogue';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaRegEdit } from "react-icons/fa";
+import {  useNavigate } from 'react-router-dom';
 import { RiDeleteBinLine } from "react-icons/ri";
 import AuthContext from '../AuthContext';
-import EditCatalogue from '../components/EditCatalogue';
-import DeleteCataloge from '../components/DeleteCataloge';
 import { ToastContainer } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 import DeleteStaff from '../components/DeleteStaff';
@@ -22,20 +18,10 @@ const navigate = useNavigate()
     const [updatePage, setUpdatePage] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const addCatalogueModel = () => {
-        setCatalogueModal(!showCatalogueModal);
-    };
     const deleteCatalogueModel = (element) => {
         setDeleteCatalogueModal(!showDeleteCatalogueModal);
         setSingleCataloge(element);
 
-    };
-    const editCatalogueModel = (element) => {
-        setEditCatalogueModal(!showEditCatalogueModal);
-        setSingleCataloge(element);
-    };
-    const handlePageUpdate = () => {
-        setUpdatePage(!updatePage);
     };
     const filteredCatalogue = catalogue?.filter((element) =>
         element.email.toLowerCase().includes(searchTerm.toLowerCase())

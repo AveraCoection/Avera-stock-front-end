@@ -1,7 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react'
-import AuthContext from '../AuthContext';
+import React, { Fragment, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 
@@ -9,7 +7,6 @@ export default function EditBuyer({ editBuyerModel, handlePageUpdate, singleBuye
 
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
-    const {user} = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const [buyer, setBuyer] = useState({

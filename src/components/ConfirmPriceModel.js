@@ -26,7 +26,7 @@ export default function ConfirmPrice({ editPrice, handlePageUpdate, design, edit
                 throw new Error(errorMessage || "Failed to update stock");
             }
 
-            const result = await response.json();
+            await response.json();
 
             toast.success("Price Updated Successfully");
 

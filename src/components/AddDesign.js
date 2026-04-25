@@ -1,13 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
 import React, { Fragment, useContext, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 import { toast } from 'react-toastify';
 import GlobalApiState from '../utilis/globalVariable';
 
 export default function AddDesign({ addDesignModel, handlePageUpdate, singlecataloge }) {
-  const params = useParams();
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
   const {user} = useContext(AuthContext);

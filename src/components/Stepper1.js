@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GlobalApiState from '../utilis/globalVariable';
-import AuthContext from '../AuthContext';
-import { toast, ToastContainer } from 'react-toastify';
+import {ToastContainer } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 import { RxCross1 } from "react-icons/rx";
@@ -84,7 +83,7 @@ export default function Stepper1({
     // Handle designId change
     if (fieldName === 'designId') {
       const selectedKhazana = updatedFields[index].catalogueDesignOptions?.find(
-        (item) => item.value == value
+        (item) => item.value === value
       );
       updatedFields[index].remaingKhazana = selectedKhazana.totalKhazana;
       updatedFields[index].error = '';
