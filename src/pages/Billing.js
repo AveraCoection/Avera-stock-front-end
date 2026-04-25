@@ -233,7 +233,7 @@ const Billing = () => {
 
                 <tbody className="divide-y divide-gray-200">
                   {
-                    filteredCatalogue.length == 0 ? (
+                    filteredCatalogue.length === 0 ? (
                       <tr>
                         <td colSpan="4" className="whitespace-nowrap p-6 text-blue-600 text-center">
                           Record Not Found

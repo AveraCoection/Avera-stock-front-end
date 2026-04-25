@@ -83,7 +83,7 @@ export default function Stepper1({
     // Handle designId change
     if (fieldName === 'designId') {
       const selectedKhazana = updatedFields[index].catalogueDesignOptions?.find(
-        (item) => item.value == value
+        (item) => item.value === value
       );
       updatedFields[index].remaingKhazana = selectedKhazana.totalKhazana;
       updatedFields[index].error = '';
