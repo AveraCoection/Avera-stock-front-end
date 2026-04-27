@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useContext, useEffect, useState, useCallback, useMemo } from "react";
 import AuthContext from "../AuthContext";
 import GlobalApiState from "../utilis/globalVariable";
 import {
@@ -46,7 +46,7 @@ function KpiCard({ label, value, sub, color = "blue" }) {
         <div className={`rounded-lg border-l-4 p-4 shadow-sm bg-white ${colors[color]}`}>
             <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">{label}</p>
             <p className={`mt-1 text-2xl font-bold ${colors[color].split(" ").pop()}`}>{value}</p>
-            {sub && <p className="mt-0.5 text-xs text-gray-400">{sub}</p>}
+            {sub && <p className="mt-0.5 text-sm text-gray-400">Value : {sub}</p>}
         </div>
     );
 }
@@ -186,6 +186,15 @@ export default function OverViewReport() {
             r.catalogue.toLowerCase().includes(stockSearch.toLowerCase())
     );
 
+    // total value of Khazana in stock (sum of khazanaStock * price)
+    const totalKhazanaValue = useMemo(() => {
+        return stockRows.reduce((acc, d) => {
+            const qty = Number(d.khazanaStock ?? 0);
+            const price = Number(d.price ?? 0);
+            return acc + qty * price;
+        }, 0);
+    }, [stockRows]);
+
     // ─────────────────────────────────────────────────────────────────────────
 
     return (
@@ -258,7 +267,7 @@ export default function OverViewReport() {
                                     <KpiCard label="Delivery Charges" value={fmt(summary?.sales?.totalDelivery)} color="yellow" />
                                     <KpiCard label="Pending Amount" value={fmt(summary?.buyers?.totalPending)} color="red" />
                                     <KpiCard label="Total Received" value={fmt(summary?.buyers?.totalReceived)} color="green" />
-                                    <KpiCard label="Khazana In Stock" value={num(summary?.stock?.totalKhazanaInStock)} color="blue" />
+                                    <KpiCard label="Khazana In Stock" value={num(summary?.stock?.totalKhazanaInStock)} sub={fmt(totalKhazanaValue)} color="blue" />
                                     <KpiCard label="Total Designs" value={num(summary?.stock?.totalDesigns)} color="purple" />
                                 </div>
 
