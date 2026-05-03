@@ -81,7 +81,7 @@ function Dashboard() {
     });
   };
 
-  const authContext = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
 
   // useEffect(() => {
   //   fetchTotalSaleAmount();
@@ -94,7 +94,7 @@ function Dashboard() {
   // Fetching total sales amount
   // const fetchTotalSaleAmount = () => {
   //   fetch(
-  //     `https://avera-stock-back-end.vercel.app/api/sales/get/${authContext.user}/totalsaleamount`
+  //     `https://avera-stock-back-end.vercel.app/api/sales/get/${user.user._id}/totalsaleamount`
   //   )
   //     .then((response) => response.json())
   //     .then((datas) => setSaleAmount(datas.totalSaleAmount));
@@ -103,7 +103,7 @@ function Dashboard() {
   // Fetching total purchase amount
   // const fetchTotalPurchaseAmount = () => {
   //   fetch(
-  //     `https://avera-stock-back-end.vercel.app/api/purchase/get/${authContext.user}/totalpurchaseamount`
+  //     `https://avera-stock-back-end.vercel.app/api/purchase/get/${user.user._id}/totalpurchaseamount`
   //   )
   //     .then((response) => response.json())
   //     .then((datas) => setPurchaseAmount(datas.totalPurchaseAmount));
@@ -111,14 +111,14 @@ function Dashboard() {
 
   // Fetching all stores data
   // const fetchStoresData = () => {
-  //   fetch(`https://avera-stock-back-end.vercel.app/api/store/get/${authContext.user}`)
+  //   fetch(`https://avera-stock-back-end.vercel.app/api/store/get/${user.user._id}`)
   //     .then((response) => response.json())
   //     .then((datas) => setStores(datas));
   // };
 
   // Fetching Data of All Products
   // const fetchProductsData = () => {
-  //   fetch(`https://avera-stock-back-end.vercel.app/api/product/get/${authContext.user}`)
+  //   fetch(`https://avera-stock-back-end.vercel.app/api/product/get/${user.user._id}`)
   //     .then((response) => response.json())
   //     .then((datas) => setProducts(datas))
   //     .catch((err) => console.log(err));

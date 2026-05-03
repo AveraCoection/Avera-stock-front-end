@@ -12,7 +12,7 @@ export default function DeleteBuyer({deleteBuyerModel , setUpdatePage , updatePa
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/buyer/delete_buyer/${singleBuyer._id}`, {
                 method: 'DELETE'
             });
-            const data = await response.json();
+            await response.json();
 
             setUpdatePage(!updatePage);
         } catch (error) {

@@ -1,8 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useContext, useRef, useState } from 'react';
 import AuthContext from '../AuthContext';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GlobalApiState from '../utilis/globalVariable';
 
@@ -11,10 +10,10 @@ export default function AddBuyer({ addBuyerModel, handlePageUpdate }) {
   const [error, setErrors] = useState({});
   const cancelButtonRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const authContext = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
 
   const [buyer, setCataloge] = useState({
-    userId: authContext.user,
+    userId:user.user._id,
     buyer_name: "",
     phone_number: "",
   });

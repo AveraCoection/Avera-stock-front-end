@@ -12,7 +12,7 @@ export default function DeleteCataloge({deleteCatalogueModel , setUpdatePage , u
             const response = await fetch(`${GlobalApiState.DEV_BASE_LIVE}/api/cataloge/delete_cataloge/${singlecatalogue._id}`, {
                 method: 'DELETE'
             });
-            const data = await response.json();
+            await response.json();
 
             setUpdatePage(!updatePage);
         } catch (error) {
